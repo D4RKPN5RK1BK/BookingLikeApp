@@ -1,0 +1,55 @@
+﻿@model BookingLikeApp.Models.User
+
+@{ 
+    ViewData["Title"] = "Info";
+}
+<h2 class="display-4">Account information</h2>
+
+<table class="table">
+
+    <tr>
+        <td><b>@Html.DisplayNameFor(o => o.AvatarUrl)</b></td>
+        <td><img src="@Model.AvatarUrl" alt="[Not selected]" /></td>
+        <td>
+            <a asp-action="" asp-controller="" class="btn btn-light">Edit</a>
+        </td>
+    <tr>
+        <td><b>@Html.DisplayNameFor(o => o.UserName)</b></td>
+        <td>@Model.UserName</td>
+        <td></td>
+    </tr>
+    </tr>
+    <tr>
+        <td><b>@Html.DisplayNameFor(o => o.DisplayName)</b></td>
+        <td>@(!String.IsNullOrEmpty(Model.DisplayName) ? Model.DisplayName : "[Not selected]")</td>
+        <td>
+            <a asp-action="" asp-controller="" class="btn btn-light">Edit</a>
+        </td>
+    </tr>
+    <tr>
+        <td><b>@Html.DisplayNameFor(o => o.Email)</b></td>
+        <td>@Model.Email</td>
+        <td>
+            <a asp-action="" asp-controller="" class="btn btn-light">Edit</a>
+        </td>
+    </tr>
+    <tr>
+        <td><b>@Html.DisplayNameFor(o => o.Gender)</b></td>
+        <td>@(Model.Gender == false ? "Man" : "Woman")</td> 
+        <td>
+            <a asp-action="" asp-controller="" class="btn btn-light">Edit</a>
+        </td>
+    </tr>
+    <tr>
+        <td><b>@Html.DisplayNameFor(o => o.DateOfBirth)</b></td>
+        <td>@(Model.DateOfBirth == null ? Model.DateOfBirth : "[Not selected]")</td>
+        <td>
+            <a asp-action="" asp-controller="" class="btn btn-light">Edit</a>
+        </td>
+    </tr>
+    <tr>
+        <td><b>@Html.DisplayNameFor(o => o.RegistationDate)</b></td>
+        <td>@Model.RegistationDate</td>
+        <td> </td>
+    </tr>
+</table>

@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "Security";
+}
+<h2 class="display-4">Security page</h2>
+<table class="table">
+    <tr>
+        <td><b>Password</b></td>
+        <td>Reset your password regularly to keep your account secure</td>
+        <td><a asp-controller="Security" asp-action="ChangePassword" class="btn btn-light">Edit</a></td>
+    </tr>
+    @*<tr>
+        <td><b>Email</b></td>
+        <td>Update your email</td>
+        <td><a asp-controller="" asp-action="" class="btn btn-light">Edit</a></td>
+    </tr>*@
+    <tr>
+        <td><b>Two-factor</b></td>
+        <td>Never</td>
+        <td><a asp-controller="" asp-action="" class="btn btn-light">Edit</a></td>
+    </tr>
+    <tr>
+        <td><b>Active sessions</b></td>
+        <td>Logout from all current sessions</td>
+        <td><a asp-controller="" asp-action="" class="btn btn-warning">Sign out</a></td>
+    </tr>
+    <tr>
+        <td><b>Delete account</b></td>
+        <td>Delete your account permanently</td>
+        <td><a asp-controller="" asp-action="" class="btn btn-danger">Delete</a></td>
+    </tr>
+</table>
