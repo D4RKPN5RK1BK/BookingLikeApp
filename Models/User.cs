@@ -29,6 +29,5 @@ namespace BookingLikeApp.Models
 
         public IEnumerable<Apartment> Apartments { get; set; }
         public IEnumerable<Reservation> Reservations { get; set; }
-        public IEnumerable<Rating> Ratings { get; set; }
     }
 }

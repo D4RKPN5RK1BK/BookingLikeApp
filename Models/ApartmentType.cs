@@ -12,7 +12,7 @@ namespace BookingLikeApp.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string NormalizedName { get; set; }
-        public bool Single { get; set; }
+        //public bool Single { get; set; }
 
         public IEnumerable<Apartment> Apartments { get; set; }
     }

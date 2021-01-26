@@ -46,6 +46,5 @@ namespace BookingLikeApp.Models
         public Street Street { get; set; }
         public ApartmentType ApartmentType { get; set; }
         public IEnumerable<Photo> Photos { get; set; }
-        public IEnumerable<Rating> Ratings { get; set; }
     }
 }

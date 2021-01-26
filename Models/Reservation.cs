@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,12 +13,24 @@ namespace BookingLikeApp.Models
     {
         public int Id { get; set; }
         public string UserId { get; set; }
-        public int BedId { get; set; }
+
+        [Range(1, 10)]
+        [Column(TypeName = "decimal(2,0)")]
+        public decimal Points { get; set; }
+
+        [Column(TypeName = "decimal(12,2)")]
+        public decimal Price { get; set; }
+        
+        [DisplayName("Reservation date")]
         public DateTimeOffset ReservationDate { get; set; }
+        
+        [DisplayName("Proceed date time")]
         public DateTime ProceedDateTime { get; set; }
+        
+        [DisplayName("Abort cancel")]
         public DateTime AbortCancel { get; set; }
 
         public User User { get; set; }
-        public Bed Bed { get; set; }
+        public IEnumerable<ReservationBed> ReservationBeds { get; set; }
     }
 }

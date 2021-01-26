@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookingLikeApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210124135919_NewTables")]
-    partial class NewTables
+    [Migration("20210126122043_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,6 +28,9 @@ namespace BookingLikeApp.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
+                    b.Property<string>("AddressLine")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("AnimalsAllowed")
                         .HasColumnType("bit");
 
@@ -42,9 +45,6 @@ namespace BookingLikeApp.Migrations
 
                     b.Property<bool>("ChildrenAllowed")
                         .HasColumnType("bit");
-
-                    b.Property<int>("CityId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -77,6 +77,9 @@ namespace BookingLikeApp.Migrations
                     b.Property<decimal>("Stars")
                         .HasColumnType("decimal(1,0)");
 
+                    b.Property<int>("StreetId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
@@ -84,7 +87,7 @@ namespace BookingLikeApp.Migrations
 
                     b.HasIndex("ApartmentTypeId");
 
-                    b.HasIndex("CityId");
+                    b.HasIndex("StreetId");
 
                     b.HasIndex("UserId");
 
@@ -104,42 +107,28 @@ namespace BookingLikeApp.Migrations
                     b.Property<string>("NormalizedName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Single")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
                     b.ToTable("ApartmentTypes");
+                });
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Home",
-                            NormalizedName = "HOME",
-                            Single = true
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Other",
-                            NormalizedName = "OTHER",
-                            Single = false
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Hotel",
-                            NormalizedName = "HOTEL",
-                            Single = false
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Apartment",
-                            NormalizedName = "APARTMENT",
-                            Single = false
-                        });
+            modelBuilder.Entity("BookingLikeApp.Models.Bed", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<decimal>("Capacity")
+                        .HasColumnType("decimal(1,0)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Beds");
                 });
 
             modelBuilder.Entity("BookingLikeApp.Models.City", b =>
@@ -220,9 +209,6 @@ namespace BookingLikeApp.Migrations
                     b.Property<decimal>("Bathrooms")
                         .HasColumnType("decimal(3,0)");
 
-                    b.Property<decimal>("Beds")
-                        .HasColumnType("decimal(3,0)");
-
                     b.Property<bool>("CityView")
                         .HasColumnType("bit");
 
@@ -269,25 +255,26 @@ namespace BookingLikeApp.Migrations
                     b.ToTable("Numbers");
                 });
 
-            modelBuilder.Entity("BookingLikeApp.Models.NumberName", b =>
+            modelBuilder.Entity("BookingLikeApp.Models.NumberBed", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                    b.Property<int>("BedId")
+                        .HasColumnType("int");
 
-                    b.Property<int>("NumberTypeId")
+                    b.Property<int>("NumberId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("NumberTypeId");
+                    b.HasIndex("BedId");
 
-                    b.ToTable("NumberNames");
+                    b.HasIndex("NumberId");
+
+                    b.ToTable("NumberBeds");
                 });
 
             modelBuilder.Entity("BookingLikeApp.Models.NumberType", b =>
@@ -325,31 +312,6 @@ namespace BookingLikeApp.Migrations
                     b.ToTable("Photos");
                 });
 
-            modelBuilder.Entity("BookingLikeApp.Models.Rating", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<int>("ApartmentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId1")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApartmentId");
-
-                    b.HasIndex("UserId1");
-
-                    b.ToTable("Ratings");
-                });
-
             modelBuilder.Entity("BookingLikeApp.Models.Reservation", b =>
                 {
                     b.Property<int>("Id")
@@ -360,8 +322,11 @@ namespace BookingLikeApp.Migrations
                     b.Property<DateTime>("AbortCancel")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("NumberId")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Points")
+                        .HasColumnType("decimal(1,0)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(12,2)");
 
                     b.Property<DateTime>("ProceedDateTime")
                         .HasColumnType("datetime2");
@@ -374,11 +339,31 @@ namespace BookingLikeApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("NumberId");
-
                     b.HasIndex("UserId");
 
                     b.ToTable("Reservations");
+                });
+
+            modelBuilder.Entity("BookingLikeApp.Models.ReservationBed", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("NumberBedId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReservationId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NumberBedId");
+
+                    b.HasIndex("ReservationId");
+
+                    b.ToTable("ReservationBeds");
                 });
 
             modelBuilder.Entity("BookingLikeApp.Models.Street", b =>
@@ -622,9 +607,9 @@ namespace BookingLikeApp.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BookingLikeApp.Models.City", "City")
-                        .WithMany("Apartments")
-                        .HasForeignKey("CityId")
+                    b.HasOne("BookingLikeApp.Models.Street", "Street")
+                        .WithMany()
+                        .HasForeignKey("StreetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -634,7 +619,7 @@ namespace BookingLikeApp.Migrations
 
                     b.Navigation("ApartmentType");
 
-                    b.Navigation("City");
+                    b.Navigation("Street");
 
                     b.Navigation("User");
                 });
@@ -669,15 +654,23 @@ namespace BookingLikeApp.Migrations
                     b.Navigation("NumberType");
                 });
 
-            modelBuilder.Entity("BookingLikeApp.Models.NumberName", b =>
+            modelBuilder.Entity("BookingLikeApp.Models.NumberBed", b =>
                 {
-                    b.HasOne("BookingLikeApp.Models.NumberType", "NumberType")
-                        .WithMany()
-                        .HasForeignKey("NumberTypeId")
+                    b.HasOne("BookingLikeApp.Models.Bed", "Bed")
+                        .WithMany("NumberBeds")
+                        .HasForeignKey("BedId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("NumberType");
+                    b.HasOne("BookingLikeApp.Models.Number", "Number")
+                        .WithMany("NumberBeds")
+                        .HasForeignKey("NumberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Bed");
+
+                    b.Navigation("Number");
                 });
 
             modelBuilder.Entity("BookingLikeApp.Models.Photo", b =>
@@ -691,44 +684,38 @@ namespace BookingLikeApp.Migrations
                     b.Navigation("Apartment");
                 });
 
-            modelBuilder.Entity("BookingLikeApp.Models.Rating", b =>
-                {
-                    b.HasOne("BookingLikeApp.Models.Apartment", "Apartment")
-                        .WithMany("Ratings")
-                        .HasForeignKey("ApartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BookingLikeApp.Models.User", "User")
-                        .WithMany("Ratings")
-                        .HasForeignKey("UserId1");
-
-                    b.Navigation("Apartment");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("BookingLikeApp.Models.Reservation", b =>
                 {
-                    b.HasOne("BookingLikeApp.Models.Number", "Number")
-                        .WithMany("Reservations")
-                        .HasForeignKey("NumberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("BookingLikeApp.Models.User", "User")
                         .WithMany("Reservations")
                         .HasForeignKey("UserId");
 
-                    b.Navigation("Number");
-
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BookingLikeApp.Models.ReservationBed", b =>
+                {
+                    b.HasOne("BookingLikeApp.Models.NumberBed", "NumberBed")
+                        .WithMany("ReservationBeds")
+                        .HasForeignKey("NumberBedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookingLikeApp.Models.Reservation", "Reservation")
+                        .WithMany("ReservationBeds")
+                        .HasForeignKey("ReservationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("NumberBed");
+
+                    b.Navigation("Reservation");
                 });
 
             modelBuilder.Entity("BookingLikeApp.Models.Street", b =>
                 {
                     b.HasOne("BookingLikeApp.Models.City", "City")
-                        .WithMany()
+                        .WithMany("Streets")
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -790,8 +777,6 @@ namespace BookingLikeApp.Migrations
             modelBuilder.Entity("BookingLikeApp.Models.Apartment", b =>
                 {
                     b.Navigation("Photos");
-
-                    b.Navigation("Ratings");
                 });
 
             modelBuilder.Entity("BookingLikeApp.Models.ApartmentType", b =>
@@ -799,9 +784,14 @@ namespace BookingLikeApp.Migrations
                     b.Navigation("Apartments");
                 });
 
+            modelBuilder.Entity("BookingLikeApp.Models.Bed", b =>
+                {
+                    b.Navigation("NumberBeds");
+                });
+
             modelBuilder.Entity("BookingLikeApp.Models.City", b =>
                 {
-                    b.Navigation("Apartments");
+                    b.Navigation("Streets");
                 });
 
             modelBuilder.Entity("BookingLikeApp.Models.Country", b =>
@@ -811,14 +801,22 @@ namespace BookingLikeApp.Migrations
 
             modelBuilder.Entity("BookingLikeApp.Models.Number", b =>
                 {
-                    b.Navigation("Reservations");
+                    b.Navigation("NumberBeds");
+                });
+
+            modelBuilder.Entity("BookingLikeApp.Models.NumberBed", b =>
+                {
+                    b.Navigation("ReservationBeds");
+                });
+
+            modelBuilder.Entity("BookingLikeApp.Models.Reservation", b =>
+                {
+                    b.Navigation("ReservationBeds");
                 });
 
             modelBuilder.Entity("BookingLikeApp.Models.User", b =>
                 {
                     b.Navigation("Apartments");
-
-                    b.Navigation("Ratings");
 
                     b.Navigation("Reservations");
                 });

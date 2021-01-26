@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+
 namespace BookingLikeApp.Models
 {
     public class City
@@ -15,6 +16,6 @@ namespace BookingLikeApp.Models
         public bool Blocked { get; set; }
 
         public Country Country { get; set; }
-        public IEnumerable<Apartment> Apartments { get; set; }
+        public IEnumerable<Street> Streets { get; set; }
     }
 }
