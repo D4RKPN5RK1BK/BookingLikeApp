@@ -17,6 +17,9 @@ namespace BookingLikeApp.Models
         public int Id { get; set; }
         public int ApartmentId { get; set; }
         public int NumberTypeId { get; set; }
+
+        public int Quantity { get; set; }
+        public int NotUsed { get; set; }
        
         [Range(0, 100)]
         [Column(TypeName = "decimal(3,0)")]
@@ -42,6 +45,7 @@ namespace BookingLikeApp.Models
         public decimal Price { get; set; }
 
         public bool Enabled { get; set; }
+        public bool Shared { get; set; }
         public bool MiniBar { get; set; }
         public bool ProvidedTV { get; set; }
         public bool FreeWiFi { get; set; }
@@ -54,6 +58,6 @@ namespace BookingLikeApp.Models
 
         public Apartment Apartment { get; set; }
         public NumberType NumberType { get; set; } 
-        public IEnumerable<NumberBed> NumberBeds { get; set; }
+        public IEnumerable<NumberReservation> NumberReservations { get; set; }
     }
 }

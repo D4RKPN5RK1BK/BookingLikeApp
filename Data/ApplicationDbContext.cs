@@ -20,9 +20,9 @@ namespace BookingLikeApp.Data
         DbSet<NumberType> NumberTypes { get; set; }
         DbSet<Reservation> Reservations { get; set; }
         DbSet<ApartmentType> ApartmentTypes { get; set; }
-        DbSet<Bed> Beds { get; set; }
+        /*DbSet<Bed> Beds { get; set; }
         DbSet<NumberBed> NumberBeds { get; set; }
-        DbSet<ReservationBed> ReservationBeds { get; set; }
+        DbSet<ReservationBed> ReservationBeds { get; set; }*/
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -32,6 +32,10 @@ namespace BookingLikeApp.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<Country>().HasData(new Country() { Id = 1, Blocked = false, Name = "TestCountry"});
+            builder.Entity<City>().HasData(new City() { Id = 1, Blocked = false, Name = "TestCity", CountryId = 1});
+            builder.Entity<Street>().HasData(new Street() { Id = 1, Name = "TestCountry", CityId = 1});
 
             /*builder.Entity<Rating>().HasNoKey();*/
 

@@ -21,9 +21,6 @@ namespace BookingLikeApp.Models
         [Column(TypeName = "decimal(12,2)")]
         public decimal Price { get; set; }
         
-        [DisplayName("Reservation date")]
-        public DateTimeOffset ReservationDate { get; set; }
-        
         [DisplayName("Proceed date time")]
         public DateTime ProceedDateTime { get; set; }
         
@@ -31,6 +28,6 @@ namespace BookingLikeApp.Models
         public DateTime AbortCancel { get; set; }
 
         public User User { get; set; }
-        public IEnumerable<ReservationBed> ReservationBeds { get; set; }
+        public IEnumerable<NumberReservation> NumberReservations { get; set; }
     }
 }
