@@ -17,23 +17,17 @@ namespace BookingLikeApp.Models
         public int Id { get; set; }
         public int ApartmentId { get; set; }
         public int NumberTypeId { get; set; }
-
-        public int Quantity { get; set; }
-        public int NotUsed { get; set; }
+        public int BedId { get; set; }
        
         [Range(0, 100)]
         [Column(TypeName = "decimal(3,0)")]
-        public decimal Badrooms { get; set; }
-        
-        [Range(0, 100)]
-        [Column(TypeName = "decimal(3,0)")]
-        public decimal Kitchens { get; set; }
+        public decimal BedQuantity { get; set; }
         
         [Range(0, 100)]
         [Column(TypeName = "decimal(3,0)")]
         public decimal Bathrooms { get; set; }
         
-        [Range(0, 1000)]
+        [Range(0, 200)]
         [Column(TypeName = "decimal(4,0)")]
         public decimal Area { get; set; }
 

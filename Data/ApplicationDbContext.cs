@@ -20,8 +20,8 @@ namespace BookingLikeApp.Data
         DbSet<NumberType> NumberTypes { get; set; }
         DbSet<Reservation> Reservations { get; set; }
         DbSet<ApartmentType> ApartmentTypes { get; set; }
-        /*DbSet<Bed> Beds { get; set; }
-        DbSet<NumberBed> NumberBeds { get; set; }
+        DbSet<Bed> Beds { get; set; }
+        /*DbSet<NumberBed> NumberBeds { get; set; }
         DbSet<ReservationBed> ReservationBeds { get; set; }*/
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
