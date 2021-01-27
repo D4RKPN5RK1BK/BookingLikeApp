@@ -1,0 +1,96 @@
+﻿@model Apartment
+@{
+    ViewData["Title"] = "Basic info";
+} 
+
+
+<h2 class="my-3 display-4">Basic information</h2>
+
+<form asp-controller="" asp-action="">
+    <div class="card">
+        <div class="card-body">
+            <div class="form-group col-sm-5">
+                <h2 class="card-title">Your object name</h2>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="alert-danger"></span>
+                <small class="form-text text-muted">This name will see by users that search for apartment.</small>
+            </div>
+            <div class="form-group col-sm-3">
+                <label asp-for="Stars" class="col-form-label"></label>
+                <input asp-for="Stars" class="custom-select" />
+                <span asp-validation-for="Stars" class="alert-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="card-body">
+            <div class="form-group col-sm-8">
+                <h2 class="card-title">Contact data</h2>
+                <label asp-for="ContactPerson"></label>
+                <input asp-for="ContactPerson" class="form-control" />
+                <span asp-validation-for="ContactPerson" class="alert-danger"></span>
+            </div>
+            <label class="col-form-label-lg col-sm-10">Contact phone number</label>
+            <div class="d-sm-flex">
+                <div class="form-group col-sm-4 flex-grow-1">
+                    <label asp-for="ContactNumber" class="col-form-label-sm"></label>
+                    <input asp-for="ContactNumber" class="form-control" />
+                    <span asp-validation-for="ContactNumber" class="alert-danger"></span>
+                </div>
+                <div class="form-group col-sm-4  flex-grow-1">
+                    <label asp-for="AdditionalNumber" class="col-form-label-sm"></label>
+                    <input asp-for="AdditionalNumber" class="form-control" />
+                    <span asp-validation-for="AdditionalNumber" class="alert-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="card-body">
+            <h2 class="card-title">In progress</h2>
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="card-body">
+            <div class="col-sm-4">
+                <h2 class="card-title">Location</h2>
+                @*<div class="form-group">
+            <label asp-for="CountryId" class="col-form-label"></label>
+            <select asp-for="CountryId" class="form-control" />
+            <span asp-validation-for="CountryId" class="alert-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="CityId" class="col-form-label"></label>
+            <select asp-for="CityId" class="form-control" />
+            <span asp-validation-for="CityId" class="alert-danger"></span>
+        </div>*@
+                <div class="form-group">
+                    <label asp-for="SecondAddressLine" class="col-form-label"></label>
+                    <input asp-for="SecondAddressLine" class="form-control" />
+                    <span asp-validation-for="SecondAddressLine" class="alert-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="StreetId" class="col-form-label"></label>
+                    <input asp-for="StreetId" class="custom-select" />
+                    <span asp-validation-for="StreetId" class="alert-danger"></span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="card-body">
+            <h2 class="card-title">In progress</h2>
+        </div>
+    </div>
+
+    <div class="d-flex flex-column align-items-center mb-5">
+        <input type="submit" value="Submit" class="btn-block btn-success btn-lg mt-3 mb-1"/>
+        <small>By clicking on any other link, you will lose all changes made on this page!</small>
+    </div>
+
+</form>

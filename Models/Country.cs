@@ -16,9 +16,6 @@ namespace BookingLikeApp.Models
         [MaxLength(256)]
         public string Name { get; set; }
         
-        /*[MaxLength(256)]
-        public string NormalizedName { get; set; }*/
-        
         public string PhotoUrl { get; set; }
         
         public string FlagUrl { get; set; }

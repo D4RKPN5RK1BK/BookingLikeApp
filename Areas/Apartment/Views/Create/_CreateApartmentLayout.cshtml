@@ -1,0 +1,14 @@
+﻿@{
+    Layout = "_Layout";
+}
+<div class="list-group-horizontal-sm list-group text-center">
+    <a asp-controller="Create" asp-action="BasicInfo" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Basic info" ? "active" : "")">Basic info</a>
+    <a asp-controller="Create" asp-action="Numbers" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Numbers" ? "active" : "")">Numbers</a>
+    <a asp-controller="Create" asp-action="Services" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Services" ? "active" : "")">Services</a>
+    <a asp-controller="Create" asp-action="Photos" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Photos" ? "active" : "")">Photos</a>
+    <a asp-controller="Create" asp-action="Facilites" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Facilites" ? "active" : "")">Facilites</a>
+    <a asp-controller="Create" asp-action="Rules" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Rules" ? "active" : "")">Rules</a>
+    <a asp-controller="Create" asp-action="Payment" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Payment" ? "active" : "")">Payment</a>
+</div>
+
+@RenderBody()

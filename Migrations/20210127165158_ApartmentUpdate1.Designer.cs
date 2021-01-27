@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookingLikeApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210126181407_BedsExc")]
-    partial class BedsExc
+    [Migration("20210127165158_ApartmentUpdate1")]
+    partial class ApartmentUpdate1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,8 +28,12 @@ namespace BookingLikeApp.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<string>("AddressLine")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("AdditionalNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<bool>("AllTimeRegistration")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("AnimalsAllowed")
                         .HasColumnType("bit");
@@ -40,11 +44,25 @@ namespace BookingLikeApp.Migrations
                     b.Property<bool>("Bar")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("Breakfest")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("BreakfestIncluded")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("Checked")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("ChildrenAllowed")
+                    b.Property<bool>("ChildrensAllowed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("ContactNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("ContactPerson")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -53,6 +71,12 @@ namespace BookingLikeApp.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("Enabled")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("FamilyNumbers")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Fitnes")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("FoundationDate")
@@ -71,8 +95,18 @@ namespace BookingLikeApp.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<decimal>("Pools")
-                        .HasColumnType("decimal(3,0)");
+                    b.Property<bool>("Parking")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Pool")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecondAddressLine")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("SmokeFreeNumbers")
+                        .HasColumnType("bit");
 
                     b.Property<decimal>("Stars")
                         .HasColumnType("decimal(1,0)");
