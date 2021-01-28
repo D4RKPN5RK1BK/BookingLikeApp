@@ -10,24 +10,22 @@ namespace BookingLikeApp.Data
 {
     public class ApplicationDbContext : IdentityDbContext<User>
     {
-        DbSet<Apartment> Apartments { get; set; }
-        DbSet<Country> Countries { get; set; }
-        DbSet<City> Cities { get; set; }
-        DbSet<Street> Streets { get; set; }
-        DbSet<Photo> Photos { get; set; }
-        DbSet<Number> Numbers { get; set; }
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+
+        public DbSet<Apartment> Apartments { get; set; }
+        public DbSet<Country> Countries { get; set; }
+        public DbSet<City> Cities { get; set; }
+        public DbSet<Street> Streets { get; set; }
+        public DbSet<Photo> Photos { get; set; }
+        public DbSet<Number> Numbers { get; set; }
         /*DbSet<NumberName> NumberNames { get; set; }*/
-        DbSet<NumberType> NumberTypes { get; set; }
-        DbSet<Reservation> Reservations { get; set; }
-        DbSet<ApartmentType> ApartmentTypes { get; set; }
-        DbSet<Bed> Beds { get; set; }
+        public DbSet<NumberType> NumberTypes { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<ApartmentType> ApartmentTypes { get; set; }
+        public DbSet<Bed> Beds { get; set; }
         /*DbSet<NumberBed> NumberBeds { get; set; }
         DbSet<ReservationBed> ReservationBeds { get; set; }*/
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
-        {
-        }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -36,6 +34,8 @@ namespace BookingLikeApp.Data
             builder.Entity<Country>().HasData(new Country() { Id = 1, Blocked = false, Name = "TestCountry"});
             builder.Entity<City>().HasData(new City() { Id = 1, Blocked = false, Name = "TestCity", CountryId = 1});
             builder.Entity<Street>().HasData(new Street() { Id = 1, Name = "TestCountry", CityId = 1});
+
+            builder.Entity<ApartmentType>().HasData(new ApartmentType() { Id = 1, Description = "TestType", Name = "TestType" });
 
             /*builder.Entity<Rating>().HasNoKey();*/
 

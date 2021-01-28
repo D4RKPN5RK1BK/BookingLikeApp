@@ -1,30 +1,30 @@
 ﻿@model Apartment
 @{
-    ViewData["Title"] = "Rules";
+    ViewData["Title"] = "Правила проживания";
 }
 
-<h2 class="my-3 display-4">Rules</h2>
+<h2 class="my-3 display-4">Правила проживания</h2>
 
 <form asp-controller="" asp-action="">
     <div class="card">
         <div class="card-body">
+            <h2 class="card-title col-md-9">За сколько дней гости могут отменить бронирование без уплаты штрафа?</h2>
             <div class="col-sm-5">
-                <h2 class="card-title">Reservation cencel</h2>
                 <label asp-for="DaysUntilCancelEnds" class="col-form-label-sm"></label>
                 <select asp-for="DaysUntilCancelEnds" class="custom-select">
-                    <option value="0">Arrival day</option>
-                    <option value="1">1 day before</option>
-                    <option value="2">2 day before</option>
-                    <option value="3">3 day before</option>
-                    <option value="7">7 day before</option>
-                    <option value="14">14 day before</option>
+                    <option value="0">В день заезда</option>
+                    <option value="1">1 день до заезда</option>
+                    <option value="2">1 дня до заезда</option>
+                    <option value="3">3 дня до заезда</option>
+                    <option value="7">7 дней до заезда</option>
+                    <option value="14">14 дней до заезда</option>
                 </select>
             </div>
             <div class=" form-group col-md-5 mt-3">
-                <label class="col-form-label-sm">or guests will pay</label>
-                <select asp-for="FullPriceCencel" class="custom-select">
-                    <option value="true">Full reservation price</option>
-                    <option value="false">One night price</option>
+                <label class="col-form-label-sm">иначе они должны будут выплатить</label>
+                <select asp-for="CancelPrice" class="custom-select">
+                    <option value="true">Полную стоимость от проживания</option>
+                    <option value="false">Стоимоть от одной ночи</option>
                 </select>
             </div>
         </div>
@@ -33,12 +33,40 @@
     <div class="card-group mt-3">
         <div class="card">
             <div class="card-body">
-                <h2 class="card-title">One</h2>
+                <div class="col-sm-12">
+                    <h3 class="card-title">Регистрация заезда</h3>
+                    <small>c:</small>
+                    <select class="custom-select">
+                        <option value="?">09:00</option>
+                        <option value="?">09:30</option>
+                        <option value="?">10:00</option>
+                    </select>
+                    <small>до:</small>
+                    <select class="custom-select">
+                        <option value="?">09:00</option>
+                        <option value="?">09:30</option>
+                        <option value="?">10:00</option>
+                    </select>
+                </div>
             </div>
         </div>
         <div class="card">
             <div class="card-body">
-                <h2 class="card-title">Two</h2>
+                <div class="col-sm-12">
+                    <h3 class="card-title">Регистрация отъезда</h3>
+                    <small>c:</small>
+                    <select class="custom-select">
+                        <option value="?">09:00</option>
+                        <option value="?">09:30</option>
+                        <option value="?">10:00</option>
+                    </select>
+                    <small>до:</small>
+                    <select class="custom-select">
+                        <option value="?">09:00</option>
+                        <option value="?">09:30</option>
+                        <option value="?">10:00</option>
+                    </select>
+                </div>
             </div>
         </div>
     </div>
@@ -51,7 +79,7 @@
 
     <div class="card mt-3">
         <div class="card-body">
-            <h2 class="card-title col-sm-10">Animals and childrens</h2>
+            <h2 class="card-title col-sm-10">Дети и животные</h2>
             <div class="form-group col-sm-6">
                 <input asp-for="AnimalsAllowed" class="form-check-inline" />
                 <label asp-for="AnimalsAllowed" class="col-form-label"></label>
@@ -63,5 +91,10 @@
                 <span asp-validation-for="ChildrensAllowed" class="alert-danger"></span>
             </div>
         </div>
+    </div>
+
+    <div class="d-flex flex-column align-items-center mb-5">
+        <input type="submit" value="Принять и продолжить" class="btn-block btn-success btn-lg mt-3 mb-1" />
+        <small>Переходя по какой люибо другой ссылке вы потеряете все изменения введенные на этой странице!</small>
     </div>
 </form>

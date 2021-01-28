@@ -1,34 +1,34 @@
 ﻿@model Apartment 
 @{
-    ViewData["Title"] = "Services";
+    ViewData["Title"] = "Услуги";
 }
 
-<h2 class="my-3 display-4">Services</h2>
+<h2 class="my-3 display-4">Услуги</h2>
 
 <form asp-controller="" asp-action="">
     <div class="card">
         <div class="card-body ">
             <div class="form-group col-sm-6">
-                <h2 class="card-title">Parking</h2>
-                <label class="col-form-label-sm">This information is especially important for those traveling by car. </label>
+                <h2 class="card-title">Парковка</h2>
+                <label class="col-form-label-sm">Данная информация будет полезная для людей путешествующих на машине.</label>
                 <select class="custom-select col-sm-6">
-                    <option value="1">No</option>
-                    <option value="2">Yes</option>
-                    <option value="3">Yes, free</option>
+                    <option value="1">Отсутствует</option>
+                    <option value="2">Платная</option>
+                    <option value="3">Бесплатная</option>
                 </select>
             </div>
         </div>
     </div>
 
-    <div class="card  mt-3">
+    <div class="card mt-3">
         <div class="card-body">
             <div class="form-group d-flex flex-column  col-sm-6">
-                <h2 class="card-title">Breakfest</h2>
-                <label class="col-form-label-sm">Brekfest service for guests. </label>
+                <h2 class="card-title">Завтрак</h2>
+                <label class="col-form-label-sm">Завтрак для посетителей.</label>
                 <select class="custom-select col-sm-6">
-                    <option value="1">No</option>
-                    <option value="2">Yes</option>
-                    <option value="3">Yes, included</option>
+                    <option value="1">Отсутствует</option>
+                    <option value="2">Присутствует</option>
+                    <option value="3">Включен в стоимость</option>
                 </select>
             </div>
         </div>
@@ -36,7 +36,7 @@
 
     <div class="card mt-3">
         <div class="card-body ">
-            <h2 class="card-title col-sm-10">Services</h2>
+            <h2 class="card-title col-sm-10">Услуги</h2>
             <div class="d-flex flex-wrap">
                 <div class="form-group flex-grow-1 col-sm-6">
                     <input asp-for="Pool" class="form-check-inline" />
@@ -78,7 +78,7 @@
     </div>
 
     <div class="d-flex flex-column align-items-center mb-5">
-        <input type="submit" value="Submit" class="btn-block btn-success btn-lg mt-3 mb-1" />
-        <small>By clicking on any other link, you will lose all changes made on this page!</small>
+        <input type="submit" value="Принять и продолжить" class="btn-block btn-success btn-lg mt-3 mb-1" />
+        <small>Переходя по какой люибо другой ссылке вы потеряете все изменения введенные на этой странице!</small>
     </div>
 </form>

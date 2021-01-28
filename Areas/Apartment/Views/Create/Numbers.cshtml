@@ -1,11 +1,48 @@
-﻿@{
-    ViewData["Title"] = "Numbers";
+﻿@model Apartment
+@{
+    ViewData["Title"] = "Номера";
 }
 
-<h2 class="my-3 display-4">Numbers</h2>
+<h2 class="my-3 display-4">Номера</h2>
+<p>Во время регистрации возможно указать только одну группу номеров. Отсальные можно будет добавить после, в разделе "Собственность" в меню пользователя.</p>
 
-<div class="card">
-    <div class="card-body">
-        <h2 class="card-title">???</h2>
+<form asp-controller="" asp-action="">
+    <div class="card">
+        <div class="card-body">
+            <div class="col-sm-12">
+                <h2 class="card-title">Основные параметры</h2>
+                <div class="form-group">
+                    <label asp-for="Numbers.First().NumberTypeId" class="col-form-label"></label>
+                    <select asp-for="Numbers.First().NumberTypeId" class="custom-select">
+                        <option value="value">валуе</option>
+                    </select>
+                    <span asp-validation-for="Numbers.First().NumberTypeId" class="alert-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input asp-for="Numbers.First().AllowSmoke" class="form-check-inline" />
+                    <label asp-for="Numbers.First().AllowSmoke" class="col-form-label"></label>
+                    <span asp-validation-for="Numbers.First().AllowSmoke"></span>
+                </div>
+
+            </div>
+        </div>
     </div>
-</div>
+
+    <div class="card mt-3">
+        <div class="card-body">
+            <div class="col-sm-12">
+                <h2 class="card-title">Цена за ночь</h2>
+                <div class="form-group">
+                    <input asp-for="Numbers.First().Price" class="form-control" type="number" />
+                    <span asp-validation-for="Numbers.First().Price" class="alert-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex flex-column align-items-center mb-5">
+        <input type="submit" value="Принять и продолжить" class="btn-block btn-success btn-lg mt-3 mb-1" />
+        <small>Переходя по какой люибо другой ссылке вы потеряете все изменения введенные на этой странице!</small>
+    </div>
+
+</form>

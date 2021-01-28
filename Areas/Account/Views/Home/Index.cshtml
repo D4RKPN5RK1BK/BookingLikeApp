@@ -5,50 +5,75 @@
 }
 <h2 class="display-4">Account information</h2>
 
-<table class="table">
+<div class="list-group">
+    <div class="list-group-item">
+        <div class="row">
+            <div class="col-sm-3">
+                <b>@Html.DisplayNameFor(o => o.AvatarUrl)</b>
 
-    <tr>
-        <td><b>@Html.DisplayNameFor(o => o.AvatarUrl)</b></td>
-        <td><img src="@Model.AvatarUrl" alt="[Not selected]" /></td>
-        <td>
-            <a asp-action="" asp-controller="" class="btn btn-light">Edit</a>
-        </td>
-    <tr>
-        <td><b>@Html.DisplayNameFor(o => o.UserName)</b></td>
-        <td>@Model.UserName</td>
-        <td></td>
-    </tr>
-    <tr>
-        <td><b>@Html.DisplayNameFor(o => o.DisplayName)</b></td>
-        <td>@(!String.IsNullOrEmpty(Model.DisplayName) ? Model.DisplayName : "[Not selected]")</td>
-        <td>
-            <a asp-action="" asp-controller="" class="btn btn-light">Edit</a>
-        </td>
-    </tr>
-    <tr>
-        <td><b>@Html.DisplayNameFor(o => o.Email)</b></td>
-        <td>@Model.Email</td>
-        <td>
-            <a asp-action="" asp-controller="" class="btn btn-light">Edit</a>
-        </td>
-    </tr>
-    <tr>
-        <td><b>@Html.DisplayNameFor(o => o.Gender)</b></td>
-        <td>@(Model.Gender == false ? "Man" : "Woman")</td> 
-        <td>
-            <a asp-action="" asp-controller="" class="btn btn-light">Edit</a>
-        </td>
-    </tr>
-    <tr>
-        <td><b>@Html.DisplayNameFor(o => o.DateOfBirth)</b></td>
-        <td>@(Model.DateOfBirth == null ? Model.DateOfBirth : "[Not selected]")</td>
-        <td>
-            <a asp-action="" asp-controller="" class="btn btn-light">Edit</a>
-        </td>
-    </tr>
-    <tr>
-        <td><b>@Html.DisplayNameFor(o => o.RegistationDate)</b></td>
-        <td>@Model.RegistationDate</td>
-        <td> </td>
-    </tr>
-</table>
+            </div>
+            <div class="flex-grow-1">
+                <img src="@Model.AvatarUrl" alt="[Not selected]" />
+            </div>
+            <p class="mr-sm-2">
+                <a data-toggle="collapse" href="#Avatar" role="button" aria-expanded="false" aria-controls="Avatar" class="btn btn-secondary">Изменить</a>
+            </p>
+        </div>
+        <div class="collapse" id="Avatar">
+            <form asp-action="" asp-controller="">
+                <div class="row">
+                    <input type="file" class="flex-grow-1" />
+                    <input type="submit" value="Подтвердить" class="btn btn-success mr-sm-2"/>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="list-group-item">
+        <div class="row">
+            <b>@Html.DisplayNameFor(o => o.UserName)</b>
+            <p>@Model.UserName</p>
+        </div>
+    </div>
+    <div class="list-group-item">
+        <div class="row">
+            <b>@Html.DisplayNameFor(o => o.DisplayName)</b>
+            @(!String.IsNullOrEmpty(Model.DisplayName) ? Model.DisplayName : "[Not selected]")
+            
+                <a asp-action="" asp-controller="" class="btn btn-light">Edit</a>
+            
+        </div>
+    </div>
+    <div class="list-group-item">
+        <div class="row">
+            <b>@Html.DisplayNameFor(o => o.Email)</b>
+            @Model.Email</td>
+                <a asp-action="" asp-controller="" class="btn btn-light">Edit</a>
+        </div>
+    </div>
+    <div class="list-group-item">
+        <div class="row">
+            <b>@Html.DisplayNameFor(o => o.Gender)</b>
+            @(Model.Gender == false ? "Man" : "Woman")
+            
+                <a asp-action="" asp-controller="" class="btn btn-light">Edit</a>
+            
+        </div>
+    </div>
+    <div class="list-group-item">
+        <div class="row">
+            <b>@Html.DisplayNameFor(o => o.DateOfBirth)</b>
+            @(Model.DateOfBirth == null ? Model.DateOfBirth : "[Not selected]")
+            
+                <a asp-action="" asp-controller="" class="btn btn-light">Edit</a>
+            
+        </div>
+    </div>
+    <div class="list-group-item">
+        <div class="row">
+            <b>@Html.DisplayNameFor(o => o.RegistationDate)</b>
+            @Model.RegistationDate
+            
+        </div>
+    </div>
+</div>

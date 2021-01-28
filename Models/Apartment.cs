@@ -13,84 +13,93 @@ namespace BookingLikeApp.Models
     {
         public int Id { get; set; }
         
-        [DisplayName("Address line")]
+        [DisplayName("Улица")]
         public int StreetId { get; set; }
         
-        [DisplayName("Type name")]
+        [DisplayName("Тип жилья")]
         public int ApartmentTypeId { get; set; }
-        
-        [Range(1, 5)]
-        [Column(TypeName ="decimal(1,0)")]
-        public decimal Stars { get; set; }
 
-        [DisplayName("Days until cancel ends")]
-        [Column(TypeName ="decimal(2,0)")]
-        public decimal DaysUntilCancelEnds { get; set; }
+        [Range(1, 5, ErrorMessage = "Значение для {0} должно должно быть от {1} до {2}" )]
+        [DisplayName("Количество звезд")]
+        public int Stars { get; set; }
 
-        [DisplayName("User")]
+        [Range(1, 14, ErrorMessage = "Значение для {0} должно быть от {1} до {2}")]
+        [DisplayName("Количество дней до начала резерванции")]
+        public int DaysUntilCancelEnds { get; set; }
+
+        [DisplayName("Владелец")]
         public string UserId { get; set; }
 
-        [MaxLength(256)]
+        [MaxLength(256, ErrorMessage = "Длинна строки {0} не может превышать {1}")]
+        [DisplayName("Наименование собственности")]
         public string Name { get; set; }
         
         [Column(TypeName = "text")]
+        [DisplayName("Описание")]
         public string Description { get; set; }
         
-        [MaxLength(256)]
-        [DisplayName("Contact person")]
+        [MaxLength(256, ErrorMessage = "Длинна строки {0} не может превышать {1}")]
+        [DisplayName("Имя человека для обратной связи")]
         public string ContactPerson { get; set; }
 
-        [MaxLength(20)]
-        [DataType(DataType.PhoneNumber)]
-        [DisplayName("Contact number")]
+        [MaxLength(20, ErrorMessage = "Длинна строки {0} не может превышать {1}")]
+        [DataType(DataType.PhoneNumber, ErrorMessage = "Неверно указан номер телефона")]
+        [DisplayName("Контактный номер телефона")]
         public string ContactNumber { get; set; }
 
-        [MaxLength(20)]
-        [DataType(DataType.PhoneNumber)]
-        [DisplayName("Additional number")]
+        [MaxLength(20, ErrorMessage = "Длинна строки {0} не может превышать {1}")]
+        [DataType(DataType.PhoneNumber, ErrorMessage = "Неверно указан номер телефона")]
+        [DisplayName("Дополнительный номер телефона")]
         public string AdditionalNumber { get; set; }
 
-        [MaxLength(256)]
-        [DisplayName("Second addressLine")]
+        [MaxLength(256, ErrorMessage = "Длинна строки {0} не может превышать {1}")]
+        [DisplayName("Дополнительная адресная строка")]
         public string SecondAddressLine { get; set; }
         
+        [DisplayName("Логотип")]
         public string LogoUrl { get; set; }
 
-        [DisplayName("Full price cencel")]
-        public bool FullPriceCencel { get; set; }
+        [DisplayName("Стоимость отмены бронирования")]
+        public bool CancelPrice { get; set; }
+        
+        //Нужно лишь для того чтобы можно было бросить регистрацию на пол пути
+        public bool Finished { get; set; }
         
         //Управление
+        [DisplayName("Проверено")]
         public bool Checked { get; set; }
+        [DisplayName("Доступно")]
         public bool Enabled { get; set; }
 
         //Парковка
-        public bool Parking { get; set; }
-        public bool FreeParking { get; set; }
+        [DisplayName("Парковка")]
+        public int Parking { get; set; }
 
         //Завтрак
-        public bool Breakfest { get; set; }
-        public bool BreakfestIncluded { get; set; }
+        [DisplayName("Завтрак")]
+        public int Breakfest { get; set; }
 
         //???
-        [DisplayName("Childrens allowed")]
+        [DisplayName("Разрешены дети")]
         public bool ChildrensAllowed { get; set; }
-        [DisplayName("Animals allowed")]
+        [DisplayName("Разрешены животные")]
         public bool AnimalsAllowed { get; set; }
 
         //Удобства
+        [DisplayName("Бар")]
         public bool Bar { get; set; }
+        [DisplayName("Бесплатный вай фай")]
         public bool FreeWiFi { get; set; }
+        [DisplayName("Фитнес центр")]
         public bool Fitnes { get; set; }
+        [DisplayName("Бассейн")]
         public bool Pool { get; set; }
-        [DisplayName("Full time registration")]
+        [DisplayName("Регитрация полные сутки")]
         public bool FullTimeRegistration { get; set; }
-        [DisplayName("Family numbers")]
+        [DisplayName("Семеные номера")]
         public bool FamilyNumbers { get; set; }
-        [DisplayName("Smoke free numbers")]
+        [DisplayName("Номера для некурящих")]
         public bool SmokeFreeNumbers { get; set; }
-
-        [DisplayName("Foundation date")]
-        public DateTime? FoundationDate { get; set; }
 
         public DateTimeOffset Disabled { get; set; }
 
@@ -98,5 +107,6 @@ namespace BookingLikeApp.Models
         public Street Street { get; set; }
         public ApartmentType ApartmentType { get; set; }
         public IEnumerable<Photo> Photos { get; set; }
+        public IEnumerable<Number> Numbers { get; set; }
     }
 }

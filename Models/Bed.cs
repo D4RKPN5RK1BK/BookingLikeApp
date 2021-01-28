@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -11,9 +12,11 @@ namespace BookingLikeApp.Models
     {
         public int Id { get; set; }
 
+        [DisplayName("Наименование")]
         [MaxLength(256)]
         public string Name { get; set; }
 
+        [DisplayName("Вместимость")]
         [Column(TypeName = "decimal(1,0)")]
         public decimal Capacity { get; set; }
 

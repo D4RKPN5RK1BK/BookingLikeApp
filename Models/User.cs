@@ -10,20 +10,21 @@ namespace BookingLikeApp.Models
 {
     public class User : IdentityUser
     {
-        [DisplayName("Display Name")]
+        [DisplayName("Отображаемое имя")]
         [MaxLength(256)]
         public string DisplayName { get; set; }
 
-        [DisplayName("Avatar")]
+        [DisplayName("Аватар")]
         public string AvatarUrl { get; set; }
 
+        [DisplayName("Пол")]
         public bool? Gender { get; set; }
 
-        [DisplayName("Date of birth")]
+        [DisplayName("Дата рождения")]
         [DataType(DataType.Date)]
         public DateTime? DateOfBirth { get; set; }
 
-        [DisplayName("Registration date")]
+        [DisplayName("Дата регистрации")]
         [DataType(DataType.Date)]
         public DateTime RegistationDate { get; set; }
 

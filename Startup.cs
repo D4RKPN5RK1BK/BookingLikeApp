@@ -69,11 +69,6 @@ namespace BookingLikeApp
 
             app.UseEndpoints(endpoints =>
             {
-                
-            });
-
-            app.UseEndpoints(endpoints =>
-            {
 
                 endpoints.MapControllerRoute(
                       name: "areas",

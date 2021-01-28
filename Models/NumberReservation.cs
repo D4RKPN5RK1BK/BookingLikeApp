@@ -12,7 +12,7 @@ namespace BookingLikeApp.Models
         public int NumberId { get; set; }
         public int ReservationId { get; set; }
 
-        [DisplayName("Reservation date")]
+        [DisplayName("Продолжительность бронирования")]
         public DateTimeOffset ReservationDate { get; set; }
 
         public Reservation Reservation { get; set; }
