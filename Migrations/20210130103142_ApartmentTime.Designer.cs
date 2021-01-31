@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookingLikeApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210128161143_DecimalToIntUpdate")]
-    partial class DecimalToIntUpdate
+    [Migration("20210130103142_ApartmentTime")]
+    partial class ApartmentTime
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,7 +28,7 @@ namespace BookingLikeApp.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<string>("AdditionalNumber")
+                    b.Property<string>("AdditionalPhone")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
@@ -37,6 +37,12 @@ namespace BookingLikeApp.Migrations
 
                     b.Property<int>("ApartmentTypeId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("ArrivalTimeEnds")
+                        .HasColumnType("datetime2");
+
+                    b.Property<TimeSpan>("ArrivalTimeStarts")
+                        .HasColumnType("time");
 
                     b.Property<bool>("Bar")
                         .HasColumnType("bit");
@@ -53,16 +59,22 @@ namespace BookingLikeApp.Migrations
                     b.Property<bool>("ChildrensAllowed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("ContactNumber")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
                     b.Property<string>("ContactPerson")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<string>("ContactPhone")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
                     b.Property<int>("DaysUntilCancelEnds")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("DepartureTimeEnds")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DepartureTimeStarts")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -387,6 +399,9 @@ namespace BookingLikeApp.Migrations
                     b.Property<int>("ApartmentId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PhotoUrl")
                         .HasColumnType("nvarchar(max)");
 
@@ -395,6 +410,52 @@ namespace BookingLikeApp.Migrations
                     b.HasIndex("ApartmentId");
 
                     b.ToTable("Photos");
+                });
+
+            modelBuilder.Entity("BookingLikeApp.Models.Registration", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("ApartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("BasicInfo")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Facilites")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("FacilitesRequired")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Numbers")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Payment")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Photos")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Rules")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Services")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApartmentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Registrations");
                 });
 
             modelBuilder.Entity("BookingLikeApp.Models.Reservation", b =>
@@ -756,6 +817,23 @@ namespace BookingLikeApp.Migrations
                         .IsRequired();
 
                     b.Navigation("Apartment");
+                });
+
+            modelBuilder.Entity("BookingLikeApp.Models.Registration", b =>
+                {
+                    b.HasOne("BookingLikeApp.Models.Apartment", "Apartment")
+                        .WithMany()
+                        .HasForeignKey("ApartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookingLikeApp.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Apartment");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BookingLikeApp.Models.Reservation", b =>

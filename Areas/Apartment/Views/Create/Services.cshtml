@@ -1,20 +1,20 @@
-﻿@model Apartment 
+﻿@model ServicesViewModel
 @{
     ViewData["Title"] = "Услуги";
 }
 
 <h2 class="my-3 display-4">Услуги</h2>
 
-<form asp-controller="" asp-action="">
+<form asp-controller="Create" asp-action="Services">
     <div class="card">
         <div class="card-body ">
             <div class="form-group col-sm-6">
                 <h2 class="card-title">Парковка</h2>
                 <label class="col-form-label-sm">Данная информация будет полезная для людей путешествующих на машине.</label>
-                <select class="custom-select col-sm-6">
-                    <option value="1">Отсутствует</option>
-                    <option value="2">Платная</option>
-                    <option value="3">Бесплатная</option>
+                <select asp-for="Parking" class="custom-select col-sm-6">
+                    <option value="0">Отсутствует</option>
+                    <option value="1">Платная</option>
+                    <option value="2">Бесплатная</option>
                 </select>
             </div>
         </div>
@@ -25,10 +25,10 @@
             <div class="form-group d-flex flex-column  col-sm-6">
                 <h2 class="card-title">Завтрак</h2>
                 <label class="col-form-label-sm">Завтрак для посетителей.</label>
-                <select class="custom-select col-sm-6">
-                    <option value="1">Отсутствует</option>
-                    <option value="2">Присутствует</option>
-                    <option value="3">Включен в стоимость</option>
+                <select asp-for="Breakfest" class="custom-select col-sm-6">
+                    <option value="0">Отсутствует</option>
+                    <option value="1">Присутствует</option>
+                    <option value="2">Включен в стоимость</option>
                 </select>
             </div>
         </div>

@@ -11,8 +11,11 @@ namespace BookingLikeApp.Models
         public int Id { get; set; }
         public int ApartmentId { get; set; }
 
+        public string Name { get; set; }
+
         [DisplayName("Фотография")]
         public string PhotoUrl { get; set; }
+
 
         public Apartment Apartment { get; set; }
     }

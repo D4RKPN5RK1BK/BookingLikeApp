@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookingLikeApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210128130217_ApartmentFinished")]
-    partial class ApartmentFinished
+    [Migration("20210129105052_UserIdRequiredDelete")]
+    partial class UserIdRequiredDelete
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -41,11 +41,8 @@ namespace BookingLikeApp.Migrations
                     b.Property<bool>("Bar")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("Breakfest")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("BreakfestIncluded")
-                        .HasColumnType("bit");
+                    b.Property<int>("Breakfest")
+                        .HasColumnType("int");
 
                     b.Property<bool>("CancelPrice")
                         .HasColumnType("bit");
@@ -64,8 +61,8 @@ namespace BookingLikeApp.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<decimal>("DaysUntilCancelEnds")
-                        .HasColumnType("decimal(2,0)");
+                    b.Property<int?>("DaysUntilCancelEnds")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -85,9 +82,6 @@ namespace BookingLikeApp.Migrations
                     b.Property<bool>("Fitnes")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("FreeParking")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("FreeWiFi")
                         .HasColumnType("bit");
 
@@ -101,8 +95,8 @@ namespace BookingLikeApp.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<bool>("Parking")
-                        .HasColumnType("bit");
+                    b.Property<int>("Parking")
+                        .HasColumnType("int");
 
                     b.Property<bool>("Pool")
                         .HasColumnType("bit");
@@ -114,8 +108,8 @@ namespace BookingLikeApp.Migrations
                     b.Property<bool>("SmokeFreeNumbers")
                         .HasColumnType("bit");
 
-                    b.Property<decimal>("Stars")
-                        .HasColumnType("decimal(1,0)");
+                    b.Property<int?>("Stars")
+                        .HasColumnType("int");
 
                     b.Property<int>("StreetId")
                         .HasColumnType("int");
@@ -154,6 +148,14 @@ namespace BookingLikeApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ApartmentTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "TestType",
+                            Name = "TestType"
+                        });
                 });
 
             modelBuilder.Entity("BookingLikeApp.Models.Bed", b =>
@@ -261,20 +263,20 @@ namespace BookingLikeApp.Migrations
                     b.Property<int>("ApartmentId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Area")
-                        .HasColumnType("decimal(4,0)");
+                    b.Property<int>("Area")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("Bathrooms")
-                        .HasColumnType("decimal(3,0)");
+                    b.Property<int>("Bathrooms")
+                        .HasColumnType("int");
 
                     b.Property<int>("BedId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("BedQuantity")
-                        .HasColumnType("decimal(3,0)");
+                    b.Property<int>("BedQuantity")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("Bedrooms")
-                        .HasColumnType("decimal(3,0)");
+                    b.Property<int>("Bedrooms")
+                        .HasColumnType("int");
 
                     b.Property<bool>("CityView")
                         .HasColumnType("bit");
@@ -292,8 +294,8 @@ namespace BookingLikeApp.Migrations
                     b.Property<bool>("FreeWiFi")
                         .HasColumnType("bit");
 
-                    b.Property<decimal>("LinvingRooms")
-                        .HasColumnType("decimal(3,0)");
+                    b.Property<int>("LinvingRooms")
+                        .HasColumnType("int");
 
                     b.Property<bool>("MiniBar")
                         .HasColumnType("bit");

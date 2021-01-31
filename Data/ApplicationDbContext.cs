@@ -18,6 +18,7 @@ namespace BookingLikeApp.Data
         public DbSet<Street> Streets { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Number> Numbers { get; set; }
+        public DbSet<Registration> Registrations { get; set; }
         /*DbSet<NumberName> NumberNames { get; set; }*/
         public DbSet<NumberType> NumberTypes { get; set; }
         public DbSet<Reservation> Reservations { get; set; }

@@ -1,5 +1,5 @@
-﻿@model Apartment
-@{
+﻿@model BasicInfoViewModel
+@{ 
     ViewData["Title"] = "Общая информация";
 } 
 
@@ -20,7 +20,14 @@
             </div>
             <div class="form-group col-sm-3">
                 <label asp-for="Stars" class="col-form-label"></label>
-                <select asp-for="Stars" asp-items="ViewBag.Stars" class="custom-select"></select>
+                <select asp-for="Stars" class="custom-select">
+                    <option value="0">Нет звезд</option>
+                    <option value="1">Одна звезда</option>
+                    <option value="2">Две звезды</option>
+                    <option value="3">Три звезды</option>
+                    <option value="4">Четыре звезды</option>
+                    <option value="5">Пять звезд</option>
+                </select>
                 <span asp-validation-for="Stars" class="alert-danger"></span>
             </div>
         </div>
@@ -37,14 +44,14 @@
             <label class="col-form-label-lg col-sm-10">Телефон</label>
             <div class="d-sm-flex">
                 <div class="form-group col-sm-4 flex-grow-1">
-                    <label asp-for="ContactNumber" class="col-form-label-sm"></label>
-                    <input asp-for="ContactNumber" class="form-control" />
-                    <span asp-validation-for="ContactNumber" class="alert-danger"></span>
+                    <label asp-for="ContactPhone" class="col-form-label-sm"></label>
+                    <input asp-for="ContactPhone" class="form-control" />
+                    <span asp-validation-for="ContactPhone" class="alert-danger"></span>
                 </div>
                 <div class="form-group col-sm-4  flex-grow-1">
-                    <label asp-for="AdditionalNumber" class="col-form-label-sm"></label>
-                    <input asp-for="AdditionalNumber" class="form-control" />
-                    <span asp-validation-for="AdditionalNumber" class="alert-danger"></span>
+                    <label asp-for="AdditionalPhone" class="col-form-label-sm"></label>
+                    <input asp-for="AdditionalPhone" class="form-control" />
+                    <span asp-validation-for="AdditionalPhone" class="alert-danger"></span>
                 </div>
             </div>
         </div>
@@ -75,11 +82,11 @@
                     <span class="alert-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="StreetId" class="col-form-label"></label>
-                    <select asp-for="StreetId" class="custom-select">
+                    <label asp-for="ApartmentStreetId" class="col-form-label"></label>
+                    <select asp-for="ApartmentStreetId" class="custom-select">
                         <option value="1">[]</option>
                     </select>
-                    <span asp-validation-for="StreetId" class="alert-danger"></span>
+                    <span asp-validation-for="ApartmentStreetId" class="alert-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="SecondAddressLine" class="col-form-label"></label>

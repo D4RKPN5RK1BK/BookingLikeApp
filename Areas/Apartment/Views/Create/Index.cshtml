@@ -4,25 +4,31 @@
 }
 
 <h2 class="display-4">Регистрация объекта</h2>
-
-<div class="card">
-    <div class="card-body">
-        <h2 class="card-title">Вы уже начали регистрацию объекта.</h2>
-        <p>Его редактирование можно продолжить перейдя по ссылке.</p>
-        <a asp-action="BasicInfo" class="btn btn-success">Продолжить редактировать</a>
+@if((bool)ViewData["Exist"])
+{
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title">Вы уже начали регистрацию объекта.</h2>
+            <p>Его редактирование можно продолжить перейдя по ссылке.</p>
+            <a asp-action="BasicInfo" class="btn btn-success">Продолжить редактировать</a>
+        </div>
     </div>
-</div>
+}
 
 <div class="row">
     @foreach (var item in ViewBag.ApartmentTypes)
     {
-        <a class="col-6 col-sm-4 col-lg-3 mt-3" asp-action="Preset" asp-route-id="item.Id">
+        <form asp-action="Initialize" asp-controller="Create">
             <div class="card">
-                <img src="@item.PhotoUrl" alt="Image not found" class="card-img-top text-center" />
-                <div class="card-footer">
-                    <h4 class="card-title text-center text-black-50">@item.Name</h4>
+                <div class="card-body">
+                    <img src="@item.PhotoUrl" alt="Image not found" class="card-img-top text-center" />
+                    <div class="">
+                        <input type="hidden" name="apartmentType" value="@item.Id" />
+                        <input type="submit" name="name" value="@item.Name" />
+                    </div>
                 </div>
+                
             </div>
-        </a>
+        </form>
     }
 </div>

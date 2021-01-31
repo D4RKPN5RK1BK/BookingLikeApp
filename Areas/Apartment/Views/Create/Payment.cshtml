@@ -1,5 +1,44 @@
-﻿@{
+﻿@model PaymentViewModel 
+@{
     ViewData["Title"] = "Оплата";
 }
 
 <h2 class="my-3 display-4">Оплата</h2>
+
+
+<form asp-controller="" asp-action="">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title">Способ оплаты гостей</h2>
+            <div class="form-group">
+                <input class="form-check-inline" />
+                <label class="col-form-label"></label>
+            </div>
+
+        </div>
+        <div class="card-footer">
+            <h2 class="card-title">In progress</h2>
+        </div>    
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title">Коммиссия</h2>
+            <p class="card-text">Кто будет получать деньги</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title">Почти готово</h2>
+            <p class="card-text">
+                Вы уже почти закончили.
+            </p>
+        </div>
+    </div>
+
+    <div class="d-flex flex-column align-items-center mb-5">
+        <input type="submit" value="Принять и продолжить" class="btn-block btn-success btn-lg mt-3 mb-1" />
+        <small>Переходя по какой люибо другой ссылке вы потеряете все изменения введенные на этой странице!</small>
+    </div>
+</form>

@@ -2,7 +2,7 @@
 
 namespace BookingLikeApp.Migrations
 {
-    public partial class ApartmetnInt : Migration
+    public partial class SomeUpdate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,33 +11,37 @@ namespace BookingLikeApp.Migrations
                 table: "Apartments",
                 type: "int",
                 nullable: false,
-                oldClrType: typeof(decimal),
-                oldType: "decimal(1,0)");
+                defaultValue: 0,
+                oldClrType: typeof(int),
+                oldType: "int",
+                oldNullable: true);
 
             migrationBuilder.AlterColumn<int>(
                 name: "DaysUntilCancelEnds",
                 table: "Apartments",
                 type: "int",
                 nullable: false,
-                oldClrType: typeof(decimal),
-                oldType: "decimal(2,0)");
+                defaultValue: 0,
+                oldClrType: typeof(int),
+                oldType: "int",
+                oldNullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<decimal>(
+            migrationBuilder.AlterColumn<int>(
                 name: "Stars",
                 table: "Apartments",
-                type: "decimal(1,0)",
-                nullable: false,
+                type: "int",
+                nullable: true,
                 oldClrType: typeof(int),
                 oldType: "int");
 
-            migrationBuilder.AlterColumn<decimal>(
+            migrationBuilder.AlterColumn<int>(
                 name: "DaysUntilCancelEnds",
                 table: "Apartments",
-                type: "decimal(2,0)",
-                nullable: false,
+                type: "int",
+                nullable: true,
                 oldClrType: typeof(int),
                 oldType: "int");
         }
