@@ -1,4 +1,4 @@
-﻿@model Apartment
+﻿@model NumbersViewModel
 @{
     ViewData["Title"] = "Номера";
 }
@@ -12,16 +12,14 @@
             <div class="col-sm-12">
                 <h2 class="card-title">Основные параметры</h2>
                 <div class="form-group">
-                    <label asp-for="Numbers.First().NumberTypeId" class="col-form-label"></label>
-                    <select asp-for="Numbers.First().NumberTypeId" class="custom-select">
-                        <option value="value">валуе</option>
-                    </select>
-                    <span asp-validation-for="Numbers.First().NumberTypeId" class="alert-danger"></span>
+                    <label class="col-form-label"></label>
+                    <select class="custom-select"></select>
+                    <span class="alert-danger"></span>
                 </div>
                 <div class="form-group">
-                    <input asp-for="Numbers.First().AllowSmoke" class="form-check-inline" />
-                    <label asp-for="Numbers.First().AllowSmoke" class="col-form-label"></label>
-                    <span asp-validation-for="Numbers.First().AllowSmoke"></span>
+                    <input class="form-check-inline" />
+                    <label class="col-form-label"></label>
+                    <span ></span>
                 </div>
 
             </div>
@@ -33,8 +31,8 @@
             <div class="col-sm-12">
                 <h2 class="card-title">Цена за ночь</h2>
                 <div class="form-group">
-                    <input asp-for="Numbers.First().Price" class="form-control" type="number" />
-                    <span asp-validation-for="Numbers.First().Price" class="alert-danger"></span>
+                    <input  class="form-control" type="number" />
+                    <span class="alert-danger"></span>
                 </div>
             </div>
         </div>

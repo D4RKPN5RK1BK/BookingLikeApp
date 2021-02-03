@@ -20,6 +20,6 @@ namespace BookingLikeApp.Models
         [Column(TypeName = "decimal(1,0)")]
         public decimal Capacity { get; set; }
 
-        public IEnumerable<Number> Numbers { get; set; }
+        public IEnumerable<NumberBed> NumberBeds { get; set; }
     }
 }

@@ -57,14 +57,6 @@ namespace BookingLikeApp.Models
         [DisplayName("Логотип")]
         public string LogoUrl { get; set; }
         
-        //Нужно лишь для того чтобы можно было бросить регистрацию на пол пути
-        public bool Finished { get; set; }
-        
-        //Управление
-        [DisplayName("Проверено")]
-        public bool Checked { get; set; }
-        [DisplayName("Доступно")]
-        public bool Enabled { get; set; }
         public DateTimeOffset Disabled { get; set; }
 
         //Услуги
@@ -120,7 +112,12 @@ namespace BookingLikeApp.Models
         //Оплата проживания
         [DisplayName("Списывать деньги при помощи карт")]
         public bool UseCards { get; set; }
-        
+        [DisplayName("Проверено")]
+        public bool Checked { get; set; }
+        public bool Enable { get; set; }
+        public bool Finished { get; set; }
+
+        [DisplayName("Место проживаниия платильщика")]
         public int PolisherStreetId { get; set; }
 
         public User User { get; set; }
@@ -128,6 +125,7 @@ namespace BookingLikeApp.Models
         public Registration Registration { get; set; }
         public IEnumerable<Photo> Photos { get; set; }
         public IEnumerable<Number> Numbers { get; set; }
+        public IEnumerable<ApartmentCard> ApartmentCards { get; set; }
 
         public void SetBasicInfo(BasicInfoViewModel model)
         {

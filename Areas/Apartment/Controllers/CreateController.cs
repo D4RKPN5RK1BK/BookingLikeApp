@@ -38,42 +38,6 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
             return apartment;
         }
 
-        protected async Task<SelectList> GetTimePointsAsync()
-        {
-            DateTime time = new DateTime();
-            Dictionary<string, DateTime> timePoints = new Dictionary<string, DateTime>()
-            {
-                {"7:00", time.AddHours(7)},
-                {"7:30", time.AddHours(7).AddMinutes(30)},
-                {"8:00", time.AddHours(8)},
-                {"8:30", time.AddHours(8).AddMinutes(30)},
-                {"9:00", time.AddHours(9)},
-                {"9:30", time.AddHours(9).AddMinutes(30)},
-                {"10:00", time.AddHours(10)},
-                {"10:30", time.AddHours(10).AddMinutes(30)},
-                {"11:00", time.AddHours(11)},
-                {"11:30", time.AddHours(11).AddMinutes(30)},
-                {"12:00", time.AddHours(12)},
-                {"12:30", time.AddHours(12).AddMinutes(30)},
-                {"13:00", time.AddHours(13)},
-                {"13:30", time.AddHours(13).AddMinutes(30)},
-                {"14:00", time.AddHours(14)},
-                {"14:30", time.AddHours(14).AddMinutes(30)},
-                {"15:00", time.AddHours(15)},
-                {"15:30", time.AddHours(15).AddMinutes(30)},
-                {"16:00", time.AddHours(16)},
-                {"16:30", time.AddHours(16).AddMinutes(30)},
-                {"17:00", time.AddHours(17)},
-                {"17:30", time.AddHours(17).AddMinutes(30)},
-                {"18:00", time.AddHours(18)},
-                {"18:30", time.AddHours(18).AddMinutes(30)},
-                {"19:00", time.AddHours(19)},
-                {"19:30", time.AddHours(19).AddMinutes(30)},
-                {"20:00", time.AddHours(20)},
-            };
-            return new SelectList(timePoints, "Value", "Key");
-        }
-
         public async Task<IActionResult> Index()
         {
             User user = await _userManager.GetUserAsync(User);
@@ -84,15 +48,21 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 
         public async Task<IActionResult> Initialize(int apartmentType) 
         {
+            //Придумать как заменить дефолтные значения с тестовых типов на настоящие
             User user = await _userManager.GetUserAsync(User);
             Models.Apartment apartment;
+            if (_context.Apartments.Any(o => o.Finished == false && o.UserId == user.Id))
+            {
+                apartment = _context.Apartments.FirstOrDefault(o => o.Finished == false && o.UserId == user.Id);
+                _context.Remove(apartment);
+            }
+            
             apartment = new Models.Apartment() { UserId = user.Id, ApartmentTypeId = 1, ApartmentStreetId = 1 };
             Registration registration = new Registration() { Apartment = apartment };
+            Number number = new Number() { ApartmentId = apartment.Id, NumberTypeId = 1};
             await _context.AddAsync(registration);
             await _context.AddAsync(apartment);
             await _context.SaveChangesAsync();
-
-            ViewBag.IsFinished = apartment.Registration.FinishedDictionary;
 
             return RedirectToAction("BasicInfo", "Create");
         }
@@ -124,12 +94,17 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
         public async Task<IActionResult> Numbers()
         {
             Models.Apartment apartment = await GetUnfinishedAsync();
-            return View(); 
+            List<Models.Number> numbers = new List<Number>()
+            {
+                _context.Numbers.FirstOrDefault(o => o.ApartmentId == apartment.Id)
+            };
+            apartment.Numbers = numbers;
+            NumbersViewModel model = new NumbersViewModel(apartment);
+            return View(model); 
         }
 
         public async Task<IActionResult> Rules()
         {
-            ViewBag.TimePoints = await GetTimePointsAsync();
             RulesViewModel model = new RulesViewModel(await GetUnfinishedAsync());
             return View(model);
         }
@@ -146,7 +121,6 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
                 _context.Update(apartment.Registration);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Payment", "Create");
-            ViewBag.TimePoints = await GetTimePointsAsync();
             }
             return View(model);
         }
@@ -176,7 +150,9 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
         public async Task<IActionResult> Photos()
         {
             Models.Apartment apartment = await GetUnfinishedAsync();
-            return View(_context.Photos.Where(o => o.ApartmentId == apartment.Id).ToList());
+            apartment.Photos = _context.Photos.Where(o => o.ApartmentId == apartment.Id).ToList();
+            PhotosViewModel model = new PhotosViewModel(apartment);
+            return View(model);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -228,20 +204,42 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 
         public async Task<IActionResult> Facilites()
         {
-            Models.Apartment model = await GetUnfinishedAsync();
+            FacilitesViewModel model = new FacilitesViewModel(await GetUnfinishedAsync());
             return View(model);
         }
-
+        
         public async Task<IActionResult> Payment()
         {
-            PaymentViewModel model = new PaymentViewModel();
+            PaymentViewModel model = new PaymentViewModel(await GetUnfinishedAsync());
+
+            model.Cards = _context.Cards.ToList();
             return View(model);
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Payment(PaymentViewModel model)
         {
             if (ModelState.IsValid)
             {
-
+                Models.Apartment apartment = await GetUnfinishedAsync();
+                apartment.Registration.Payment = true;
+                apartment.SetPayment(model);
+                _context.Update(apartment);
+                _context.Update(apartment.Registration);
+                await _context.SaveChangesAsync();
+                if (apartment.Registration.IsFinished)
+                {
+                    apartment.Finished = true;
+                    apartment.Enable = model.Enable;
+                    _context.Update(apartment);
+                    _context.Remove(apartment.Registration);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    return RedirectToAction(apartment.Registration.Unfinished, "Create");
+                }
             }
             return View(model);
         }

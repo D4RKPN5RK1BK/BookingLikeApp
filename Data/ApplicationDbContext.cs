@@ -19,14 +19,13 @@ namespace BookingLikeApp.Data
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Number> Numbers { get; set; }
         public DbSet<Registration> Registrations { get; set; }
-        /*DbSet<NumberName> NumberNames { get; set; }*/
+        public DbSet<Card> Cards { get; set; }
+        public DbSet<ApartmentCard> ApartmentCards { get; set; }
         public DbSet<NumberType> NumberTypes { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<ApartmentType> ApartmentTypes { get; set; }
         public DbSet<Bed> Beds { get; set; }
-        /*DbSet<NumberBed> NumberBeds { get; set; }
-        DbSet<ReservationBed> ReservationBeds { get; set; }*/
-
+        public DbSet<NumberBed> NumberBeds { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -38,15 +37,7 @@ namespace BookingLikeApp.Data
 
             builder.Entity<ApartmentType>().HasData(new ApartmentType() { Id = 1, Description = "TestType", Name = "TestType" });
 
-            /*builder.Entity<Rating>().HasNoKey();*/
-
-            /*builder.Entity<ApartmentType>().HasData(
-                new ApartmentType() { Id = 1, Name = "Home", NormalizedName="HOME", Single = true},
-                new ApartmentType() { Id = 2, Name = "Other", NormalizedName = "OTHER", Single = false},    
-                new ApartmentType() { Id = 3, Name = "Hotel", NormalizedName = "HOTEL", Single = false},    
-                new ApartmentType() { Id = 4, Name = "Apartment", NormalizedName = "APARTMENT", Single = false}   
-            );*/
-
+            builder.Entity<Card>().HasData(new Card() { Id = 1, Name = "TestCard" });
         }
     }
 }

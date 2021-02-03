@@ -73,7 +73,8 @@ namespace BookingLikeApp.Models
         public DateTimeOffset Disabled { get; set; }
 
         public Apartment Apartment { get; set; }
-        public NumberType NumberType { get; set; } 
+        public NumberType NumberType { get; set; }
+        public IEnumerable<NumberBed> NumberBeds { get; set; }
         public IEnumerable<NumberReservation> NumberReservations { get; set; }
     }
 }

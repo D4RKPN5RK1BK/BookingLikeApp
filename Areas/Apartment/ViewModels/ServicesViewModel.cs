@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BookingLikeApp.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BookingLikeApp.Areas.Apartment.ViewModels
 {
-    public class ServicesViewModel
+    public class ServicesViewModel : Registration
     {
         //Парковка
         [DisplayName("Парковка")]
@@ -39,7 +40,7 @@ namespace BookingLikeApp.Areas.Apartment.ViewModels
 
         public ServicesViewModel() { }
 
-        public ServicesViewModel(Models.Apartment apartment)
+        public ServicesViewModel(Models.Apartment apartment) : base(apartment)
         {
             Parking = apartment.Parking;
             Breakfest = apartment.Breakfest;

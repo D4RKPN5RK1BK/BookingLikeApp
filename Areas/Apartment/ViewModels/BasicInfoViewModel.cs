@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BookingLikeApp.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BookingLikeApp.Areas.Apartment.ViewModels
 {
-    public class BasicInfoViewModel
+    public class BasicInfoViewModel : Registration
     {
         [DisplayName("Улица")]
         [Required(ErrorMessage = "Данный пункт обязателен")]
@@ -51,7 +52,7 @@ namespace BookingLikeApp.Areas.Apartment.ViewModels
 
         public BasicInfoViewModel() { }
 
-        public BasicInfoViewModel(Models.Apartment apartment)
+        public BasicInfoViewModel(Models.Apartment apartment) : base(apartment)
         {
             ApartmentStreetId = apartment.ApartmentStreetId;
             Stars = apartment.Stars;

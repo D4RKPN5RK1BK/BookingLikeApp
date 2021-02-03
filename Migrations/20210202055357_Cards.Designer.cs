@@ -4,14 +4,16 @@ using BookingLikeApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BookingLikeApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210202055357_Cards")]
+    partial class Cards
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -169,7 +171,7 @@ namespace BookingLikeApp.Migrations
 
                     b.HasIndex("CardId");
 
-                    b.ToTable("ApartmentCards");
+                    b.ToTable("ApartmentCard");
                 });
 
             modelBuilder.Entity("BookingLikeApp.Models.ApartmentType", b =>
@@ -233,14 +235,7 @@ namespace BookingLikeApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cards");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "TestCard"
-                        });
+                    b.ToTable("Card");
                 });
 
             modelBuilder.Entity("BookingLikeApp.Models.City", b =>
@@ -412,7 +407,7 @@ namespace BookingLikeApp.Migrations
 
                     b.HasIndex("NumberId");
 
-                    b.ToTable("NumberBeds");
+                    b.ToTable("NumberBed");
                 });
 
             modelBuilder.Entity("BookingLikeApp.Models.NumberReservation", b =>

@@ -6,34 +6,49 @@
 <h2 class="my-3 display-4">Оплата</h2>
 
 
-<form asp-controller="" asp-action="">
-    <div class="card">
+<form asp-controller="Create" asp-action="Payment">
+    <div class="card mt-3">
         <div class="card-body">
             <h2 class="card-title">Способ оплаты гостей</h2>
             <div class="form-group">
-                <input class="form-check-inline" />
-                <label class="col-form-label"></label>
+                <input asp-for="UseCards" class="form-check-inline" data-toggle="collapse" data-target="#cards" aria-expanded="false" aria-controls="cards"/>
+                <label asp-for="UseCards" class="col-form-label"></label>
             </div>
-
-        </div>
-        <div class="card-footer">
-            <h2 class="card-title">In progress</h2>
+            <div class="collapse" id="cards">
+                <h4>Выберите карты которыми смогут пользоваться ваши гости.</h4>
+                <div class="row">
+                    @foreach(var item in Model.Cards)
+                    { 
+                        <div class="col-12 col-sm-6">
+                            <div class="form-group">
+                                <input asp-for="@item.Use" />
+                                <label>@item.Name</label>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
         </div>    
     </div>
 
-    <div class="card">
+    <div class="card mt-3">
         <div class="card-body">
             <h2 class="card-title">Коммиссия</h2>
             <p class="card-text">Кто будет получать деньги</p>
+            <select asp-for="PolisherInApaertment" class="custom-select"></select>
         </div>
     </div>
 
-    <div class="card">
+    <div class="card mt-3">
         <div class="card-body">
             <h2 class="card-title">Почти готово</h2>
-            <p class="card-text">
+            <h5 class="card-text">
                 Вы уже почти закончили.
-            </p>
+            </h5>
+            <div class="form-group">
+                <input asp-for="Enable" class="form-check-inline" />
+                <label class="col-form-label">Сразу добавить возможность снимать недвижемость.</label>
+            </div>
         </div>
     </div>
 

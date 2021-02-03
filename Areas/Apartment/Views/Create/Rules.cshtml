@@ -38,10 +38,10 @@
                 <div class="col-sm-12">
                     <h3 class="card-title">Регистрация заезда</h3>
                     <small>c:</small>
-                    <select asp-for="ArrivalTimeStarts" class="custom-select" asp-items="ViewBag.TimePoints"></select>
+                    <select asp-for="ArrivalTimeStarts" class="custom-select" asp-items="@Model.TimePoints"></select>
                     <span asp-validation-for="ArrivalTimeStarts" class="alert-danger"></span>
                     <small>до:</small>
-                    <select asp-for="ArrivalTimeEnds" class="custom-select" asp-items="ViewBag.TimePoints"></select>
+                    <select asp-for="ArrivalTimeEnds" class="custom-select" asp-items="@Model.TimePoints"></select>
                     <span asp-validation-for="ArrivalTimeEnds" class="alert-danger"></span>
                 </div>
             </div>
@@ -51,10 +51,10 @@
                 <div class="col-sm-12">
                     <h3 class="card-title">Регистрация отъезда</h3>
                     <small>c:</small>
-                    <select asp-for="DepartureTimeStarts" class="custom-select" asp-items="ViewBag.TimePoints"></select>
+                    <select asp-for="DepartureTimeStarts" class="custom-select" asp-items="@Model.TimePoints"></select>
                     <span asp-validation-for="DepartureTimeStarts" class="alert-danger"></span>
                     <small>до:</small>
-                    <select asp-for="DepartureTimeEnds" class="custom-select" asp-items="ViewBag.TimePoints"></select>
+                    <select asp-for="DepartureTimeEnds" class="custom-select" asp-items="@Model.TimePoints"></select>
                     <span asp-validation-for="DepartureTimeEnds" class="alert-danger"></span>
                 </div>
             </div>
