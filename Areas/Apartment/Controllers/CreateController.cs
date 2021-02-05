@@ -94,13 +94,24 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
         public async Task<IActionResult> Numbers()
         {
             Models.Apartment apartment = await GetUnfinishedAsync();
-            List<Models.Number> numbers = new List<Number>()
-            {
-                _context.Numbers.FirstOrDefault(o => o.ApartmentId == apartment.Id)
-            };
-            apartment.Numbers = numbers;
             NumbersViewModel model = new NumbersViewModel(apartment);
-            return View(model); 
+            model.NumbersList = _context.Numbers.Where(o => o.ApartmentId == apartment.Id).ToList();
+            model.NumberTypes = new SelectList(_context.NumberTypes.ToList(), "Id", "Name");
+            return View(model);  
+        }
+
+        public async Task<IActionResult> AddNumber(int numberTypeId)
+        {
+            Models.Apartment apartment = await GetUnfinishedAsync();
+            Number number = new Number()
+            {
+                NumberTypeId = numberTypeId,
+                ApartmentId = apartment.Id,
+            };
+
+            await _context.AddAsync(number);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Numbers");
         }
 
         public async Task<IActionResult> Rules()

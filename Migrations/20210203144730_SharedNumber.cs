@@ -2,13 +2,13 @@
 
 namespace BookingLikeApp.Migrations
 {
-    public partial class ApartmentProtection : Migration
+    public partial class SharedNumber : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<bool>(
-                name: "AccidentProtection",
-                table: "Apartments",
+                name: "Shared",
+                table: "Numbers",
                 type: "bit",
                 nullable: false,
                 defaultValue: false);
@@ -17,8 +17,8 @@ namespace BookingLikeApp.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "AccidentProtection",
-                table: "Apartments");
+                name: "Shared",
+                table: "Numbers");
         }
     }
 }

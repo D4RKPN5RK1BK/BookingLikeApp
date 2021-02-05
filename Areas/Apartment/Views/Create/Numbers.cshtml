@@ -4,43 +4,32 @@
 }
 
 <h2 class="my-3 display-4">Номера</h2>
-<p>Во время регистрации возможно указать только одну группу номеров. Отсальные можно будет добавить после, в разделе "Собственность" в меню пользователя.</p>
 
-<form asp-controller="" asp-action="">
+<form asp-controller="Create" asp-action="AddNumber">
     <div class="card">
         <div class="card-body">
-            <div class="col-sm-12">
-                <h2 class="card-title">Основные параметры</h2>
-                <div class="form-group">
-                    <label class="col-form-label"></label>
-                    <select class="custom-select"></select>
-                    <span class="alert-danger"></span>
-                </div>
-                <div class="form-group">
-                    <input class="form-check-inline" />
-                    <label class="col-form-label"></label>
-                    <span ></span>
-                </div>
-
+            <h2 class="card-title">Добивать новый номер</h2>
+            <div class="form-group">
+                <select name="numberTypeId" asp-items="@Model.NumberTypes" class="custom-select col-sm-4">
+                    <option>Выберите тип номера</option>
+                </select>
+                <input type="submit" value="Добавить" class="btn btn-success"/>
             </div>
         </div>
     </div>
-
-    <div class="card mt-3">
-        <div class="card-body">
-            <div class="col-sm-12">
-                <h2 class="card-title">Цена за ночь</h2>
-                <div class="form-group">
-                    <input  class="form-control" type="number" />
-                    <span class="alert-danger"></span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="d-flex flex-column align-items-center mb-5">
-        <input type="submit" value="Принять и продолжить" class="btn-block btn-success btn-lg mt-3 mb-1" />
-        <small>Переходя по какой люибо другой ссылке вы потеряете все изменения введенные на этой странице!</small>
-    </div>
-
 </form>
+
+<div class="list-group mt-3">
+    @foreach(Number item in Model.NumbersList)
+    {
+        <div class="list-group-item d-sm-inline-flex">
+            <div class="flex-grow-1">
+                <h4>@item.CustomName</h4>
+            </div>
+            <a asp-controller="Edit" class="btn btn-primary mr-sm-3">Изменить</a>
+            <a asp-controller="Delete" class="btn btn-danger mr-sm-3">Удалить</a>
+        </div>
+    }
+
+</div>
+<a asp-action="Services" asp-controller="Create" class="btn-block btn-success btn-lg mt-3 mb-1 text-center">Продолжить</a>

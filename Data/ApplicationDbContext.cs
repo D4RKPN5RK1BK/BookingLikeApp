@@ -26,6 +26,9 @@ namespace BookingLikeApp.Data
         public DbSet<ApartmentType> ApartmentTypes { get; set; }
         public DbSet<Bed> Beds { get; set; }
         public DbSet<NumberBed> NumberBeds { get; set; }
+        public DbSet<Room> Rooms { get; set; }
+        public DbSet<NumberRoom> NumberRooms { get; set; }
+        public DbSet<NumberRoomBed> NumberRoomBeds { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -36,6 +39,16 @@ namespace BookingLikeApp.Data
             builder.Entity<Street>().HasData(new Street() { Id = 1, Name = "TestCountry", CityId = 1});
 
             builder.Entity<ApartmentType>().HasData(new ApartmentType() { Id = 1, Description = "TestType", Name = "TestType" });
+
+            builder.Entity<NumberType>().HasData(new NumberType() { Id = 1, Name = "Number", BedOnly = false, Enable = true, HasRooms = false, Share = false});
+            builder.Entity<NumberType>().HasData(new NumberType() { Id = 2, Name = "Apartment", BedOnly = false, Enable = true, HasRooms = true, Share = false });
+            builder.Entity<NumberType>().HasData(new NumberType() { Id = 3, Name = "SharedRoom", BedOnly = false, Enable = true, HasRooms = false, Share = true });
+            builder.Entity<NumberType>().HasData(new NumberType() { Id = 4, Name = "SharedBed", BedOnly = true, Enable = true, HasRooms = false, Share = true });
+            builder.Entity<NumberType>().HasData(new NumberType() { Id = 5, Name = "SharedBedWithRooms", BedOnly = true, Enable = true, HasRooms = true, Share = true });
+
+            builder.Entity<Room>().HasData(new Room() { Id = 1, Name = "Bedroom"});
+            builder.Entity<Room>().HasData(new Room() { Id = 2, Name = "Livingroom"});
+            builder.Entity<Room>().HasData(new Room() { Id = 3, Name = "Bathroom"});
 
             builder.Entity<Card>().HasData(new Card() { Id = 1, Name = "TestCard" });
         }

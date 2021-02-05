@@ -127,6 +127,9 @@ namespace BookingLikeApp.Models
         public IEnumerable<Number> Numbers { get; set; }
         public IEnumerable<ApartmentCard> ApartmentCards { get; set; }
 
+        [NotMapped]
+        public Number Number { get; set; }
+
         public void SetBasicInfo(BasicInfoViewModel model)
         {
             ApartmentStreetId = model.ApartmentStreetId;

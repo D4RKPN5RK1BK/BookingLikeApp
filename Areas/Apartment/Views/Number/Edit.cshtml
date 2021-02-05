@@ -1,0 +1,19 @@
+﻿@model Number
+@{ 
+    ViewData["Title"] = "Редактирование номера";
+}
+<div class="card">
+    @if (Model.NumberType.HasRooms)
+    {
+        <div class="card-body">
+            <h2 class="card-title">Комнаты</h2>
+        </div>
+    } 
+    else
+    {
+        <div class="card-body">
+            <h2 class="card-title">Кровати</h2>
+        </div>
+
+    }
+</div>
