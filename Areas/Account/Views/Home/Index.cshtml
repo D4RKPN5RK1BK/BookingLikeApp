@@ -3,13 +3,13 @@
 @{ 
     ViewData["Title"] = "Info";
 }
-<h2 class="display-4">Account information</h2>
+<h2 class="display-4">Основная информация</h2>
 
 <div class="list-group">
     <div class="list-group-item">
         <div class="row">
             <div class="col-sm-3">
-                <b>@Html.DisplayNameFor(o => o.AvatarUrl)</b>
+                <b>Имя пользователя</b>
 
             </div>
             <div class="flex-grow-1">
@@ -31,7 +31,7 @@
 
     <div class="list-group-item">
         <div class="row">
-            <b>@Html.DisplayNameFor(o => o.UserName)</b>
+            <b>Логин</b>
             <p>@Model.UserName</p>
         </div>
     </div>
@@ -40,7 +40,7 @@
             <b>@Html.DisplayNameFor(o => o.DisplayName)</b>
             @(!String.IsNullOrEmpty(Model.DisplayName) ? Model.DisplayName : "[Not selected]")
             
-                <a asp-action="" asp-controller="" class="btn btn-light">Edit</a>
+                <a asp-action="" asp-controller="" class="btn btn-light">Изменить</a>
             
         </div>
     </div>
@@ -48,15 +48,15 @@
         <div class="row">
             <b>@Html.DisplayNameFor(o => o.Email)</b>
             @Model.Email</td>
-                <a asp-action="" asp-controller="" class="btn btn-light">Edit</a>
+        <a asp-action="" asp-controller="" class="btn btn-light">Изменить</a>
         </div>
     </div>
     <div class="list-group-item">
         <div class="row">
             <b>@Html.DisplayNameFor(o => o.Gender)</b>
-            @(Model.Gender == false ? "Man" : "Woman")
+            @(Model.Gender == false ? "Мужчина" : "Женщина")
             
-                <a asp-action="" asp-controller="" class="btn btn-light">Edit</a>
+        <a asp-action="" asp-controller="" class="btn btn-light">Изменить</a>
             
         </div>
     </div>
@@ -65,7 +65,7 @@
             <b>@Html.DisplayNameFor(o => o.DateOfBirth)</b>
             @(Model.DateOfBirth == null ? Model.DateOfBirth : "[Not selected]")
             
-                <a asp-action="" asp-controller="" class="btn btn-light">Edit</a>
+        <a asp-action="" asp-controller="" class="btn btn-light">Изменить</a>
             
         </div>
     </div>

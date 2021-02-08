@@ -43,6 +43,6 @@ namespace BookingLikeApp.Models
         public NumberType NumberType { get; set; }
         public IEnumerable<NumberBed> NumberBeds { get; set; }
         public IEnumerable<NumberReservation> NumberReservations { get; set; }
-        //public IEnumerable<NumberRoom> NumberRooms { get; set; }
+        public IEnumerable<NumberRoom> NumberRooms { get; set; }
     }
 }

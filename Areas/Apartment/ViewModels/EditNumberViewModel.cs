@@ -9,9 +9,9 @@ namespace BookingLikeApp.Areas.Apartment.ViewModels
 {
     public class EditNumberViewModel : Registration
     {
-        public IEnumerable<NumberBed> NumberBeds { get; set; }
-        public IEnumerable<NumberRoom> NumberRooms { get; set; }
-        public IEnumerable<NumberRoomBed> NumberRoomBeds { get; set; }
+        public List<NumberBed> NumberBeds { get; set; }
+        public List<NumberRoom> NumberRooms { get; set; }
+        public List<NumberRoomBed> NumberRoomBeds { get; set; }
 
         public SelectList Rooms { get; set; }
         public SelectList Beds { get; set; }

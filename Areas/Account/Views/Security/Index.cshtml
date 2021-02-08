@@ -1,31 +1,26 @@
 ﻿@{
     ViewData["Title"] = "Security";
 }
-<h2 class="display-4">Security page</h2>
+<h2 class="display-4">Защита</h2>
 <table class="table">
     <tr>
-        <td><b>Password</b></td>
-        <td>Reset your password regularly to keep your account secure</td>
-        <td><a asp-controller="Security" asp-action="ChangePassword" class="btn btn-light">Edit</a></td>
-    </tr>
-    @*<tr>
-        <td><b>Email</b></td>
-        <td>Update your email</td>
-        <td><a asp-controller="" asp-action="" class="btn btn-light">Edit</a></td>
-    </tr>*@
-    <tr>
-        <td><b>Two-factor</b></td>
-        <td>Never</td>
-        <td><a asp-controller="" asp-action="" class="btn btn-light">Edit</a></td>
+        <td><b>Пароль</b></td>
+        <td>Сбросить пароль</td>
+        <td><a asp-controller="Security" asp-action="ChangePassword" class="btn btn-light">Изменить</a></td>
     </tr>
     <tr>
-        <td><b>Active sessions</b></td>
-        <td>Logout from all current sessions</td>
-        <td><a asp-controller="" asp-action="" class="btn btn-warning">Sign out</a></td>
+        <td><b>Аутентификация</b></td>
+        <td>Добавить или отрегулированть настройки двухфакторной аутентификации</td>
+        <td><a asp-controller="" asp-action="" class="btn btn-light">Изменить</a></td>
     </tr>
     <tr>
-        <td><b>Delete account</b></td>
-        <td>Delete your account permanently</td>
-        <td><a asp-controller="" asp-action="" class="btn btn-danger">Delete</a></td>
+        <td><b>Активные сессии</b></td>
+        <td>Сьпрсит все активные сессии</td>
+        <td><a asp-controller="" asp-action="" class="btn btn-warning">Выйти</a></td>
+    </tr>
+    <tr>
+        <td><b>Удалить аккаунт</b></td>
+        <td>Полностью удалить аккаунт</td>
+        <td><a asp-controller="" asp-action="" class="btn btn-danger">Удалить</a></td>
     </tr>
 </table>

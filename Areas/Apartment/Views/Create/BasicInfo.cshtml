@@ -13,7 +13,7 @@
     <div class="card">
         <div class="card-body">
             <div class="form-group col-sm-5">
-                <h2 class="card-title">Название вашего обьекта</h2>
+                <h2 class="card-title">Название вашего объекта</h2>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="alert-danger"></span>
                 <small class="form-text text-muted">Это название будут видить все пользователи.</small>
@@ -57,11 +57,11 @@
         </div>
     </div>
 
-    <div class="card mt-3">
+    @*<div class="card mt-3">
         <div class="card-body">
             <h2 class="card-title">In progress</h2>
         </div>
-    </div>
+    </div>*@
 
     <div class="card mt-3">
         <div class="card-body">
@@ -84,7 +84,7 @@
                 <div class="form-group">
                     <label asp-for="ApartmentStreetId" class="col-form-label"></label>
                     <select asp-for="ApartmentStreetId" class="custom-select">
-                        <option value="1">[]</option>
+                        <option value="1">Выберите улицу</option>
                     </select>
                     <span asp-validation-for="ApartmentStreetId" class="alert-danger"></span>
                 </div>
