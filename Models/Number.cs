@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BookingLikeApp.Areas.Apartment.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -21,7 +22,7 @@ namespace BookingLikeApp.Models
 
         [DisplayName("Отображаемое имя")]
         [MaxLength(256, ErrorMessage = "Длинна строки {0} не может превышать {1}")]
-        public string CustomName { get; set; }
+        public string Name { get; set; }
 
         [DisplayName("Стоимость (за ночь)")]
         [Range(minimum:0, maximum:1000000000, ErrorMessage = "Значение для {0} должно должно быть от {1} до {2}")]
@@ -37,12 +38,17 @@ namespace BookingLikeApp.Models
         [DisplayName("Разрешается курить в номере")]
         public bool AllowSmoke { get; set; }
 
-        public bool Shared { get; set; }
-
         public Apartment Apartment { get; set; }
         public NumberType NumberType { get; set; }
-        public IEnumerable<NumberBed> NumberBeds { get; set; }
-        public IEnumerable<NumberReservation> NumberReservations { get; set; }
-        public IEnumerable<NumberRoom> NumberRooms { get; set; }
+        public List<NumberBed> NumberBeds { get; set; }
+        public List<NumberReservation> NumberReservations { get; set; }
+        public List<NumberRoom> NumberRooms { get; set; }
+
+        public void SetProps(EditNumberViewModel model)
+        {
+            Name = model.Name;
+            NumberBeds = model.NumberBeds;
+
+        }
     }
 }

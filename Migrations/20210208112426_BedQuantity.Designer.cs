@@ -4,14 +4,16 @@ using BookingLikeApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BookingLikeApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210208112426_BedQuantity")]
+    partial class BedQuantity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -337,15 +339,15 @@ namespace BookingLikeApp.Migrations
                     b.Property<int>("Area")
                         .HasColumnType("int");
 
+                    b.Property<string>("CustomName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
                     b.Property<bool>("Enabled")
                         .HasColumnType("bit");
 
                     b.Property<bool>("MiniBar")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
 
                     b.Property<int>("NumberTypeId")
                         .HasColumnType("int");
@@ -354,6 +356,9 @@ namespace BookingLikeApp.Migrations
                         .HasColumnType("decimal(12,2)");
 
                     b.Property<bool>("ProvidedTV")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Shared")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");

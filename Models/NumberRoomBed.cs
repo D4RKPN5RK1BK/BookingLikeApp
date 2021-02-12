@@ -11,6 +11,8 @@ namespace BookingLikeApp.Models
         public int NumberRoomId { get; set; }
         public int BedId { get; set; }
 
+        public int Quantity { get; set; }
+
         public NumberRoom NumberRoom { get; set; }
         public Bed Bed { get; set; }
     }

@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,24 +11,31 @@ namespace BookingLikeApp.Areas.Apartment.ViewModels
 {
     public class EditNumberViewModel : Registration
     {
-        public List<NumberBed> NumberBeds { get; set; }
-        public List<NumberRoom> NumberRooms { get; set; }
-        public List<NumberRoomBed> NumberRoomBeds { get; set; }
+        [Range(0, 10)]
+        [DisplayName("Количество кроватей")]
+        public int BedsCount { get; set; }
 
-        public SelectList Rooms { get; set; }
-        public SelectList Beds { get; set; }
+        [DisplayName("Название номера")]
+        public string Name { get; set; }
 
         public NumberType NumberType { get; set; }
-        public Number Number { get; set; }
-        
-        public bool NotFound { get; set; }
+
+        public Dictionary<string, int> RoomsCount { get; set; }
+
+        public SelectList BedsSelect { get; set; }
+        public SelectList RoomsSelect { get; set; }
+
+        public List<NumberRoom> NumberRooms { get; set; }
+
+        public List<NumberBed> NumberBeds { get; set; }
 
         public EditNumberViewModel() { }
 
-        public EditNumberViewModel(Models.Apartment apartment) : base(apartment)
+        public EditNumberViewModel(Number number)
         {
-            Number = apartment.Number;
-            NumberType = apartment.Number.NumberType;
+            Name = number.Name;
+            NumberType = number.NumberType;
+            NumberBeds = number.NumberBeds;
         } 
     }
 }

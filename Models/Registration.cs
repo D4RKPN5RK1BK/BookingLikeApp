@@ -48,6 +48,22 @@ namespace BookingLikeApp.Models
         }
 
         [NotMapped]
+        public virtual Registration RegProps
+        {
+            set
+            {
+                if (value == null) return;
+                BasicInfo = value.BasicInfo;
+                Numbers = value.Numbers;
+                Rules = value.Rules;
+                Services = value.Services;
+                Facilites = value.Facilites;
+                Payment = value.Payment;
+                Photos = value.Photos;
+            }
+        }
+
+        [NotMapped]
         public Dictionary<string, bool> FinishedDictionary
         {
             get
@@ -64,6 +80,7 @@ namespace BookingLikeApp.Models
                 };
             }
         }
+
 
         public Registration() { }
 
@@ -83,6 +100,7 @@ namespace BookingLikeApp.Models
 
         public virtual void SetProps(Registration model)
         {
+            if (model == null) return;
             BasicInfo = model.BasicInfo;
             Numbers = model.Numbers;
             Rules = model.Rules;
