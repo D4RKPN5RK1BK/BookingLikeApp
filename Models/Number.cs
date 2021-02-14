@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BookingLikeApp.Models
 {
@@ -23,14 +21,14 @@ namespace BookingLikeApp.Models
         [DisplayName("Отображаемое имя")]
         [MaxLength(256, ErrorMessage = "Длинна строки {0} не может превышать {1}")]
         public string Name { get; set; }
-
+		
         [DisplayName("Стоимость (за ночь)")]
         [Range(minimum:0, maximum:1000000000, ErrorMessage = "Значение для {0} должно должно быть от {1} до {2}")]
         [Column(TypeName = "decimal(12,2)")]
         public decimal Price { get; set; }
 
         [DisplayName("Доступно")]
-        public bool Enabled { get; set; }
+        public bool Enable { get; set; }
         [DisplayName("Мини бар")]
         public bool MiniBar { get; set; }
         [DisplayName("Присутствует телевидение")]
@@ -46,9 +44,17 @@ namespace BookingLikeApp.Models
 
         public void SetProps(EditNumberViewModel model)
         {
+            Area = model.Area;
             Name = model.Name;
-            NumberBeds = model.NumberBeds;
+            Price = model.Price;
+            Enable = model.Enable;
+            MiniBar = model.MiniBar;
+            ProvidedTV = model.ProvidedTV;
+            AllowSmoke = model.AllowSmoke;
 
+            if (NumberType != null) NumberType = model.NumberType;
+            if (NumberBeds != null) NumberBeds = model.NumberBeds;
+            if (NumberRooms != null) NumberRooms = model.NumberRooms;
         }
     }
 }

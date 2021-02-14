@@ -62,10 +62,17 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
         {
             if (!await AllowEditASync(id))
                 return NotFound();
-            EditNumberViewModel model = new EditNumberViewModel(await GetNumberAsync(id));
+
+			Number number = await GetNumberAsync(id);
+			EditNumberViewModel model = new EditNumberViewModel(number);
+            if (_context.Registrations.Any(o => o.ApartmentId == model.ApartmentId))
+                model.SetProps(_context.Registrations.FirstOrDefault(o => o.ApartmentId == model.ApartmentId));
+            model.BedsCount = _context.NumberBeds.Where(o => o.NumberId == id).Count();
+            model.NumberBeds = _context.NumberBeds.Where(o => o.NumberId == id).ToList();
             model.BedsSelect = new SelectList(_context.Beds.ToList(), "Id", "Name");
             model.RoomsSelect = new SelectList(_context.Rooms.ToList(), "Id", "Name");
-            model.SetProps(_context.Registrations.Find(model.ApartmentId));
+            model.SetProps(_context.Registrations.Find(number.ApartmentId));
+
             return View(model);
         }
 
@@ -82,10 +89,23 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
             return View(model);
         }*/
 
-        [HttpPost]
-        public async Task<IActionResult> Basic(EditNumberViewModel model)
+        [HttpPost("{id}")]
+        public async Task<IActionResult> Basic(EditNumberViewModel model, int id)
         {
-            return View(model);
+			if (ModelState.IsValid)
+			{
+				Number number = await _context.Numbers.FindAsync(id);
+				number.SetProps(model);
+				_context.Numbers.Update(number);
+
+				/*Registration registration = await _context.Registrations.FindAsync(number.ApartmentId);
+				registration.Numbers = true;
+				_context.Registrations.Update(registration);*/
+
+				await _context.SaveChangesAsync();
+
+			}
+            return RedirectToAction("Edit", new { id });
         }
 
         [HttpPost]
@@ -93,41 +113,58 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
         {
             if (ModelState["BedsCount"].Errors.Count == 0)
             {
-                Number number = await _context.Numbers.FindAsync(id);
                 List<NumberBed> numberBeds = new List<NumberBed>();
                 int bedsCount = _context.NumberBeds.Where(o => o.NumberId == id).Count();
                 if (bedsCount < model.BedsCount)
                 {
                     for (int i = 0; i < model.BedsCount - bedsCount; i++)
-                        numberBeds.Add(new NumberBed() { NumberId = number.Id, BedId = _context.Beds.First().Id });
+                        numberBeds.Add(new NumberBed() { NumberId = (int)id, BedId = _context.Beds.First().Id });
                     await _context.NumberBeds.AddRangeAsync(numberBeds);
 
                 }
                 else if (bedsCount > model.BedsCount)
                 {
-                    numberBeds = _context.NumberBeds.Where(o => o.NumberId == number.Id).TakeLast(model.BedsCount - bedsCount).ToList();
+                    numberBeds = _context.NumberBeds.Where(o => o.NumberId == (int)id).Take(bedsCount - model.BedsCount).ToList();
                     _context.RemoveRange(numberBeds);
                 }
 
                 await _context.SaveChangesAsync();
             }
-            return View("Edit", model);
+            return RedirectToAction("Edit", new { id });
         }
 
         [HttpPost]
-        public async Task<IActionResult> RoomsCount(EditNumberViewModel model)
+        public async Task<IActionResult> RoomsCount(EditNumberViewModel model, int? id)
         {
             return View(model);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Beds(EditNumberViewModel model)
+		/*[HttpPost]
+        public async Task<IActionResult> Beds(EditNumberViewModel model, int? id)
         {
+            if (model.NumberBeds != null & model.NumberBeds.Count > 0)
+                for (int i = 0; i < model.NumberBeds.Count; i++)
+                    model.NumberBeds[i].NumberId = (int)id;
 
-            return View(model);
-        }
+            _context.NumberBeds.UpdateRange(model.NumberBeds);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Edit", new { id });
+        }*/
 
-        [HttpPost]
+		[HttpPost]
+		public async Task<IActionResult> Beds(EditNumberViewModel model, int? id)
+		{
+			if (model.NumberBeds != null && model.NumberBeds.Count > 0)
+			{
+				for (int i = 0; i < model.NumberBeds.Count; i++)
+					model.NumberBeds[i].NumberId = (int)id;
+				_context.NumberBeds.UpdateRange(model.NumberBeds);
+			}
+			await _context.SaveChangesAsync();
+			return RedirectToAction("Edit", new { id });
+		}
+
+		[HttpPost]
         public async Task<IActionResult> Rooms(EditNumberViewModel model)
         {
 

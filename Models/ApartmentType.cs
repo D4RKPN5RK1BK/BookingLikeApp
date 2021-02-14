@@ -18,6 +18,8 @@ namespace BookingLikeApp.Models
         
         [DisplayName("Фотография")]
         public string PhotoUrl { get; set; }
+
+		public bool FacilitesRequired { get; set; }
         
         [DisplayName("Описание")]
         [Column(TypeName = "text")]

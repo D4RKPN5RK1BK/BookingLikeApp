@@ -1,108 +1,157 @@
 ﻿@model EditNumberViewModel
 @{
-    ViewData["Title"] = "Номера";
-    Layout = "_CreateApartmentLayout";
+	ViewData["Title"] = "Номера";
+	Layout = "_CreateApartmentLayout";
 }
 
-<form asp-action="Basic" asp-controller="Number">
-    <div class="card mt-3">
-        <div class="card-body">
-            <h2 class="card-title col-sm-8">Общая информация о номере</h2>
-            <div class="form-group col-sm-4">
-                <label asp-for="Name" class="col-form-label"></label>
-                <input asp-for="Name" class="form-control" />
-            </div>
-            <div class="form-group col-sm-4">
-                <input type="submit" value="Принять" class="btn btn-success" />
-            </div>
-        </div>
-    </div>
+<form asp-action="Basic" asp-controller="Number" asp-route-id="@Url.ActionContext.RouteData.Values["id"]">
+	<div class="card mt-3">
+		<div class="card-body">
+			<h2 class="card-title col-sm-8">Общая информация о номере</h2>
+			<div class="form-group col-sm-4">
+				<label asp-for="Name" class="col-form-label"></label>
+				<input asp-for="Name" class="form-control" />
+			</div>
+			<div class="form-group col-sm-4">
+				<label asp-for="Area" class="col-form-label"></label>
+				<input asp-for="Area" class="form-control" />
+			</div>
+			<div class="form-group col-sm-4">
+				<label asp-for="Price" class="col-form-label"></label>
+				<input asp-for="Price" class="form-control" />
+			</div>
+			<div class="form-group col-sm-4">
+				<input asp-for="Enable" class="form-check-inline" />
+				<label asp-for="Enable" class="col-form-label"></label>
+			</div>
+			<div class="form-group col-sm-4">
+				<input type="submit" value="Применить" class="btn btn-success" />
+			</div>
+		</div>
+	</div>
 </form>
 
-<form asp-controller="Number" asp-action="BedsCount" method="post">
-    <div class="card mt-3">
-        <div class="card-body">
-            <h2 class="card-title col-sm-8">Количество кроватей в номере</h2>
-            <div class="form-group col-sm-4">
-                <label asp-for="BedsCount" class="col-form-label"></label>
-                <input asp-for="BedsCount" class="form-control" />
-                <span asp-validation-for="BedsCount" class="alert-danger"></span>
-            </div>
-            <div class="form-group col-sm-4">
-                <input type="submit" name="beds" value="Применить" class="btn btn-success" />
-            </div>
-        </div>
-    </div>
+<form asp-controller="Number" asp-action="BedsCount" asp-route-id="@Url.ActionContext.RouteData.Values["id"]" method="post">
+	<div class="card mt-3">
+		<div class="card-body">
+			<h2 class="card-title col-sm-8">Количество кроватей в номере</h2>
+			<div class="form-group col-sm-4">
+				<label asp-for="BedsCount" class="col-form-label"></label>
+				<input asp-for="BedsCount" class="form-control" />
+				<span asp-validation-for="BedsCount" class="alert-danger"></span>
+			</div>
+			<div class="form-group col-sm-4">
+				<input type="submit" name="beds" value="Применить" class="btn btn-success" />
+			</div>
+		</div>
+	</div>
 </form>
 
-@if (Model.NumberBeds != null && Model.NumberBeds.Count > 0)
-{
-    <form asp-action="Beds" asp-controller="Number" method="post">
-        <div class="card mt-3">
-            <div class="card-body ">
-                <h2 class="card-title col-sm-12">Кровати</h2>
-            </div>
-            <div class="col-sm-12">
-                <div class="list-group list-group-flush" name="numberBeds">
-                    @foreach (var item in Model.NumberBeds)
-                    {
-                        <div class="form-group col-sm-5">
-                            <label class="col-form-label">Тип кровати</label>
-                            <select asp-for="@item.BedId" asp-items="@Model.BedsSelect" class="custom-select">
-                                <option>Выберите тип кровати</option>
-                            </select>
-                            <label class="col-form-label">Количество кроватей</label>
-                            <input asp-for="@item.Quantity" class="form-control"/>
-                        </div>
-                    }
-                </div>
-                <div class="form-group col-sm-5 mt-4">
-                    <input type="submit" value="Подтвердить" class="btn btn-success btn-block"/>
-                </div>
-            </div>
-        </div>
-    </form>
-}
+<form asp-action="Beds" asp-controller="Number" asp-route-id="@Url.ActionContext.RouteData.Values["id"]" method="post">
+	<div class="card mt-3">
+		<div class="card-body ">
+			<h2 class="card-title col-sm-12">Кровати</h2>
+			<div class="align-items-end row col-sm-12 align-items-start" id="numberBeds">
+				@for (int i = 0; i < Model.NumberBeds.Count; i++)
+				{
+					<div class="form-group col-sm-4 mb-5 bedBlock" id="@i">
+						<input type="hidden" asp-for="NumberBeds[i].Id" />
+						<label class="col-form-label">Тип кровати</label>
+						<select asp-for="NumberBeds[i].BedId" asp-items="@Model.BedsSelect" class="custom-select" id="bedsList"></select>
+						<label class="col-form-label">Количество кроватей</label>
+						<input asp-for="NumberBeds[i].Quantity" class="form-control" />
+						@*<a class="btn btn-secondary btn-block mt-3 deleteBed">Удалить</a>*@
+					</div>
+				}
+			</div>
+			@*<div class="form-group col-sm-4">
+			<a id="addBed" class="btn btn-primary text-white">Добавить кровать</a>
+		</div>*@
 
-@if (Model.NumberType.HasRooms)
-{
-    <div class="card mt-3">
-        <div class="card-body">
-            <h2 class="card-title col-sm-8">Количество комнат</h2>
-            <form asp-controller="Number" asp-action="RoomsCount" method="post">
-                <div class="form-group col-sm-3">
-                    <label class="col-form-label">Спальни</label>
-                    <input type="number" name="bedrooms" class="form-control" />
-                </div>
-                <div class="form-group col-sm-3">
-                    <label class="col-form-label">Кухни</label>
-                    <input type="number" name="bedrooms" class="form-control" />
-                </div>
-                <div class="form-group col-sm-3">
-                    <label class="col-form-label">Ванные</label>
-                    <input type="number" name="bedrooms" class="form-control" />
-                </div>
-                <div class="form-group col-sm-4">
-                    <input type="submit" value="Применить" class="btn btn-success" />
-                </div>
-            </form>
-        </div>
-    </div>
-}
+			<div class="form-group col-sm-4">
+				<input type="submit" value="Сохранить изменения" class="btn btn-success" />
+			</div>
 
-@if (Model.NumberRooms.Count() > 0)
-{
-    <div class="card mt-3">
-        <div class="card-body">
-            <h2 class="card-title">Комнаты</h2>
-        </div>
-        <div class="list-group list-group-flush">
-            @foreach (var item in Model.NumberBeds)
-            {
-                <h2>@item.BedId.ToString()</h2>
-            }
-        </div>
-    </div>
-}
+		</div>
 
-<a asp-action="Numbers" asp-controller="Create" class="btn-block btn-success btn-lg mt-3 mb-1 text-center">Вернуться к списку номеров</a>
+	</div>
+
+	
+</form>
+
+@*@if (Model.NumberType.HasRooms)
+	{
+		<div class="card mt-3">
+			<div class="card-body">
+				<h2 class="card-title col-sm-8">Количество комнат</h2>
+				<form asp-controller="Number" asp-action="RoomsCount" method="post">
+					<div class="form-group col-sm-3">
+						<label class="col-form-label">Спальни</label>
+						<input type="number" name="bedrooms" class="form-control" />
+					</div>
+					<div class="form-group col-sm-3">
+						<label class="col-form-label">Кухни</label>
+						<input type="number" name="bedrooms" class="form-control" />
+					</div>
+					<div class="form-group col-sm-3">
+						<label class="col-form-label">Ванные</label>
+						<input type="number" name="bedrooms" class="form-control" />
+					</div>
+					<div class="form-group col-sm-4">
+						<input type="submit" value="Применить" class="btn btn-success" />
+					</div>
+				</form>
+			</div>
+		</div>
+	}
+
+	@if (Model.NumberRooms.Count() > 0)
+	{
+		<div class="card mt-3">
+			<div class="card-body">
+				<h2 class="card-title">Комнаты</h2>
+			</div>
+			<div class="list-group list-group-flush">
+				@foreach (var item in Model.NumberBeds)
+				{
+					<h2>@item.BedId.ToString()</h2>
+				}
+			</div>
+		</div>
+	}*@
+
+<a asp-action="Numbers" asp-controller="Create" class="btn-block btn-primary btn-lg mt-3 mb-1 text-center">Вернуться к списку номеров</a>
+
+@*@section Scripts {
+	<script>
+    $(function () {
+		Array freeId = new Array();
+		var bedsList = $('#bedsList').html();
+		var id = $('#numberBeds').children().length;
+		$('#addBed').click(function () {
+			var htmlBlock = "<div class='form-group col-sm-4 mb-5 bedBlock' id='" + id + "'>" +
+				"<input name='NumberBeds[" + id + "].Id' />" +
+                "<label class='col-form-label'>Тип кровати</label>" +
+                "<select name='NumberBeds[" + id + "].BedId' class='custom-select'>" + bedsList + "</select>" +
+                "<label class='col-form-label'>Количество кроватей</label>" +
+				"<input class='form-control' name='NumberBeds[" + id + "].Quantity' type='number'/>" +
+				"<a class='btn btn-secondary btn-block mt-3 deleteBed'>Удалить</a>" +
+                "</div>";
+
+			$('#numberBeds').append(htmlBlock);
+
+			id++;
+			$('.deleteBed').click(function () {
+				$(this.parentElement).remove();
+			})
+			
+		})	
+
+		$('.deleteBed').click(function () {
+			$(this.parentElement).remove();
+		})
+
+    })
+	</script>
+}
+*@

@@ -48,7 +48,7 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 
         public async Task<IActionResult> Initialize(int apartmentType) 
         {
-            //Придумать как заменить дефолтные значения с тестовых типов на настоящие
+            //заменить дефолтные значения с тестовых типов на настоящие
             User user = await _userManager.GetUserAsync(User);
             Models.Apartment apartment;
             if (_context.Apartments.Any(o => o.Finished == false && o.UserId == user.Id))
@@ -103,12 +103,16 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
         public async Task<IActionResult> AddNumber(int numberTypeId)
         {
             Models.Apartment apartment = await GetUnfinishedAsync();
-            Number number = new Number()
-            {
-                NumberTypeId = numberTypeId,
-                ApartmentId = apartment.Id,
+			NumberType numberType = await _context.NumberTypes.FindAsync(numberTypeId);
+			Number number = new Number()
+			{
+				NumberTypeId = numberTypeId,
+				ApartmentId = apartment.Id,
+				Name = numberType.Name
             };
 
+			apartment.Registration.Numbers = true;
+			_context.Update(apartment.Registration);
             await _context.AddAsync(number);
             await _context.SaveChangesAsync();
             return RedirectToAction("Numbers");

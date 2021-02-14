@@ -182,6 +182,9 @@ namespace BookingLikeApp.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
+                    b.Property<bool>("FacilitesRequired")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -198,6 +201,7 @@ namespace BookingLikeApp.Migrations
                         {
                             Id = 1,
                             Description = "TestType",
+                            FacilitesRequired = false,
                             Name = "TestType"
                         });
                 });
@@ -337,7 +341,7 @@ namespace BookingLikeApp.Migrations
                     b.Property<int>("Area")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Enabled")
+                    b.Property<bool>("Enable")
                         .HasColumnType("bit");
 
                     b.Property<bool>("MiniBar")
