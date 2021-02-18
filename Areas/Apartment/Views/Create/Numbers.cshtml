@@ -10,9 +10,7 @@
         <div class="card-body">
             <h2 class="card-title">Добивать новый номер</h2>
             <div class="form-group">
-                <select name="numberTypeId" asp-items="@Model.NumberTypes" class="custom-select col-sm-4">
-                    <option>Выберите тип номера</option>
-                </select>
+                <select name="numberTypeId" asp-items="@Model.NumberTypes" class="custom-select col-sm-4"></select>
                 <input type="submit" value="Добавить" class="btn btn-success"/>
             </div>
         </div>

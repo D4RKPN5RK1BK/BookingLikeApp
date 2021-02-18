@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace BookingLikeApp.Models
 {
@@ -21,11 +23,15 @@ namespace BookingLikeApp.Models
         
         [DisplayName("Фотография")]
         public string PhotoUrl { get; set; }
+		[NotMapped]
+		public IFormFile PhotoFile { get; set; }
         
         [DisplayName("Флаг")]
         public string FlagUrl { get; set; }
-        
-        [DisplayName("Заблокирована")]
+		[NotMapped]
+		public IFormFile FlagFile { get; set; }
+
+		[DisplayName("Заблокирована")]
         public bool Blocked { get; set; }
 
         public IEnumerable<City> Cities { get; set; }

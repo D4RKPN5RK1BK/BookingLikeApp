@@ -2,3 +2,39 @@
 @{
 	ViewData["Title"] = "Типы номеров";
 }
+
+<div class="col-sm-12">
+	<h2 class="display-4">Удаление элемента</h2>
+	<a asp-action="Index" class="btn-link">Вернуться к спику</a>
+</div>
+
+<div class="col-sm-4 mt-3">
+	<div class="form-group">
+		<p class="col-form-label">@Html.DisplayNameFor(o => o.Name)</p>
+		<h4>@Html.DisplayFor(o => o.Name)</h4>
+	</div>
+	<div class="form-group">
+		<p class="col-form-label">@Html.DisplayNameFor(o => o.Description)</p>
+		<textarea>@Html.DisplayFor(o => o.Description)</textarea>
+	</div>
+	<div class="form-group">
+		<p class="col-form-label">@Html.DisplayNameFor(o => o.Code)</p>
+		<h4>@Html.DisplayFor(o => o.Code)</h4>
+	</div>
+	@if (Model.HasRooms)
+	{
+		<p class="bg-warning pl-2 rounded">@Html.DisplayNameFor(o => o.HasRooms)</p>
+	}
+	@if (Model.Share)
+	{
+		<p class="bg-warning pl-2 rounded">@Html.DisplayNameFor(o => o.Share)</p>
+	}
+	<form asp-action="Edit" method="post">
+		<div class="form-group">
+			<input type="hidden" asp-for="Id" />
+			<input type="submit" value="Подтвердить удаление" class="btn btn-danger" />
+		</div>
+	</form>
+
+</div>
+

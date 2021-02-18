@@ -2,3 +2,42 @@
 @{
 	ViewData["Title"] = "Типы отелей";
 }
+
+<div class="col-sm-12">
+	<h2 class="display-4">Удаление элемента</h2>
+	<a asp-action="Index" class="btn-link">Вернуться к спику</a>
+</div>
+
+<div class="col-sm-4 mt-3">
+	<div class="form-group">
+		<p class="col-form-label">@Html.DisplayNameFor(o => o.Name)</p>
+		<h4>@Html.DisplayFor(o => o.Name)</h4>
+	</div>
+	<div class="form-group">
+		<p class="col-form-label">@Html.DisplayNameFor(o => o.Description)</p>
+		<textarea class="w-100">@Html.DisplayFor(o => o.Description)</textarea>
+	</div>
+	<div class="form-group">
+		<p class="col-form-label">@Html.DisplayNameFor(o => o.Description)</p>
+		@if (!String.IsNullOrEmpty(Model.PhotoUrl))
+		{
+			<img class="img-thumbnail" src="@Model.PhotoUrl">
+		}
+	</div>
+	<div class="form-group">
+		@if (Model.FacilitesRequired)
+		{
+			<p class="bg-warning">Для регистрации требуются дополнительные параметры</p>
+		}
+	</div>
+
+	<form asp-action="Delete" method="post">
+		<div class="form-group">
+			<input type="hidden" asp-for="Id" />
+			<input type="submit" value="Удалить объект" class="btn btn-danger" />
+		</div>
+	</form>
+
+</div>
+
+

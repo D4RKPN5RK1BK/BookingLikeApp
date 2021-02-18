@@ -40,11 +40,11 @@ namespace BookingLikeApp.Data
 
             builder.Entity<ApartmentType>().HasData(new ApartmentType() { Id = 1, Description = "TestType", Name = "TestType" });
 
-            builder.Entity<NumberType>().HasData(new NumberType() { Id = 1, Name = "Number", BedOnly = false, Enable = true, HasRooms = false, Share = false});
-            builder.Entity<NumberType>().HasData(new NumberType() { Id = 2, Name = "Apartment", BedOnly = false, Enable = true, HasRooms = true, Share = false });
-            builder.Entity<NumberType>().HasData(new NumberType() { Id = 3, Name = "SharedRoom", BedOnly = false, Enable = true, HasRooms = false, Share = true });
-            builder.Entity<NumberType>().HasData(new NumberType() { Id = 4, Name = "SharedBed", BedOnly = true, Enable = true, HasRooms = false, Share = true });
-            builder.Entity<NumberType>().HasData(new NumberType() { Id = 5, Name = "SharedBedWithRooms", BedOnly = true, Enable = true, HasRooms = true, Share = true });
+            builder.Entity<NumberType>().HasData(new NumberType() { Id = 1, Name = "Number", HasRooms = false, Share = false});
+            builder.Entity<NumberType>().HasData(new NumberType() { Id = 2, Name = "Apartment", HasRooms = true, Share = false });
+            builder.Entity<NumberType>().HasData(new NumberType() { Id = 3, Name = "SharedRoom", HasRooms = false, Share = true });
+            builder.Entity<NumberType>().HasData(new NumberType() { Id = 4, Name = "SharedBed", HasRooms = false, Share = true });
+            builder.Entity<NumberType>().HasData(new NumberType() { Id = 5, Name = "SharedBedWithRooms", HasRooms = true, Share = true });
 
             builder.Entity<Room>().HasData(new Room() { Id = 1, Name = "Bedroom"});
             builder.Entity<Room>().HasData(new Room() { Id = 2, Name = "Livingroom"});

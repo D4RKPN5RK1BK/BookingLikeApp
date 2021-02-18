@@ -4,14 +4,16 @@ using BookingLikeApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BookingLikeApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210216074129_NumberTypeCode")]
+    partial class NumberTypeCode
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -215,10 +217,6 @@ namespace BookingLikeApp.Migrations
 
                     b.Property<decimal>("Capacity")
                         .HasColumnType("decimal(1,0)");
-
-                    b.Property<string>("Code")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
@@ -484,6 +482,9 @@ namespace BookingLikeApp.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
+                    b.Property<bool>("Enable")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("HasRooms")
                         .HasColumnType("bit");
 
@@ -502,6 +503,7 @@ namespace BookingLikeApp.Migrations
                         new
                         {
                             Id = 1,
+                            Enable = true,
                             HasRooms = false,
                             Name = "Number",
                             Share = false
@@ -509,6 +511,7 @@ namespace BookingLikeApp.Migrations
                         new
                         {
                             Id = 2,
+                            Enable = true,
                             HasRooms = true,
                             Name = "Apartment",
                             Share = false
@@ -516,6 +519,7 @@ namespace BookingLikeApp.Migrations
                         new
                         {
                             Id = 3,
+                            Enable = true,
                             HasRooms = false,
                             Name = "SharedRoom",
                             Share = true
@@ -523,6 +527,7 @@ namespace BookingLikeApp.Migrations
                         new
                         {
                             Id = 4,
+                            Enable = true,
                             HasRooms = false,
                             Name = "SharedBed",
                             Share = true
@@ -530,6 +535,7 @@ namespace BookingLikeApp.Migrations
                         new
                         {
                             Id = 5,
+                            Enable = true,
                             HasRooms = true,
                             Name = "SharedBedWithRooms",
                             Share = true

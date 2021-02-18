@@ -36,7 +36,7 @@
                                 <div class="dropdown-menu dropdown-menu-right">
                                     @if (User.IsInRole("admin"))
                                     {
-                                        <a class="dropdown-item" asp-area="admin" asp-controller="Users" asp-action="Index">Администрирование</a>
+                                        <a class="dropdown-item bg-warning" asp-area="admin" asp-controller="Users" asp-action="Index">Администрирование</a>
                                     }
                                     <a class="dropdown-item" asp-area="account" asp-controller="Home" asp-action="Index">Настройки пользователя</a>
                                     <a href="#" class="dropdown-item">Собственность</a>

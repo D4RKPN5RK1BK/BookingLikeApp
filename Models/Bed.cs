@@ -14,9 +14,13 @@ namespace BookingLikeApp.Models
 
         //public int RoomId { get; set; }
 
-        [DisplayName("Наименование")]
         [MaxLength(256)]
+        [DisplayName("Наименование")]
         public string Name { get; set; }
+
+        [MaxLength(256)]
+		[DisplayName("Кодовое имя")]
+		public string Code { get; set; }
 
         [DisplayName("Вместимость")]
         [Column(TypeName = "decimal(1,0)")]

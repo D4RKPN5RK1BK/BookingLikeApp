@@ -2,17 +2,22 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Microsoft.AspNetCore.Http;
 
 namespace BookingLikeApp.Models
 {
-    public class City
-    {
-        public int Id { get; set; }
+	public class City
+	{
+		public int Id { get; set; }
 
-        public int CountryId { get; set; }
+		public int CountryId { get; set; }
+		[Required]
+		[NotMapped]
+		[DisplayName("Страна")]
+		public string CountryName { get; set; }
 
         [DisplayName("Название")]
         [MaxLength(256, ErrorMessage = "Длинна строки {0} не может превышать {1}")]
@@ -20,8 +25,10 @@ namespace BookingLikeApp.Models
 
         [DisplayName("Фотография")]
         public string PhotoUrl { get; set; }
-        
-        [DisplayName("Заблокирован")]
+		[NotMapped]
+		public IFormFile File { get; set; }
+
+		[DisplayName("Заблокирован")]
         public bool Blocked { get; set; }
 
         public Country Country { get; set; }

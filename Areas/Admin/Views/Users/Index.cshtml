@@ -4,3 +4,19 @@
 }
 
 <h2 class="display-4">Пользователи</h2>
+
+<table class="table">
+	@foreach(var item in Model)
+	{
+		<tr>
+			<td>@item.UserName</td>
+			<td>@item.Email</td>
+			<td>
+				<a asp-action="Info" class="btn btn-secondary">Подробнее</a>
+				<a asp-action="Edit" class="btn btn-primary">Редактировать</a>
+				<a asp-action="Delete" class="btn btn-danger">Удалить</a>
+			</td>
+		</tr>
+
+	}
+</table>

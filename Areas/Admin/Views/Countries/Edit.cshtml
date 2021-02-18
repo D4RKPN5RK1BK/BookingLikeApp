@@ -2,3 +2,37 @@
 @{
 	ViewData["Title"] = "Страны";
 }
+<div class="col-sm-12">
+	<h2 class="display-4">Редактирование элемента</h2>
+	<a asp-action="Index" class="btn-link">Вернуться к спику</a>
+</div>
+
+<form asp-action="Edit" method="post">
+	<div class="col-sm-4 mt-3">
+		<div class="form-group">
+			<label asp-for="Name" class="col-form-label"></label>
+			<input asp-for="Name" class="form-control" />
+			<span asp-validation-for="Name" class="alert-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="Code" class="col-form-label"></label>
+			<input asp-for="Code" class="form-control" />
+			<span asp-validation-for="Code" class="alert-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="PhotoUrl" class="col-form-label"></label>
+			<input asp-for="PhotoFile" class="form-control" />
+		</div>
+		<div class="form-group">
+			<label asp-for="FlagUrl" class="col-form-label"></label>
+			<input asp-for="FlagFile" class="form-control" />
+		</div>
+		<div class="form-group">
+			<input asp-for="Blocked" class="form-check-inline" />
+			<label asp-for="Blocked" class="col-form-label"></label>
+		</div>
+		<div class="form-group">
+			<input type="submit" value="Обновить" class="btn btn-success" />
+		</div>
+	</div>
+</form>

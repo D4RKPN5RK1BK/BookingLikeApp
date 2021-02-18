@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace BookingLikeApp.Models
 {
@@ -18,7 +19,10 @@ namespace BookingLikeApp.Models
         
         [DisplayName("Фотография")]
         public string PhotoUrl { get; set; }
+		[NotMapped]
+		public IFormFile File { get; set; }
 
+		[DisplayName("Дополнительные удобства")]
 		public bool FacilitesRequired { get; set; }
         
         [DisplayName("Описание")]

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,7 +12,11 @@ namespace BookingLikeApp.Models
     {
         public int Id { get; set; }
 
-        public int CityId { get; set; }
+		public int CityId { get; set; }
+		[Required]
+		[NotMapped]
+		[DisplayName("Город")]
+		public string CityName { get; set; }
 
         [DisplayName("Имя")]
         [MaxLength(256, ErrorMessage = "Длинна строки {0} не может превышать {1}")]
