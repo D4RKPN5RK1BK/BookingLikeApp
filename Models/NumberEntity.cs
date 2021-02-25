@@ -6,16 +6,12 @@ using System.Threading.Tasks;
 
 namespace BookingLikeApp.Models
 {
-    public class NumberReservation
+    public class NumberEntity
     {
         public int Id { get; set; }
         public int NumberId { get; set; }
-        public int ReservationId { get; set; }
 
-        [DisplayName("Продолжительность бронирования")]
-        public DateTimeOffset ReservationDate { get; set; }
-
-        public Reservation Reservation { get; set; }
+        public List<EntityReservation> EntityReservations { get; set; }
         public Number Number { get; set; }
     }
 }

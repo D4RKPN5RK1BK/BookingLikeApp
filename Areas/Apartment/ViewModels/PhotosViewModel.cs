@@ -1,4 +1,5 @@
 ﻿using BookingLikeApp.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,16 +10,21 @@ namespace BookingLikeApp.Areas.Apartment.ViewModels
 {
     public class PhotosViewModel : Registration
     {
-        public List<Photo> ApartmentPhotos { get; set; }
+		public int Id { get; set; }
+		public List<Photo> ApartmentPhotos { get; set; }
 
         [DisplayName("Логотип")]
         public string LogoUrl { get; set; }
+
+		[DisplayName("Файл")]
+		public IFormFile File { get; set; }
 
         public PhotosViewModel() { }
 
         public PhotosViewModel(Models.Apartment apartment) : base(apartment)
         {
-            if (apartment.Photos != null)
+			Id = apartment.Id;
+			if (apartment.Photos != null)
             {
                 ApartmentPhotos = apartment.Photos.ToList();
             }

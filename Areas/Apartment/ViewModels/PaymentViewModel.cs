@@ -1,4 +1,5 @@
 ﻿using BookingLikeApp.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +10,8 @@ namespace BookingLikeApp.Areas.Apartment.ViewModels
 {
     public class PaymentViewModel : Registration
     {
-        public List<Card> Cards { get; set; }
+		public int Id { get; set; }
+		public List<Card> Cards { get; set; }
 
         [DisplayName("Списывать деньги при помощи карт")]
         public bool UseCards { get; set; }
@@ -20,7 +22,9 @@ namespace BookingLikeApp.Areas.Apartment.ViewModels
         [DisplayName("Успешно зарегистрировано")]
         public bool Finished { get; set; }
         
-        public bool PolisherInApaertment { get; set; }
+		public SelectList Polishers { get; set; }
+
+        public bool PolisherInApartment { get; set; }
 
         [DisplayName("Место проживаниия платильщика")]
         public int PolisherStreetId { get; set; }
@@ -31,7 +35,7 @@ namespace BookingLikeApp.Areas.Apartment.ViewModels
 
         public PaymentViewModel(Models.Apartment apartment) : base(apartment)
         {
-
-        }
+			Id = apartment.Id;
+		}
     }
 }

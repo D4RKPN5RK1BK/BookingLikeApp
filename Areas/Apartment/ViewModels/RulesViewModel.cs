@@ -12,7 +12,9 @@ namespace BookingLikeApp.Areas.Apartment.ViewModels
 {
     public class RulesViewModel : Registration
     {
-        [DisplayName("Разрешены дети")]
+		public int Id { get; set; }
+
+		[DisplayName("Разрешены дети")]
         public bool ChildrensAllowed { get; set; }
         [DisplayName("Разрешены животные")]
         public bool AnimalsAllowed { get; set; }
@@ -80,7 +82,8 @@ namespace BookingLikeApp.Areas.Apartment.ViewModels
 
         public RulesViewModel(Models.Apartment apartment) : base(apartment)
         {
-            ChildrensAllowed = apartment.ChildrensAllowed;
+			Id = apartment.Id;
+			ChildrensAllowed = apartment.ChildrensAllowed;
             AnimalsAllowed = apartment.AnimalsAllowed;
             DaysUntilCancelEnds = apartment.DaysUntilCancelEnds;
             CancelPrice = apartment.CancelPrice;

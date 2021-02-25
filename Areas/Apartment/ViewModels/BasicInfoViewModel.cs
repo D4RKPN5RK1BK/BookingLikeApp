@@ -11,7 +11,9 @@ namespace BookingLikeApp.Areas.Apartment.ViewModels
 {
     public class BasicInfoViewModel : Registration
     {
-        [DisplayName("Улица")]
+		public int Id { get; set; }
+
+		[DisplayName("Улица")]
         [Required(ErrorMessage = "Данный пункт обязателен")]
         public int ApartmentStreetId { get; set; }
 
@@ -54,6 +56,7 @@ namespace BookingLikeApp.Areas.Apartment.ViewModels
 
         public BasicInfoViewModel(Models.Apartment apartment) : base(apartment)
         {
+			Id = apartment.Id;
             ApartmentStreetId = apartment.ApartmentStreetId;
             Stars = apartment.Stars;
             Name = apartment.Name;

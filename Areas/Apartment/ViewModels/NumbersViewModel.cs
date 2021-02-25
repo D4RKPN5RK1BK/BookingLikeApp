@@ -9,6 +9,8 @@ namespace BookingLikeApp.Areas.Apartment.ViewModels
 {
     public class NumbersViewModel : Registration
     {
+		public int Id { get; set; }
+
         public SelectList NumberTypes { get; set; }
         public List<Number> NumbersList { get; set; }
 
@@ -16,6 +18,7 @@ namespace BookingLikeApp.Areas.Apartment.ViewModels
 
         public NumbersViewModel(Models.Apartment apartment) : base(apartment)
         {
-        }
+			Id = apartment.Id;
+		}
     }
 }

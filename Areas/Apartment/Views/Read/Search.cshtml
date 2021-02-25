@@ -1,0 +1,16 @@
+﻿@model List<Apartment>
+@{ 
+	ViewData["Title"] = "Поиск";
+}
+
+<h2 class="display-4">Поиск по имени</h2>
+@*Поиcковая панель*@
+<div class="list-group">
+	@foreach(var item in Model)
+	{
+		<div class="list-group-item">
+			<h2>@item.Name</h2>
+			<a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Информация</a>
+		</div>
+	}
+</div>

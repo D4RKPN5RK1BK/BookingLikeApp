@@ -9,15 +9,19 @@ using System.Threading.Tasks;
 
 namespace BookingLikeApp.Models
 {
-    public class Reservation
+    public class EntityReservation
     {
         public int Id { get; set; }
         public string UserId { get; set; }
+		public int NumberEntityId { get; set; }
 
         [DisplayName("Оценка")]
         [Range(1, 10, ErrorMessage = "Значение для {0} должно должно быть от {1} до {2}")]
         [Column(TypeName = "decimal(2,0)")]
         public decimal Points { get; set; }
+
+		[DisplayName("Бронирование")]
+		public DateTimeOffset Reservation { get; set; }
 
         [DisplayName("Стоимость")]
         [Column(TypeName = "decimal(12,2)")]
@@ -30,6 +34,6 @@ namespace BookingLikeApp.Models
         public DateTime AbortCancel { get; set; }
 
         public User User { get; set; }
-        public IEnumerable<NumberReservation> NumberReservations { get; set; }
+		public NumberEntity NumberEntity { get; set; }
     }
 }

@@ -1,0 +1,16 @@
+﻿@model List<Apartment>
+
+<h2 class="display-4">Список зарегистрированной недвижимости</h2>
+
+<table class="table">
+	@foreach(var item in Model) {
+		<tr>
+			<td>@item.Name</td>
+			<td>
+				<a asp-action="Info" asp-controller="Read" asp-route-id="@item.Id" class="btn btn-secondary">Информация</a>
+				<a asp-action="Index" asp-controller="Edit" asp-route-id="@item.Id" class="btn btn-secondary">Редактор</a>
+				<a asp-action="Confirm" asp-controller="Delete" asp-route-id="@item.Id" class="btn btn-danger">Удалить</a>
+			</td>
+		</tr>
+	}
+</table>

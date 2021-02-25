@@ -10,7 +10,7 @@
         <div class="card-body">
             <h2 class="card-title">Вы уже начали регистрацию объекта.</h2>
             <p>Его редактирование можно продолжить перейдя по ссылке.</p>
-            <a asp-action="BasicInfo" class="btn btn-success">Продолжить редактировать</a>
+            <a asp-controller="Edit" asp-action="BasicInfo" asp-route-id="@ViewData["Id"]" class="btn btn-success">Продолжить редактировать</a>
         </div>
     </div>
 }

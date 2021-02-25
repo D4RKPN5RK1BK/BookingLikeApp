@@ -8,11 +8,12 @@ namespace BookingLikeApp.Areas.Apartment.ViewModels
 {
     public class FacilitesViewModel : Registration
     {
+		public int Id { get; set; }
         public FacilitesViewModel() { }
 
         public FacilitesViewModel(Models.Apartment apartment) : base(apartment)
         {
-
-        }
+			Id = apartment.Id;
+		}
     }
 }

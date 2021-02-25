@@ -12,7 +12,6 @@ namespace BookingLikeApp.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-        public DbSet<Apartment> Apartments { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Street> Streets { get; set; }
@@ -20,15 +19,19 @@ namespace BookingLikeApp.Data
         public DbSet<Number> Numbers { get; set; }
         public DbSet<Registration> Registrations { get; set; }
         public DbSet<Card> Cards { get; set; }
-        public DbSet<ApartmentCard> ApartmentCards { get; set; }
-        public DbSet<NumberType> NumberTypes { get; set; }
-        public DbSet<Reservation> Reservations { get; set; }
-        public DbSet<ApartmentType> ApartmentTypes { get; set; }
+        public DbSet<EntityReservation> EntityReservations { get; set; }
+		public DbSet<Service> Services { get; set; }
         public DbSet<Bed> Beds { get; set; }
-        public DbSet<NumberBed> NumberBeds { get; set; }
         public DbSet<Room> Rooms { get; set; }
+        public DbSet<NumberBed> NumberBeds { get; set; }
+		public DbSet<NumberEntity> NumberEntities { get; set; }
         public DbSet<NumberRoom> NumberRooms { get; set; }
+        public DbSet<NumberType> NumberTypes { get; set; }
         public DbSet<NumberRoomBed> NumberRoomBeds { get; set; }
+        public DbSet<ApartmentCard> ApartmentCards { get; set; }
+		public DbSet<ApartmentService> ApartmentServices { get; set; }
+        public DbSet<Apartment> Apartments { get; set; }
+        public DbSet<ApartmentType> ApartmentTypes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -51,6 +54,8 @@ namespace BookingLikeApp.Data
             builder.Entity<Room>().HasData(new Room() { Id = 3, Name = "Bathroom"});
 
             builder.Entity<Card>().HasData(new Card() { Id = 1, Name = "TestCard" });
+
+			builder.Entity<Service>().HasData(new Service() { Id = 1, Name = "TestService" });
         }
     }
 }

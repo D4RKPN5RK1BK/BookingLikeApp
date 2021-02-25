@@ -1,4 +1,5 @@
 ﻿using BookingLikeApp.Areas.Apartment.ViewModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -36,25 +37,11 @@ namespace BookingLikeApp.Models
         [DisplayName("Разрешается курить в номере")]
         public bool AllowSmoke { get; set; }
 
-        public Apartment Apartment { get; set; }
+		public Apartment Apartment { get; set; }
         public NumberType NumberType { get; set; }
         public List<NumberBed> NumberBeds { get; set; }
-        public List<NumberReservation> NumberReservations { get; set; }
+        public List<NumberEntity> NumberReservations { get; set; }
         public List<NumberRoom> NumberRooms { get; set; }
 
-        public void SetProps(EditNumberViewModel model)
-        {
-            Area = model.Area;
-            Name = model.Name;
-            Price = model.Price;
-            Enable = model.Enable;
-            MiniBar = model.MiniBar;
-            ProvidedTV = model.ProvidedTV;
-            AllowSmoke = model.AllowSmoke;
-
-            if (NumberType != null) NumberType = model.NumberType;
-            if (NumberBeds != null) NumberBeds = model.NumberBeds;
-            if (NumberRooms != null) NumberRooms = model.NumberRooms;
-        }
-    }
+	}
 }

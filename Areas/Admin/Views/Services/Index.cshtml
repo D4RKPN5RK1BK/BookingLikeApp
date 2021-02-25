@@ -1,0 +1,21 @@
+﻿@model List<Service>
+@{
+	ViewData["Title"] = "Услуги";
+}
+
+<h2 class="display-4">Услуги</h2>
+
+<a asp-action="Create" class="btn btn-success">Добавить элемент</a>
+
+<table class="table mt-3">
+	@foreach(var item in Model)
+	{
+		<tr>
+			<td>@item.Name</td>
+			<td>
+				<a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary">Редактировать</a>
+				<a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Удалить</a>
+			</td>
+		</tr>
+	}
+</table>

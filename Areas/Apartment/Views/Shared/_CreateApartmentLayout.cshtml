@@ -3,21 +3,21 @@
 	Layout = "_Layout";
 }
 <div class="list-group-horizontal-lg list-group text-center">
-	<a asp-controller="Create" asp-action="BasicInfo" class="list-group-item list-group-item-action @(Model.BasicInfo ?  "list-group-item-success" : "") @(ViewData["Title"].ToString() == "Общая информация" ? "active" : "")">Общая информация</a>
-	<a asp-controller="Create" asp-action="Numbers" class="list-group-item list-group-item-action @(Model.Numbers ?  "list-group-item-success" : "")  @(ViewData["Title"].ToString() == "Номера" ? "active" : "")">Номера</a>
-	<a asp-controller="Create" asp-action="Services" class="list-group-item list-group-item-action @(Model.Services ?  "list-group-item-success" : "")  @(ViewData["Title"].ToString() == "Услуги" ? "active" : "")">Услуги</a>
-	<a asp-controller="Create" asp-action="Photos" class="list-group-item list-group-item-action @(Model.Photos ?  "list-group-item-success" : "")  @(ViewData["Title"].ToString() == "Фотографии" ? "active" : "")">Фотографии</a>
+	<a asp-controller="Edit" asp-action="BasicInfo" asp-route-id="@ViewData["Id"]" class="list-group-item list-group-item-action @(Model.BasicInfo ?  "list-group-item-success" : "") @(ViewData["Title"].ToString() == "Общая информация" ? "active" : "")">Общая информация</a>
+	<a asp-controller="Number" asp-action="Index" asp-route-id="@ViewData["Id"]" class="list-group-item list-group-item-action @(Model.Numbers ?  "list-group-item-success" : "")  @(ViewData["Title"].ToString() == "Номера" ? "active" : "")">Номера</a>
+	<a asp-controller="Edit" asp-action="Services" asp-route-id="@ViewData["Id"]" class="list-group-item list-group-item-action @(Model.Services ?  "list-group-item-success" : "")  @(ViewData["Title"].ToString() == "Услуги" ? "active" : "")">Услуги</a>
+	<a asp-controller="Edit" asp-action="Photos" asp-route-id="@ViewData["Id"]" class="list-group-item list-group-item-action @(Model.Photos ?  "list-group-item-success" : "")  @(ViewData["Title"].ToString() == "Фотографии" ? "active" : "")">Фотографии</a>
 	@if(Model.FacilitesRequired)
 	{
-		<a asp-controller="Create" asp-action="Facilites" class="list-group-item list-group-item-action @(Model.Facilites ?  "list-group-item-success" : "")  @(ViewData["Title"].ToString() == "Удобства" ? "active" : "")">Удобства</a>
+		<a asp-controller="Edit" asp-action="Facilites" asp-route-id="@ViewData["Id"]" class="list-group-item list-group-item-action @(Model.Facilites ?  "list-group-item-success" : "")  @(ViewData["Title"].ToString() == "Удобства" ? "active" : "")">Удобства</a>
 	}
-	<a asp-controller="Create" asp-action="Rules" class="list-group-item list-group-item-action @(Model.Rules ?  "list-group-item-success" : "")  @(ViewData["Title"].ToString() == "Правила проживания" ? "active" : "")">Правила</a>
-	<a asp-controller="Create" asp-action="Payment" class="list-group-item list-group-item-action @(Model.Payment ?  "list-group-item-success" : "")  @(ViewData["Title"].ToString() == "Оплата" ? "active" : "")">Оплата</a>
+	<a asp-controller="Edit" asp-action="Rules" asp-route-id="@ViewData["Id"]" class="list-group-item list-group-item-action @(Model.Rules ?  "list-group-item-success" : "")  @(ViewData["Title"].ToString() == "Правила проживания" ? "active" : "")">Правила</a>
+	<a asp-controller="Edit" asp-action="Payment" asp-route-id="@ViewData["Id"]" class="list-group-item list-group-item-action @(Model.Payment ?  "list-group-item-success" : "")  @(ViewData["Title"].ToString() == "Оплата" ? "active" : "")">Оплата</a>
 </div>
 
 @RenderBody()
 
 
 @section Scripts {
-	@await RenderSectionAsync("Scripts", required: false)
+	@await RenderSectionAsync("ApartmentScripts", required: false)
 }

@@ -1,157 +1,141 @@
 ﻿@model EditNumberViewModel
 @{
 	ViewData["Title"] = "Номера";
+	ViewData["Id"] = Model.Number.ApartmentId;
 	Layout = "_CreateApartmentLayout";
 }
 
-<form asp-action="Basic" asp-controller="Number" asp-route-id="@Url.ActionContext.RouteData.Values["id"]">
+<form asp-action="Edit" asp-controller="Number">
+	<input type="hidden" asp-for="Number.Id" />
+	<input type="hidden" asp-for="Number.ApartmentId" />
+	<input type="hidden" asp-for="Number.NumberTypeId" />
 	<div class="card mt-3">
 		<div class="card-body">
 			<h2 class="card-title col-sm-8">Общая информация о номере</h2>
 			<div class="form-group col-sm-4">
-				<label asp-for="Name" class="col-form-label"></label>
-				<input asp-for="Name" class="form-control" />
+				<label asp-for="Number.Name" class="col-form-label"></label>
+				<input asp-for="Number.Name" class="form-control" />
 			</div>
 			<div class="form-group col-sm-4">
-				<label asp-for="Area" class="col-form-label"></label>
-				<input asp-for="Area" class="form-control" />
+				<label asp-for="Number.Area" class="col-form-label"></label>
+				<input asp-for="Number.Area" class="form-control" />
 			</div>
 			<div class="form-group col-sm-4">
-				<label asp-for="Price" class="col-form-label"></label>
-				<input asp-for="Price" class="form-control" />
+				<label asp-for="Number.Price" class="col-form-label"></label>
+				<input asp-for="Number.Price" class="form-control" />
 			</div>
 			<div class="form-group col-sm-4">
-				<input asp-for="Enable" class="form-check-inline" />
-				<label asp-for="Enable" class="col-form-label"></label>
+				<label asp-for="Count" class="col-form-label"></label>
+				<input asp-for="Count" class="form-control" />
+				<span asp-validation-for="Count" class="alert-danger"></span>
 			</div>
 			<div class="form-group col-sm-4">
-				<input type="submit" value="Применить" class="btn btn-success" />
+				<input asp-for="Number.Enable" class="form-check-inline" />
+				<label asp-for="Number.Enable" class="col-form-label"></label>
 			</div>
 		</div>
 	</div>
-</form>
 
-<form asp-controller="Number" asp-action="BedsCount" asp-route-id="@Url.ActionContext.RouteData.Values["id"]" method="post">
 	<div class="card mt-3">
-		<div class="card-body">
-			<h2 class="card-title col-sm-8">Количество кроватей в номере</h2>
-			<div class="form-group col-sm-4">
-				<label asp-for="BedsCount" class="col-form-label"></label>
-				<input asp-for="BedsCount" class="form-control" />
-				<span asp-validation-for="BedsCount" class="alert-danger"></span>
-			</div>
-			<div class="form-group col-sm-4">
-				<input type="submit" name="beds" value="Применить" class="btn btn-success" />
+		<div class="card-body col-sm-12">
+			<div class="col-sm-12">
+				<h2 class="card-title">Кровати в номере</h2>
+				<div class="row col-sm-8">
+					<a id="addBed" class="btn btn-success">Добавить кровать</a>
+					<a id="deleteBed" class=" ml-3 btn btn-danger">Удалить кровать</a>
+				</div>
+				<div class="align-items-end row align-items-start" id="numberBeds">
+					@for (int i = 0; i < Model.Number.NumberBeds.Count; i++)
+					{
+						<div class="form-group col-sm-4 mb-5 bedBlock" id="@i">
+							<input type="hidden" asp-for="Number.NumberBeds[i].Id" />
+							<label class="col-form-label">Тип кровати</label>
+							<select asp-for="Number.NumberBeds[i].BedId" asp-items="@Model.BedsSelect" class="custom-select" id="bedsList"></select>
+							<label class="col-form-label">Количество кроватей</label>
+							<input asp-for="Number.NumberBeds[i].Quantity" class="form-control" />
+						</div>
+					}
+				</div>
 			</div>
 		</div>
 	</div>
-</form>
 
-<form asp-action="Beds" asp-controller="Number" asp-route-id="@Url.ActionContext.RouteData.Values["id"]" method="post">
-	<div class="card mt-3">
-		<div class="card-body ">
-			<h2 class="card-title col-sm-12">Кровати</h2>
-			<div class="align-items-end row col-sm-12 align-items-start" id="numberBeds">
-				@for (int i = 0; i < Model.NumberBeds.Count; i++)
-				{
-					<div class="form-group col-sm-4 mb-5 bedBlock" id="@i">
-						<input type="hidden" asp-for="NumberBeds[i].Id" />
-						<label class="col-form-label">Тип кровати</label>
-						<select asp-for="NumberBeds[i].BedId" asp-items="@Model.BedsSelect" class="custom-select" id="bedsList"></select>
-						<label class="col-form-label">Количество кроватей</label>
-						<input asp-for="NumberBeds[i].Quantity" class="form-control" />
-						@*<a class="btn btn-secondary btn-block mt-3 deleteBed">Удалить</a>*@
-					</div>
-				}
-			</div>
-			@*<div class="form-group col-sm-4">
-			<a id="addBed" class="btn btn-primary text-white">Добавить кровать</a>
-		</div>*@
-
-			<div class="form-group col-sm-4">
-				<input type="submit" value="Сохранить изменения" class="btn btn-success" />
-			</div>
-
-		</div>
-
-	</div>
-
-	
-</form>
-
-@*@if (Model.NumberType.HasRooms)
+	@if (Model.Number.NumberType.HasRooms)
 	{
 		<div class="card mt-3">
 			<div class="card-body">
 				<h2 class="card-title col-sm-8">Количество комнат</h2>
-				<form asp-controller="Number" asp-action="RoomsCount" method="post">
-					<div class="form-group col-sm-3">
-						<label class="col-form-label">Спальни</label>
-						<input type="number" name="bedrooms" class="form-control" />
-					</div>
-					<div class="form-group col-sm-3">
-						<label class="col-form-label">Кухни</label>
-						<input type="number" name="bedrooms" class="form-control" />
-					</div>
-					<div class="form-group col-sm-3">
-						<label class="col-form-label">Ванные</label>
-						<input type="number" name="bedrooms" class="form-control" />
-					</div>
-					<div class="form-group col-sm-4">
-						<input type="submit" value="Применить" class="btn btn-success" />
-					</div>
-				</form>
+				<div class="row col-sm-12">
+					@for (int i = 0; i < Model.Rooms.Count; i++)
+					{
+						<div class="form-group col-sm-3">
+							<label class="col-form-label">@Model.Rooms[i].Name</label>
+							<select asp-for="Rooms[i].Count" class="form-control">
+								<option value="0">Нет</option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+							</select>
+						</div>
+					}
+				</div>
 			</div>
 		</div>
 	}
 
-	@if (Model.NumberRooms.Count() > 0)
-	{
-		<div class="card mt-3">
-			<div class="card-body">
-				<h2 class="card-title">Комнаты</h2>
-			</div>
-			<div class="list-group list-group-flush">
-				@foreach (var item in Model.NumberBeds)
-				{
-					<h2>@item.BedId.ToString()</h2>
+
+	<input type="submit" class="btn-block btn-success btn-lg mt-3 mb-1 text-center mb-5" value="Сохранить изменения"/>
+
+</form>
+
+
+
+
+
+@section ApartmentScripts {
+		<script>
+		$(function () {
+			var bedsList = $('#bedsList').html();
+			var id = $('#numberBeds').children().length;
+
+			$('#addBed').click(function () {
+				var htmlBlock = "<div class='form-group col-sm-4 mb-5 bedBlock' id='" + id + "'>" +
+					"<input type='hidden' name='NumberBeds[" + id + "].Id' />" +
+					"<label class='col-form-label'>Тип кровати</label>" +
+					"<select name='NumberBeds[" + id + "].BedId' class='custom-select'>" + bedsList + "</select>" +
+					"<label class='col-form-label'>Количество кроватей</label>" +
+					"<input class='form-control' name='NumberBeds[" + id + "].Quantity' type='number'/>" +
+					@*"<a class='btn btn-secondary btn-block mt-3 deleteBed'>Удалить</a>" +*@
+					"</div>";
+
+				
+
+				if (id < 3) {
+					$('#deleteBed').attr('class', 'btn btn-danger ml-3');
+					$('#addBed').attr('class', 'btn btn-success');
+					$('#numberBeds').append(htmlBlock);
+					id++;
+					if (id == 3)
+						$('#addBed').attr('class', 'btn btn-secondary');
 				}
-			</div>
-		</div>
-	}*@
 
-<a asp-action="Numbers" asp-controller="Create" class="btn-block btn-primary btn-lg mt-3 mb-1 text-center">Вернуться к списку номеров</a>
+			});
 
-@*@section Scripts {
-	<script>
-    $(function () {
-		Array freeId = new Array();
-		var bedsList = $('#bedsList').html();
-		var id = $('#numberBeds').children().length;
-		$('#addBed').click(function () {
-			var htmlBlock = "<div class='form-group col-sm-4 mb-5 bedBlock' id='" + id + "'>" +
-				"<input name='NumberBeds[" + id + "].Id' />" +
-                "<label class='col-form-label'>Тип кровати</label>" +
-                "<select name='NumberBeds[" + id + "].BedId' class='custom-select'>" + bedsList + "</select>" +
-                "<label class='col-form-label'>Количество кроватей</label>" +
-				"<input class='form-control' name='NumberBeds[" + id + "].Quantity' type='number'/>" +
-				"<a class='btn btn-secondary btn-block mt-3 deleteBed'>Удалить</a>" +
-                "</div>";
+			$('#deleteBed').click(function () {
 
-			$('#numberBeds').append(htmlBlock);
+				if (id > 0) {
+					$('#deleteBed').attr('class', 'btn btn-danger ml-3');
+					$('#addBed').attr('class', 'btn btn-success');
+					$('#numberBeds').children().last().remove();
+					id--;
+					if (id == 0)
+						$('#deleteBed').attr('class', 'btn btn-secondary ml-3');
+				}
+			});
 
-			id++;
-			$('.deleteBed').click(function () {
-				$(this.parentElement).remove();
-			})
-			
-		})	
-
-		$('.deleteBed').click(function () {
-			$(this.parentElement).remove();
 		})
+		</script>
+	}
 
-    })
-	</script>
-}
-*@

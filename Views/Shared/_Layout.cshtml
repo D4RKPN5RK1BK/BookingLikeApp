@@ -12,8 +12,8 @@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BookingLikeApp</a>
-                <form asp-action="" asp-controller="" asp-area="" class="flex-grow-1">
-                    <input type="search" class="form-control" placeholder="Поиск" />
+                <form asp-action="Search" asp-controller="Read" asp-area="Apartment" class="flex-grow-1">
+                    <input type="search" class="form-control" placeholder="Поиск" name="name"/>
                 </form>
                 <button class="navbar-toggler ml-2" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -39,7 +39,7 @@
                                         <a class="dropdown-item bg-warning" asp-area="admin" asp-controller="Users" asp-action="Index">Администрирование</a>
                                     }
                                     <a class="dropdown-item" asp-area="account" asp-controller="Home" asp-action="Index">Настройки пользователя</a>
-                                    <a href="#" class="dropdown-item">Собственность</a>
+                                    <a asp-action="Index" asp-area="Apartment" asp-controller="Read" class="dropdown-item">Собственность</a>
                                     <a href="#" class="dropdown-item">Бронирования</a>
                                     <a href="#" class="dropdown-item">Кошелек</a>
                                     <a class="dropdown-item font-weight-bold" asp-area="account" asp-controller="auth" asp-action="Logout">Выйти</a>

@@ -66,7 +66,7 @@ namespace BookingLikeApp.Models
         [DisplayName("Завтрак")]
         public int Breakfest { get; set; }
 
-        [DisplayName("Бар")]
+        /*[DisplayName("Бар")]
         public bool Bar { get; set; }
         [DisplayName("Бесплатный вай фай")]
         public bool FreeWiFi { get; set; }
@@ -79,7 +79,7 @@ namespace BookingLikeApp.Models
         [DisplayName("Семеные номера")]
         public bool FamilyNumbers { get; set; }
         [DisplayName("Номера для некурящих")]
-        public bool SmokeFreeNumbers { get; set; }
+        public bool SmokeFreeNumbers { get; set; }*/
 
         //Порядок проживания
         [DisplayName("Разрешены дети")]
@@ -117,21 +117,26 @@ namespace BookingLikeApp.Models
         public bool Enable { get; set; }
         public bool Finished { get; set; }
 
+		
         [DisplayName("Место проживаниия платильщика")]
-        public int PolisherStreetId { get; set; }
+        public int? PolisherStreetId { get; set; }
 
         public User User { get; set; }
         public ApartmentType ApartmentType { get; set; }
         public Registration Registration { get; set; }
-        public IEnumerable<Photo> Photos { get; set; }
-        public IEnumerable<Number> Numbers { get; set; }
-        public IEnumerable<ApartmentCard> ApartmentCards { get; set; }
+        public List<Photo> Photos { get; set; }
+        public List<Number> Numbers { get; set; }
+        public List<ApartmentCard> ApartmentCards { get; set; }
 
-        [NotMapped]
+		[DisplayName("Сервисы")]
+		public List<ApartmentService> ApartmentServices { get; set; }
+
+		[NotMapped]
         public Number Number { get; set; }
 
         public void SetBasicInfo(BasicInfoViewModel model)
         {
+			Id = model.Id;
             ApartmentStreetId = model.ApartmentStreetId;
             Stars = model.Stars;
             Name = model.Name;
@@ -144,20 +149,15 @@ namespace BookingLikeApp.Models
 
         public void SetServices(ServicesViewModel model)
         {
-            Parking = model.Parking;
+			Id = model.Id;
+			Parking = model.Parking;
             Breakfest = model.Breakfest;
-            Bar = model.Bar;
-            FreeWiFi = model.FreeWiFi;
-            Fitnes = model.Fitnes;
-            Pool = model.Pool;
-            FullTimeRegistration = model.FullTimeRegistration;
-            FamilyNumbers = model.FamilyNumbers;
-            SmokeFreeNumbers = model.SmokeFreeNumbers;
         }
 
         public void  SetRules(RulesViewModel model)
         {
-            ChildrensAllowed = model.ChildrensAllowed;
+			Id = model.Id;
+			ChildrensAllowed = model.ChildrensAllowed;
             AnimalsAllowed = model.AnimalsAllowed;
             DaysUntilCancelEnds = model.DaysUntilCancelEnds;
             CancelPrice = model.CancelPrice;

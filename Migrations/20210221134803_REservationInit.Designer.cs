@@ -4,14 +4,16 @@ using BookingLikeApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BookingLikeApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210221134803_REservationInit")]
+    partial class REservationInit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -99,7 +101,7 @@ namespace BookingLikeApp.Migrations
                     b.Property<int>("Parking")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PolisherStreetId")
+                    b.Property<int>("PolisherStreetId")
                         .HasColumnType("int");
 
                     b.Property<string>("SecondAddressLine")

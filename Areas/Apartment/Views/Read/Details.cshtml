@@ -1,0 +1,26 @@
+﻿@model Apartment
+@{
+	ViewData["Title"] = "Информация";
+}
+
+<div class="card mt-3">
+	<div class="card-body">
+		<h2 class="display-4">@Model.Name</h2>
+
+	</div>
+</div>
+
+@foreach(var item in Model.Numbers)
+{
+	<div class="card mt-3">
+		<div class="card-body">
+			<h2>@item.Name</h2>
+			<div class="row justify-content-end">
+				<form action="/" method="post">
+					<input asp-for="@item.Id" type="hidden"/>
+					<input type="submit" value="Снять номер" class="btn btn-primary mr-3"/>
+				</form>
+			</div>
+		</div>
+	</div>
+}

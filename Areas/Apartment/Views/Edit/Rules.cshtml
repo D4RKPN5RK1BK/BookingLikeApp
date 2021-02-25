@@ -1,5 +1,98 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model RulesViewModel
 @{
+	ViewData["Title"] = "Правила проживания";
+	ViewData["Id"] = Model.Id;
 }
+
+<h2 class="my-3 display-4">Правила проживания</h2>
+
+<form asp-controller="Edit" asp-action="Rules">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title col-md-9">За сколько дней гости могут отменить бронирование без уплаты штрафа?</h2>
+            <div class="col-sm-5">
+                <label asp-for="DaysUntilCancelEnds" class="col-form-label-sm"></label>
+                <select asp-for="DaysUntilCancelEnds" class="custom-select">
+                    <option value="0">В день заезда</option>
+                    <option value="1">1 день до заезда</option>
+                    <option value="2">1 дня до заезда</option>
+                    <option value="3">3 дня до заезда</option>
+                    <option value="7">7 дней до заезда</option>
+                    <option value="14">14 дней до заезда</option>
+                </select>
+                <span asp-validation-for="DaysUntilCancelEnds" class="alert-danger"></span>
+            </div>
+            <div class=" form-group col-md-5 mt-3">
+                <label class="col-form-label-sm">иначе они должны будут выплатить</label>
+                <select asp-for="CancelPrice" class="custom-select">
+                    <option value="true">Полную стоимость от проживания</option>
+                    <option value="false">Стоимоть от одной ночи</option>
+                </select>
+                <span asp-validation-for="CancelPrice" class="alert-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-group mt-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="col-sm-12">
+                    <h3 class="card-title">Регистрация заезда</h3>
+                    <small>c:</small>
+                    <select asp-for="ArrivalTimeStarts" class="custom-select" asp-items="@Model.TimePoints"></select>
+                    <span asp-validation-for="ArrivalTimeStarts" class="alert-danger"></span>
+                    <small>до:</small>
+                    <select asp-for="ArrivalTimeEnds" class="custom-select" asp-items="@Model.TimePoints"></select>
+                    <span asp-validation-for="ArrivalTimeEnds" class="alert-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="col-sm-12">
+                    <h3 class="card-title">Регистрация отъезда</h3>
+                    <small>c:</small>
+                    <select asp-for="DepartureTimeStarts" class="custom-select" asp-items="@Model.TimePoints"></select>
+                    <span asp-validation-for="DepartureTimeStarts" class="alert-danger"></span>
+                    <small>до:</small>
+                    <select asp-for="DepartureTimeEnds" class="custom-select" asp-items="@Model.TimePoints"></select>
+                    <span asp-validation-for="DepartureTimeEnds" class="alert-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="card-body">
+            <div class="col-sm-12">
+                <h2 class="card-title">Защита от случ бронирований</h2>
+                <div class="form-group">
+                    <input asp-for="AccidentProtection" class="form-check-inline" />
+                    <label asp-for="AccidentProtection" class="col-form-label"></label>
+                    <span asp-validation-for="AccidentProtection" class="alert-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="card-body">
+            <h2 class="card-title col-sm-10">Дети и животные</h2>
+            <div class="form-group col-sm-6">
+                <input asp-for="AnimalsAllowed" class="form-check-inline" />
+                <label asp-for="AnimalsAllowed" class="col-form-label"></label>
+                <span asp-validation-for="AnimalsAllowed" class="alert-danger"></span>
+            </div>
+            <div class="form-group col-sm-6">
+                <input asp-for="ChildrensAllowed" class="form-check-inline" />
+                <label asp-for="ChildrensAllowed" class="col-form-label"></label>
+                <span asp-validation-for="ChildrensAllowed" class="alert-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex flex-column align-items-center mb-5">
+        <input type="submit" value="Принять и продолжить" class="btn-block btn-success btn-lg mt-3 mb-1" />
+        <small>Переходя по какой люибо другой ссылке вы потеряете все изменения введенные на этой странице!</small>
+    </div>
+</form>
