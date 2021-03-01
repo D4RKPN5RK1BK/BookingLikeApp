@@ -40,7 +40,7 @@ namespace BookingLikeApp.Models
 		public Apartment Apartment { get; set; }
         public NumberType NumberType { get; set; }
         public List<NumberBed> NumberBeds { get; set; }
-        public List<NumberEntity> NumberReservations { get; set; }
+        public List<NumberEntity> NumberEntities { get; set; }
         public List<NumberRoom> NumberRooms { get; set; }
 
 	}

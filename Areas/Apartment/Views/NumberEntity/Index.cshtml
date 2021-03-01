@@ -1,0 +1,17 @@
+﻿@model Number
+@{ 
+	ViewData["Title"] = "Номер";
+}
+
+<h2 class="display-2">@Model.Name</h2>
+
+<iframe class="w-100" id="frame" frameborder="0" src="@Url.Action("Read", "NumberEntity", new { Model.Id })"></iframe>
+
+@section Scripts {
+	<script>
+		$('iframe').on('load', function () {
+			this.style.height =
+				(this.contentWindow.document.body.offsetHeight + 20) + 'px';
+		});
+	</script>
+}

@@ -52,14 +52,26 @@ namespace BookingLikeApp.Models
         {
             set
             {
-                if (value == null) return;
-                BasicInfo = value.BasicInfo;
-                Numbers = value.Numbers;
-                Rules = value.Rules;
-                Services = value.Services;
-                Facilites = value.Facilites;
-                Payment = value.Payment;
-                Photos = value.Photos;
+				if (value == null)
+				{
+					BasicInfo = false;
+					Numbers = false;
+					Rules = false;
+					Services = false;
+					Facilites = false;
+					Payment = false;
+					Photos = false;
+				}
+				else
+				{
+					BasicInfo = value.BasicInfo;
+					Numbers = value.Numbers;
+					Rules = value.Rules;
+					Services = value.Services;
+					Facilites = value.Facilites;
+					Payment = value.Payment;
+					Photos = value.Photos;
+				}                
             }
         }
 
@@ -100,14 +112,26 @@ namespace BookingLikeApp.Models
 
         public virtual void SetProps(Registration model)
         {
-            if (model == null) return;
-            BasicInfo = model.BasicInfo;
-            Numbers = model.Numbers;
-            Rules = model.Rules;
-            Services = model.Services;
-            Facilites = model.Facilites;
-            Payment = model.Payment;
-            Photos = model.Photos;
+            if (model == null)
+			{
+				BasicInfo = false;
+				Numbers = false;
+				Rules = false;
+				Services = false;
+				Facilites = false;
+				Payment = false;
+				Photos = false;
+			}
+			else
+			{
+				BasicInfo = model.BasicInfo;
+				Numbers = model.Numbers;
+				Rules = model.Rules;
+				Services = model.Services;
+				Facilites = model.Facilites;
+				Payment = model.Payment;
+				Photos = model.Photos;
+			}
         }
     }
 }

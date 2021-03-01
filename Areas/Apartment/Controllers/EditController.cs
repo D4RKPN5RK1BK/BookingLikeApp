@@ -37,9 +37,11 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 			return true;
 		}
 
-		public async Task<IActionResult> Index()
+		public async Task<IActionResult> Index(int id)
 		{
-			return View();
+			if (!await AllowEditAsync(id)) return NotFound();
+			Models.Apartment model = await _context.Apartments.FindAsync(id);
+			return View(model);
 		}
 
 		public async Task<IActionResult> BasicInfo(int id)
