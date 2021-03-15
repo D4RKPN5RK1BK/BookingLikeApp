@@ -58,12 +58,17 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 			if (ModelState.IsValid)
 			{
 				Models.Apartment apartment = await _context.Apartments.FindAsync(model.Id);
-				apartment.Registration = await _context.Registrations.FindAsync(apartment.Id);
-				apartment.Registration.BasicInfo = true;
 				apartment.SetBasicInfo(model);
-				apartment.Registration.BasicInfo = true;
-				_context.Update(apartment.Registration);
 				_context.Update(apartment);
+				
+				if (_context.Registrations.Any(o => o.ApartmentId == apartment.Id))
+				{
+					apartment.Registration = await _context.Registrations.FindAsync(apartment.Id);
+					apartment.Registration.BasicInfo = true;
+					_context.Update(apartment.Registration);
+
+				}
+
 				await _context.SaveChangesAsync();
 
 				return RedirectToAction("Index", "Number", new { apartment.Id });
@@ -86,13 +91,20 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 			if (ModelState.IsValid)
 			{
 				Models.Apartment apartment = await _context.Apartments.FindAsync(model.Id);
-				apartment.Registration = await _context.Registrations.FindAsync(apartment.Id);
 				apartment.SetRules(model);
-				apartment.Registration.Rules = true;
 				_context.Update(apartment);
-				_context.Update(apartment.Registration);
+
+				if (_context.Registrations.Any(o => o.ApartmentId == apartment.Id))
+				{
+					apartment.Registration = await _context.Registrations.FindAsync(apartment.Id);
+					apartment.Registration.Rules = true;
+					_context.Update(apartment.Registration);
+
+				}
+
 				await _context.SaveChangesAsync();
-				return RedirectToAction("Payment", "Edit");
+				
+				return RedirectToAction("Payment", "Edit", new { apartment.Id });
 			}
 			return View(model);
 		}
@@ -135,7 +147,7 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 				_context.Update(apartment.Registration);
 				_context.Update(apartment);
 				await _context.SaveChangesAsync();
-				return RedirectToAction("Photos", "Edit");
+				return RedirectToAction("Photos", "Edit", new { apartment.Id });
 			}
 			return View(model);
 		}
@@ -181,7 +193,7 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 				await _context.SaveChangesAsync();
 
 			}
-			return RedirectToAction("Photos", "Edit");
+			return RedirectToAction("Photos", "Edit", new { apartment.Id });
 		}
 		[HttpPost]
 		[ValidateAntiForgeryToken]
@@ -195,7 +207,7 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 			_context.Photos.Remove(photo);
 			await _context.SaveChangesAsync();
 
-			return RedirectToAction("Photos", "Edit");
+			return RedirectToAction("Photos", "Edit", new { apartment.Id });
 		}
 
 		public async Task<IActionResult> Facilites(int id)
@@ -266,11 +278,14 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 					_context.Update(apartment);
 					_context.Remove(apartment.Registration);
 					await _context.SaveChangesAsync();
-					return RedirectToAction("Index", "Home");
+					return RedirectToAction("Index", "Read", new { apartment.Id });
 				}
 				else
 				{
-					return RedirectToAction(apartment.Registration.Unfinished, "Edit");
+					if(apartment.Registration.Unfinished == "Numbers")
+						return RedirectToAction("Index", "Number", new { apartment.Id });
+					else 
+						return RedirectToAction(apartment.Registration.Unfinished, "Edit", new { apartment.Id });
 				}
 			}
 			return View(model);

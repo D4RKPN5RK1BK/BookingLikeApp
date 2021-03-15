@@ -41,18 +41,30 @@
 				<h2 class="card-title">Кровати в номере</h2>
 				<div class="row col-sm-8">
 					<a id="addBed" class="btn btn-success">Добавить кровать</a>
-					<a id="deleteBed" class=" ml-3 btn btn-danger">Удалить кровать</a>
 				</div>
 				<div class="align-items-end row align-items-start" id="numberBeds">
 					@for (int i = 0; i < Model.Number.NumberBeds.Count; i++)
 					{
-						<div class="form-group col-sm-4 mb-5 bedBlock" id="@i">
-							<input type="hidden" asp-for="Number.NumberBeds[i].Id" />
-							<label class="col-form-label">Тип кровати</label>
-							<select asp-for="Number.NumberBeds[i].BedId" asp-items="@Model.BedsSelect" class="custom-select" id="bedsList"></select>
-							<label class="col-form-label">Количество кроватей</label>
-							<input asp-for="Number.NumberBeds[i].Quantity" class="form-control" />
-						</div>
+					<div class="form-group col-sm-4 mb-5 bedBlock" name="bedBlock">
+						<input type="hidden" name="id" value="@Model.Number.NumberBeds[i].Id" />
+						<label class="col-form-label">Тип кровати</label>
+						<select name="numberBeds" class="custom-select">
+							@foreach (var b in Model.BedsSelect)
+							{
+								@if (Int32.Parse(b.Value) == @Model.Number.NumberBeds[i].BedId)
+								{
+									<option selected="selected" value="@b.Value">@b.Text</option>
+								}
+								else
+								{
+									<option value="@b.Value">@b.Text</option>
+								}
+							}
+						</select>
+						<label class="col-form-label">Количество кроватей</label>
+						<input name="numberBedsCount" value="@Model.Number.NumberBeds[i].Quantity" class="form-control" />
+						<a class="btn btn-block btn-sm btn-danger mt-2" name="delete">Удалить</a>
+					</div>
 					}
 				</div>
 			</div>
@@ -89,52 +101,79 @@
 
 </form>
 
-
-
-
-
 @section ApartmentScripts {
-		<script>
-		$(function () {
-			var bedsList = $('#bedsList').html();
-			var id = $('#numberBeds').children().length;
+	<script>
+		$(document).ready(function () {
+			//Кровати в номере
+			$("body").on("click", "a[name='delete']", function () {
+				fetch('/apartment/numberbed/delete', {
+					method: 'DELETE',
+					headers: {
+						'Accept': 'application/json',
+						'content-type': 'application/json'
+					},
+					body: JSON.stringify($(this).parent().children("input[name='id']").val())
+				});
+				$(this).parent().remove();
+			});
+
+			$("body").on("change", "input[name='numberBedsCount'], select[name='numberBeds']", function () {
+				let numberBed = {
+					id: Number($(this).parent().children("input[name='id']").val()),
+					quantity: Number($(this).parent().children("select[name='numberBedsCount']").val()),
+					bedId: Number($(this).parent().children("select[name='numberBeds']").val()),
+					numberId: Number($('#Number_Id').val())
+				};
+
+				fetch('/apartment/numberBed/update', {
+					method: 'PUT',
+					headers: {
+						'accept': 'application/json',
+						'content-type': 'application/json'
+					},
+					body: JSON.stringify(numberBed)
+				});
+			});
 
 			$('#addBed').click(function () {
-				var htmlBlock = "<div class='form-group col-sm-4 mb-5 bedBlock' id='" + id + "'>" +
-					"<input type='hidden' name='NumberBeds[" + id + "].Id' />" +
-					"<label class='col-form-label'>Тип кровати</label>" +
-					"<select name='NumberBeds[" + id + "].BedId' class='custom-select'>" + bedsList + "</select>" +
-					"<label class='col-form-label'>Количество кроватей</label>" +
-					"<input class='form-control' name='NumberBeds[" + id + "].Quantity' type='number'/>" +
-					@*"<a class='btn btn-secondary btn-block mt-3 deleteBed'>Удалить</a>" +*@
-					"</div>";
+				fetch('/apartment/numberbed/create', {
+					method: 'POST',
+					headers: {
+						'Accept': 'application/json',
+						'content-type': 'application/json'
+					},
+					body: JSON.stringify($('#Number_Id').val())
+				})
+					.then(res => res.json())
+					.then(numberBed => {
 
-				
+						let options = '';
+						fetch('/apartment/number/getbeds')
+							.then(res => res.json())
+							.then(beds => {
 
-				if (id < 3) {
-					$('#deleteBed').attr('class', 'btn btn-danger ml-3');
-					$('#addBed').attr('class', 'btn btn-success');
-					$('#numberBeds').append(htmlBlock);
-					id++;
-					if (id == 3)
-						$('#addBed').attr('class', 'btn btn-secondary');
-				}
+								for (let i = 0; i < $(beds).length; i++) {
+									options += `<option vlaue="${beds[i].id}">${beds[i].name}</option>`;
+								}
 
+								let content = `
+									<div class="form-group col-sm-4 mb-5 bedBlock">
+										<input type='hidden' name="id" value='${numberBed.id}'/>
+										<label class="col-form-label">Тип кровати</label>
+										<select name="numberBeds" class="custom-select" id="bedsList">${options}</select>
+										<label class="col-form-label">Количество кроватей</label>
+										<input name="numberBedsCount" class="form-control" />
+										<a class="btn btn-sm btn-block btn-danger mt-2" name="delete">Удалить</a>
+									</div>
+								`;
+
+								$('#numberBeds').append(content);
+							});
+					});
 			});
-
-			$('#deleteBed').click(function () {
-
-				if (id > 0) {
-					$('#deleteBed').attr('class', 'btn btn-danger ml-3');
-					$('#addBed').attr('class', 'btn btn-success');
-					$('#numberBeds').children().last().remove();
-					id--;
-					if (id == 0)
-						$('#deleteBed').attr('class', 'btn btn-secondary ml-3');
-				}
-			});
-
-		})
-		</script>
-	}
+			// Комнаты
+			// Кровати в комнатках
+		});
+	</script>
+}
 

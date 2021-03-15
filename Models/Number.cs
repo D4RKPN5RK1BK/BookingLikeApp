@@ -28,6 +28,8 @@ namespace BookingLikeApp.Models
         [Column(TypeName = "decimal(12,2)")]
         public decimal Price { get; set; }
 
+		public bool Finish { get; set; }
+
         [DisplayName("Доступно")]
         public bool Enable { get; set; }
         [DisplayName("Мини бар")]

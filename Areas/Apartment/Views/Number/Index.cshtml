@@ -6,7 +6,7 @@
 
 <h2 class="my-3 display-4">Номера</h2>
 
-<form asp-controller="Create" asp-action="AddNumber">
+<form asp-controller="Number" asp-action="Create" asp-route-id="@Model.Id">
 	<div class="card">
 		<div class="card-body">
 			<h2 class="card-title">Добивать новый номер</h2>
@@ -31,4 +31,4 @@
 	}
 
 </div>
-<a asp-action="Services" asp-controller="Create" class="btn-block btn-primary btn-lg mt-3 mb-1 text-center">Продолжить</a>
+<a asp-action="Services" asp-controller="Edit" asp-route-id="@Model.Id" class="btn-block btn-primary btn-lg mt-3 mb-1 text-center">Продолжить</a>

@@ -23,8 +23,12 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
         public async Task<IActionResult> Index()
         {
             User user = await _userManager.GetUserAsync(User);
-            ViewData["Exist"] = _context.Apartments.Any(o => o.Finished == false && o.UserId == user.Id);
-			ViewData["Id"] = _context.Apartments.FirstOrDefault(o => !o.Finished).Id;
+			bool exist = _context.Apartments.Any(o => o.Finished == false && o.UserId == user.Id);
+			ViewData["Exist"] = exist;
+			if (exist)
+			{
+				ViewData["Id"] = _context.Apartments.FirstOrDefault(o => !o.Finished).Id;
+			}
             ViewBag.ApartmentTypes = _context.ApartmentTypes.ToList();
             return View();
         }
@@ -45,7 +49,7 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
             await _context.AddAsync(apartment);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("BasicInfo", "Edit");
+            return RedirectToAction("BasicInfo", "Edit", new { apartment.Id });
         }
 
        

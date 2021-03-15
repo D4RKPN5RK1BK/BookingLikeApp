@@ -386,6 +386,9 @@ namespace BookingLikeApp.Migrations
                     b.Property<bool>("Enable")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("Finish")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("MiniBar")
                         .HasColumnType("bit");
 
@@ -1056,7 +1059,7 @@ namespace BookingLikeApp.Migrations
             modelBuilder.Entity("BookingLikeApp.Models.NumberEntity", b =>
                 {
                     b.HasOne("BookingLikeApp.Models.Number", "Number")
-                        .WithMany("NumberReservations")
+                        .WithMany("NumberEntities")
                         .HasForeignKey("NumberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1230,7 +1233,7 @@ namespace BookingLikeApp.Migrations
                 {
                     b.Navigation("NumberBeds");
 
-                    b.Navigation("NumberReservations");
+                    b.Navigation("NumberEntities");
 
                     b.Navigation("NumberRooms");
                 });

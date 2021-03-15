@@ -24,19 +24,21 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 			_userManager = userManager;
 		}
 
-		protected async Task<bool> AllowEditASync(int? id)
+		protected async Task<bool> AllowEditASync(Number number)
 		{
-			if (id == null) return false;
 
 			User user = await _userManager.GetUserAsync(User);
-			
-			Number number = _context.Numbers.Find(id);
 			if (number == null) return false;
 
 			Models.Apartment apartment = _context.Apartments.Find(number.ApartmentId);
 			if (apartment.UserId != user.Id) return false;
 
 			return true;
+		}
+
+		public ActionResult GetBeds()
+		{
+			return Json(_context.Beds);
 		}
 
 		public async Task<IActionResult> Index(int? id)
@@ -66,18 +68,20 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 			if (numberType == null) return NotFound();
 		
 			await _context.Numbers.AddAsync(new Number() { NumberTypeId = numberTypeId, ApartmentId = id, Name = numberType.Name});
+			await _context.SaveChangesAsync();
 
-			return RedirectToAction("Index", new { id });
+			return RedirectToAction("Index", "Number", new { id });
 			
 		}
 
 		public async Task<IActionResult> Edit(int? id)
 		{
-			if (!await AllowEditASync(id))
-				return NotFound();
-
 			EditNumberViewModel model = new EditNumberViewModel();
 			model.Number = await _context.Numbers.FindAsync(id);
+			
+			if (!await AllowEditASync(model.Number))
+				return NotFound();
+
 			model.Count = _context.NumberEntities.Count(o => o.NumberId == model.Number.Id);
 			model.BedsSelect = new SelectList(_context.Beds.ToList(), "Id", "Name");
 			model.Rooms = _context.Rooms.ToList();
@@ -95,14 +99,19 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Edit(EditNumberViewModel model)
 		{
-			if (!await AllowEditASync(model.Number.Id))
+			if (!await AllowEditASync(model.Number))
 				return NotFound();
 			if (ModelState.IsValid)
 			{
+				model.Number.Finish = true;
 				_context.Update(model.Number);
 
-				if (model.Number.NumberBeds != null)
-					_context.UpdateRange(model.Number.NumberBeds);
+				if (_context.Registrations.Any( o => o.ApartmentId == model.Number.ApartmentId))
+				{
+					Registration registration = await _context.Registrations.FindAsync(model.Number.ApartmentId);
+					registration.Numbers = true;
+					_context.Update(registration);
+				}
 
 				await _context.SaveChangesAsync();
 				return RedirectToAction("Index", new { model.Number.Id });
@@ -113,7 +122,7 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Delete(int id)
 		{
-			if (!await AllowEditASync(id))
+			if (!await AllowEditASync(await _context.Numbers.FindAsync(id)))
 				return NotFound();
 			return RedirectToAction("Index", new { id });
 		}
