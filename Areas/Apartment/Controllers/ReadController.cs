@@ -33,11 +33,16 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 			return View(_context.Apartments.ToList());
 		}
 
-		public IActionResult Search (string name)
+		public IActionResult SearchByName (string name)
 		{
 			if (_context.Apartments.Any(o => o.Name == name))
 				return View(_context.Apartments.Where(o => o.Name == name).ToList());
-			return View(_context.Apartments.Where(o => o.Name.Contains(name)).ToList());
+			return View("Search", _context.Apartments.Where(o => o.Name.Contains(name)).ToList(), new { Name = name });
+		}
+
+		public async Task<ActionResult> Search(SearchViewModel model)
+		{
+			return View("Search");
 		}
 
 		public IActionResult Details(int id)

@@ -20,8 +20,11 @@ namespace BookingLikeApp.Models
         [Column(TypeName = "decimal(2,0)")]
         public decimal Points { get; set; }
 
-		[DisplayName("Бронирование")]
-		public DateTimeOffset Reservation { get; set; }
+		[DisplayName("Начало бронирования")]
+		public DateTime ReservationBegin { get; set; }
+
+		[DisplayName("Конец бронирования")]
+		public DateTime ReservationEnd { get; set; }
 
         [DisplayName("Стоимость")]
         [Column(TypeName = "decimal(12,2)")]

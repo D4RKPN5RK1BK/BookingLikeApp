@@ -8,7 +8,7 @@ namespace BookingLikeApp.Areas.Apartment.ViewModels
 {
 	public class NumberEntityViewModel
 	{
-		public List<DateTime> Dates { get; set; }
+
 		public List<NumberEntity> Entities { get; set; }
 	}
 }

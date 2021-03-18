@@ -10,27 +10,21 @@ else
 	@foreach (var item in Model)
 	{
 		<div class="card mt-3">
-			<div class="card-header">
+			<a asp-action="Index" asp-controller="Edit" asp-route-id="@item.Id" class="card-header list-group-item-action">
 				<div class="row align-items-center">
 					<h2 class="flex-grow-1 card-title ml-5">@item.Name</h2>
-					<a asp-action="Index" asp-controller="Edit" asp-route-id="@item.Id" class="btn btn-link">Редактор</a>
-					<a asp-action="Confirm" asp-controller="Delete" asp-route-id="@item.Id" class="btn btn-danger mr-5">Удалить</a>
 
 				</div>
-			</div>
+			</a>
 			<div class="list-group list-group-flush">
 				@foreach (var number in item.Numbers)
 				{
-					<div class="list-group-item">
+					<a asp-action="Edit" asp-controller="Number" asp-route-id="@number.Id" class="list-group-item list-group-item-action">
 						<div class="row align-items-center w-75">
 							<h4 class="flex-grow-1 ml-3">@number.Name</h4>
-							<div class="btn-group btn-group-toggle">
-								<a asp-action="Reservations" asp-controller="Number" asp-route-id="@number.Id" class="btn btn-link btn-sm">Бронирования</a>
-								<a asp-action="Edit" asp-controller="Number" asp-route-id="@number.Id" class="btn btn-link btn-sm">Редактор</a>
-							</div>
-							<a asp-action="Delete" asp-controller="Number" asp-route-id="@number.Id" class="btn btn-danger btn-sm mr-3">Удалить</a>
+
 						</div>
-					</div>
+					</a>
 				}
 			</div>
 		</div>

@@ -4,14 +4,16 @@ using BookingLikeApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BookingLikeApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210318080555_NumberEntityUpdate")]
+    partial class NumberEntityUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -201,16 +203,9 @@ namespace BookingLikeApp.Migrations
                         new
                         {
                             Id = 1,
-                            Description = "Отель со множеством комнат и номеров",
+                            Description = "TestType",
                             FacilitesRequired = false,
-                            Name = "Отель"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Частный дом обчно сожержит несколько квартир",
-                            FacilitesRequired = false,
-                            Name = "Дом"
+                            Name = "TestType"
                         });
                 });
 
@@ -240,22 +235,6 @@ namespace BookingLikeApp.Migrations
                     b.HasIndex("RoomId");
 
                     b.ToTable("Beds");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Capacity = 0m,
-                            Code = "SNG",
-                            Name = "Односпальная"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Capacity = 0m,
-                            Code = "DBL",
-                            Name = "Двуспальная"
-                        });
                 });
 
             modelBuilder.Entity("BookingLikeApp.Models.Card", b =>
@@ -276,12 +255,7 @@ namespace BookingLikeApp.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "MasterCard"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "ВТБ"
+                            Name = "TestCard"
                         });
                 });
 
@@ -317,7 +291,7 @@ namespace BookingLikeApp.Migrations
                             Id = 1,
                             Blocked = false,
                             CountryId = 1,
-                            Name = "Москва"
+                            Name = "TestCity"
                         });
                 });
 
@@ -354,7 +328,7 @@ namespace BookingLikeApp.Migrations
                         {
                             Id = 1,
                             Blocked = false,
-                            Name = "Россия"
+                            Name = "TestCountry"
                         });
                 });
 
@@ -380,11 +354,8 @@ namespace BookingLikeApp.Migrations
                     b.Property<DateTime>("ProceedDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("ReservationBegin")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ReservationEnd")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("Reservation")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -476,9 +447,6 @@ namespace BookingLikeApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .UseIdentityColumn();
-
-                    b.Property<bool>("Enable")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .HasMaxLength(32)
@@ -574,28 +542,35 @@ namespace BookingLikeApp.Migrations
                         {
                             Id = 1,
                             HasRooms = false,
-                            Name = "Одноместный номер",
+                            Name = "Number",
                             Share = false
                         },
                         new
                         {
                             Id = 2,
                             HasRooms = true,
-                            Name = "Двуместный номер",
+                            Name = "Apartment",
                             Share = false
                         },
                         new
                         {
                             Id = 3,
                             HasRooms = false,
-                            Name = "Общая комната",
+                            Name = "SharedRoom",
                             Share = true
                         },
                         new
                         {
                             Id = 4,
+                            HasRooms = false,
+                            Name = "SharedBed",
+                            Share = true
+                        },
+                        new
+                        {
+                            Id = 5,
                             HasRooms = true,
-                            Name = "Апартаменты",
+                            Name = "SharedBedWithRooms",
                             Share = true
                         });
                 });
@@ -675,17 +650,17 @@ namespace BookingLikeApp.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Спальная"
+                            Name = "Bedroom"
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Гостинная"
+                            Name = "Livingroom"
                         },
                         new
                         {
                             Id = 3,
-                            Name = "Ванная"
+                            Name = "Bathroom"
                         });
                 });
 
@@ -710,7 +685,7 @@ namespace BookingLikeApp.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Wifi"
+                            Name = "TestService"
                         });
                 });
 
@@ -739,7 +714,7 @@ namespace BookingLikeApp.Migrations
                         {
                             Id = 1,
                             CityId = 1,
-                            Name = "Ленинградская"
+                            Name = "TestCountry"
                         });
                 });
 

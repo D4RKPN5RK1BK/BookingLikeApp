@@ -1,27 +1,27 @@
-﻿@model EditNumberViewModel
+﻿@model Number
 @{
-	ViewData["Title"] = "Номера";
-	ViewData["Id"] = Model.Number.ApartmentId;
+	ViewData["Title"] = "Общая информация";
+	ViewData["Id"] = Model.ApartmentId;
 }
 
 <form asp-action="Edit" asp-controller="Number">
-	<input type="hidden" asp-for="Number.Id" />
-	<input type="hidden" asp-for="Number.ApartmentId" />
-	<input type="hidden" asp-for="Number.NumberTypeId" />
+	<input type="hidden" asp-for="Id" />
+	<input type="hidden" asp-for="ApartmentId" />
+	<input type="hidden" asp-for="NumberTypeId" />
 	<div class="card mt-3">
 		<div class="card-body">
 			<h2 class="card-title col-sm-8">Общая информация о номере</h2>
 			<div class="form-group col-sm-4">
-				<label asp-for="Number.Name" class="col-form-label"></label>
-				<input asp-for="Number.Name" class="form-control" />
+				<label asp-for="Name" class="col-form-label"></label>
+				<input asp-for="Name" class="form-control" />
 			</div>
 			<div class="form-group col-sm-4">
-				<label asp-for="Number.Area" class="col-form-label"></label>
-				<input asp-for="Number.Area" class="form-control" />
+				<label asp-for="Area" class="col-form-label"></label>
+				<input asp-for="Area" class="form-control" />
 			</div>
 			<div class="form-group col-sm-4">
-				<label asp-for="Number.Price" class="col-form-label"></label>
-				<input asp-for="Number.Price" class="form-control" />
+				<label asp-for="Price" class="col-form-label"></label>
+				<input asp-for="Price" class="form-control" />
 			</div>
 			<div class="form-group col-sm-4">
 				<label asp-for="Count" class="col-form-label"></label>
@@ -29,8 +29,8 @@
 				<span asp-validation-for="Count" class="alert-danger"></span>
 			</div>
 			<div class="form-group col-sm-4">
-				<input asp-for="Number.Enable" class="form-check-inline" />
-				<label asp-for="Number.Enable" class="col-form-label"></label>
+				<input asp-for="Enable" class="form-check-inline" />
+				<label asp-for="Enable" class="col-form-label"></label>
 			</div>
 		</div>
 	</div>
@@ -43,15 +43,15 @@
 					<a id="addBed" class="btn btn-success">Добавить кровать</a>
 				</div>
 				<div class="align-items-end row align-items-start" id="numberBeds">
-					@for (int i = 0; i < Model.Number.NumberBeds.Count; i++)
+					@for (int i = 0; i < Model.NumberBeds.Count; i++)
 					{
 					<div class="form-group col-sm-4 mb-5 bedBlock" name="bedBlock">
-						<input type="hidden" name="id" value="@Model.Number.NumberBeds[i].Id" />
+						<input type="hidden" name="id" value="@Model.NumberBeds[i].Id" />
 						<label class="col-form-label">Тип кровати</label>
 						<select name="numberBeds" class="custom-select">
-							@foreach (var b in Model.BedsSelect)
+							@foreach (var b in ViewBag.BedsSelect)
 							{
-								@if (Int32.Parse(b.Value) == @Model.Number.NumberBeds[i].BedId)
+								@if (Int32.Parse(b.Value) == @Model.NumberBeds[i].BedId)
 								{
 									<option selected="selected" value="@b.Value">@b.Text</option>
 								}
@@ -62,7 +62,7 @@
 							}
 						</select>
 						<label class="col-form-label">Количество кроватей</label>
-						<input name="numberBedsCount" value="@Model.Number.NumberBeds[i].Quantity" class="form-control" />
+						<input name="numberBedsCount" value="@Model.NumberBeds[i].Quantity" class="form-control" />
 						<a class="btn btn-block btn-sm btn-danger mt-2" name="delete">Удалить</a>
 					</div>
 					}
@@ -71,17 +71,17 @@
 		</div>
 	</div>
 
-	@if (Model.Number.NumberType.HasRooms)
+	@if (Model.NumberType.HasRooms)
 	{
 		<div class="card mt-3">
 			<div class="card-body">
 				<h2 class="card-title col-sm-8">Количество комнат</h2>
 				<div class="row col-sm-12">
-					@for (int i = 0; i < Model.Rooms.Count; i++)
+					@for (int i = 0; i < ViewBag.Rooms.Count; i++)
 					{
 						<div class="form-group col-sm-3">
-							<label class="col-form-label">@Model.Rooms[i].Name</label>
-							<select asp-for="Rooms[i].Count" class="form-control">
+							<label class="col-form-label">@ViewBag.Rooms[i].Name</label>
+							<select name="@ViewBag.Rooms[i].Name" class="form-control">
 								<option value="0">Нет</option>
 								<option value="1">1</option>
 								<option value="2">2</option>
@@ -101,7 +101,7 @@
 
 </form>
 
-@section ApartmentScripts {
+@section Scripts {
 	<script>
 		$(document).ready(function () {
 			//Кровати в номере
@@ -122,7 +122,7 @@
 					id: Number($(this).parent().children("input[name='id']").val()),
 					quantity: Number($(this).parent().children("select[name='numberBedsCount']").val()),
 					bedId: Number($(this).parent().children("select[name='numberBeds']").val()),
-					numberId: Number($('#Number_Id').val())
+					numberId: Number($('#Id').val())
 				};
 
 				fetch('/apartment/numberBed/update', {
@@ -142,7 +142,7 @@
 						'Accept': 'application/json',
 						'content-type': 'application/json'
 					},
-					body: JSON.stringify($('#Number_Id').val())
+					body: JSON.stringify($('#Id').val())
 				})
 					.then(res => res.json())
 					.then(numberBed => {

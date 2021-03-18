@@ -4,53 +4,48 @@
 	ViewData["Id"] = Model.Id;
 }
 
-<h2 class="my-3 display-4">Фотографии</h2>
+<div class="card mt-3">
+	<div class="row ">
+		@if (Model != null && Model.ApartmentPhotos.Count < 15)
+		{
+			<div class="card-body ">
+				<h2 class="card-title">Выберите фотографию</h2>
+				<label class="col-form-label-lg">Можно выбрать до 15 фотографий.</label>
+				<form asp-controller="Edit" asp-action="AddPhoto" enctype="multipart/form-data" method="post">
+					<div class="row justify-content-between col-12">
+						<input type="hidden" asp-for="Id" />
+						<div class="form-group">
+							<input asp-for="File">
+							<span class="alert-danger"></span>
+						</div>
+						<div class="form-group">
+							<input type="submit" value="Загрузить" class="btn btn-success" />
+						</div>
+					</div>
+				</form>
+			</div>
+		}
+	</div>
+	<div class="list-group list-group-flush mx-0 px-0">
+		@if (Model != null)
+		{
+			@foreach (var item in Model.ApartmentPhotos)
+			{
+				<div class="list-group-item">
+					<div class="row">
+						<img src="@item.PhotoUrl" alt="Image not found" class="rounded-lg" style="height: 150px;" />
+						<div class="ml-3">
+							<h4>@item.Name</h4>
+							<form asp-controller="Edit" asp-action="DeletePhoto">
+								<input type="hidden" name="id" value="@item.Id" />
+								<input type="submit" value="Удалить" class="btn btn-danger" />
+							</form>
+						</div>
+					</div>
+				</div>
+			}
+		}
+	</div>
 
-<div class="col-sm-8 px-0 mx-0">
-    <div class="card">
-        <div class="row ">
-            @if (Model != null && Model.ApartmentPhotos.Count < 15)
-            {
-                <div class="card-body ">
-                    <h2 class="card-title">Выберите фотографию</h2>
-                    <label class="col-form-label-lg">Можно выбрать до 15 фотографий.</label>
-                    <form asp-controller="Edit" asp-action="AddPhoto" enctype="multipart/form-data" method="post">
-                        <div class="row justify-content-between col-12">
-							<input type="hidden" asp-for="Id"  />
-                            <div class="form-group">
-                                <input asp-for="File">
-                                <span class="alert-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <input type="submit" value="Загрузить" class="btn btn-success" />
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            }
-        </div>
-        <div class="list-group list-group-flush mx-0 px-0">
-            @if (Model != null)
-            {
-                @foreach (var item in Model.ApartmentPhotos)
-                {
-                    <div class="list-group-item">
-                        <div class="row">
-                            <img src="@item.PhotoUrl" alt="Image not found" class="rounded-lg" style="height: 150px;" />
-                            <div class="ml-3">
-                                <h4>@item.Name</h4>
-                                <form asp-controller="Edit" asp-action="DeletePhoto">
-                                    <input type="hidden" name="id" value="@item.Id" />
-                                    <input type="submit" value="Удалить" class="btn btn-danger" />
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                }
-            }
-        </div>
-
-    </div>
 </div>
-
 <a class="btn-block btn-primary text-white text-center col-md-8 btn-lg mt-3 mb-5"  asp-action="@(Model.FacilitesRequired ? "facilites" : "rules")">Продолжить</a>

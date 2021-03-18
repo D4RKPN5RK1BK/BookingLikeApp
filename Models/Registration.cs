@@ -93,11 +93,15 @@ namespace BookingLikeApp.Models
             }
         }
 
+		[NotMapped]
+		public string ApartmentName { get; set; }
+
 
         public Registration() { }
 
         public Registration(Models.Apartment apartment)
         {
+			ApartmentName = apartment.Name;
             if (apartment.Registration != null)
             {
                 BasicInfo = apartment.Registration.BasicInfo;

@@ -1,15 +1,14 @@
 ﻿@model NumbersViewModel
 @{
+	Layout = "_EditApartmentLayout";
 	ViewData["Title"] = "Номера";
 	ViewData["Id"] = Model.Id;
 }
 
-<h2 class="my-3 display-4">Номера</h2>
-
 <form asp-controller="Number" asp-action="Create" asp-route-id="@Model.Id">
-	<div class="card">
+	<div class="card mt-3">
 		<div class="card-body">
-			<h2 class="card-title">Добивать новый номер</h2>
+			<h2 class="card-title">Добавить новый номер</h2>
 			<div class="form-group">
 				<select name="numberTypeId" asp-items="@Model.NumberTypes" class="custom-select col-sm-4"></select>
 				<input type="submit" value="Добавить" class="btn btn-success" />
@@ -21,14 +20,11 @@
 <div class="list-group mt-3">
 	@foreach (Number item in Model.NumbersList)
 	{
-		<div class="list-group-item d-sm-inline-flex">
+		<a asp-controller="Number" asp-action="Edit" asp-route-id="@item.Id" class="list-group-item list-group-item-action d-sm-inline-flex">
 			<div class="flex-grow-1">
 				<h4>@item.Name</h4>
 			</div>
-			<a asp-controller="Number" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary mr-sm-3">Изменить</a>
-			<a asp-controller="Number" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger mr-sm-3">Удалить</a>
-		</div>
+		</a>
 	}
 
 </div>
-<a asp-action="Services" asp-controller="Edit" asp-route-id="@Model.Id" class="btn-block btn-primary btn-lg mt-3 mb-1 text-center">Продолжить</a>

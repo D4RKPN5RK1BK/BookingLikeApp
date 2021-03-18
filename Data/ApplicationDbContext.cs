@@ -37,25 +37,29 @@ namespace BookingLikeApp.Data
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<Country>().HasData(new Country() { Id = 1, Blocked = false, Name = "TestCountry"});
-            builder.Entity<City>().HasData(new City() { Id = 1, Blocked = false, Name = "TestCity", CountryId = 1});
-            builder.Entity<Street>().HasData(new Street() { Id = 1, Name = "TestCountry", CityId = 1});
+            builder.Entity<Country>().HasData(new Country() { Id = 1, Blocked = false, Name = "Россия"});
+            builder.Entity<City>().HasData(new City() { Id = 1, Blocked = false, Name = "Москва", CountryId = 1});
+            builder.Entity<Street>().HasData(new Street() { Id = 1, Name = "Ленинградская", CityId = 1});
 
-            builder.Entity<ApartmentType>().HasData(new ApartmentType() { Id = 1, Description = "TestType", Name = "TestType" });
+            builder.Entity<ApartmentType>().HasData(new ApartmentType() { Id = 1, Description = "Отель со множеством комнат и номеров", Name = "Отель" });
+            builder.Entity<ApartmentType>().HasData(new ApartmentType() { Id = 2, Description = "Частный дом обчно сожержит несколько квартир", Name = "Дом" });
 
-            builder.Entity<NumberType>().HasData(new NumberType() { Id = 1, Name = "Number", HasRooms = false, Share = false});
-            builder.Entity<NumberType>().HasData(new NumberType() { Id = 2, Name = "Apartment", HasRooms = true, Share = false });
-            builder.Entity<NumberType>().HasData(new NumberType() { Id = 3, Name = "SharedRoom", HasRooms = false, Share = true });
-            builder.Entity<NumberType>().HasData(new NumberType() { Id = 4, Name = "SharedBed", HasRooms = false, Share = true });
-            builder.Entity<NumberType>().HasData(new NumberType() { Id = 5, Name = "SharedBedWithRooms", HasRooms = true, Share = true });
+            builder.Entity<NumberType>().HasData(new NumberType() { Id = 1, Name = "Одноместный номер", HasRooms = false, Share = false});
+            builder.Entity<NumberType>().HasData(new NumberType() { Id = 2, Name = "Двуместный номер", HasRooms = true, Share = false });
+            builder.Entity<NumberType>().HasData(new NumberType() { Id = 3, Name = "Общая комната", HasRooms = false, Share = true });
+            builder.Entity<NumberType>().HasData(new NumberType() { Id = 4, Name = "Апартаменты", HasRooms = true, Share = true });
 
-            builder.Entity<Room>().HasData(new Room() { Id = 1, Name = "Bedroom"});
-            builder.Entity<Room>().HasData(new Room() { Id = 2, Name = "Livingroom"});
-            builder.Entity<Room>().HasData(new Room() { Id = 3, Name = "Bathroom"});
+            builder.Entity<Room>().HasData(new Room() { Id = 1, Name = "Спальная"});
+            builder.Entity<Room>().HasData(new Room() { Id = 2, Name = "Гостинная"});
+            builder.Entity<Room>().HasData(new Room() { Id = 3, Name = "Ванная"});
 
-            builder.Entity<Card>().HasData(new Card() { Id = 1, Name = "TestCard" });
+            builder.Entity<Bed>().HasData(new Bed() { Id = 1, Name = "Односпальная", Code="SNG"});
+            builder.Entity<Bed>().HasData(new Bed() { Id = 2, Name = "Двуспальная", Code="DBL"});
 
-			builder.Entity<Service>().HasData(new Service() { Id = 1, Name = "TestService" });
+            builder.Entity<Card>().HasData(new Card() { Id = 1, Name = "MasterCard" });
+            builder.Entity<Card>().HasData(new Card() { Id = 2, Name = "ВТБ" });
+
+			builder.Entity<Service>().HasData(new Service() { Id = 1, Name = "Wifi" });
         }
     }
 }

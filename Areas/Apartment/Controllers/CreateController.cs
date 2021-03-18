@@ -43,7 +43,7 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
                 _context.Remove(apartment);
             }
             
-            apartment = new Models.Apartment() { UserId = user.Id, ApartmentTypeId = apartmentType };
+            apartment = new Models.Apartment() { UserId = user.Id, ApartmentTypeId = apartmentType , Name = _context.ApartmentTypes.Find(apartmentType).Name};
             Registration registration = new Registration() { Apartment = apartment };
             await _context.AddAsync(registration);
             await _context.AddAsync(apartment);

@@ -19,7 +19,7 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 			_context = context;
 		}
 
-		public IActionResult Index(int id)
+		/*public IActionResult Index(int id)
 		{
 			Number model = _context.Numbers.Find(id);
 			return View(model);
@@ -35,6 +35,6 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 				model.Dates.Add(now.Subtract(new TimeSpan(14)));
 			}
 			return View();
-		}
+		}*/
 	}
 }

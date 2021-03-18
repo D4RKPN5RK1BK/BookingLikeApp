@@ -1,0 +1,42 @@
+﻿@model Number
+@{ 
+	Layout = "_Empty";
+}
+<table class="table mt-3">
+	<thead>
+	<th>
+		Названия номеров
+	</th>
+	@foreach (DateTime date in ViewBag.Dates)
+	{
+		<th>@date.Date.ToString("yy:MM:dd")</th>
+	}
+	</thead>
+	@foreach (var entity in Model.NumberEntities)
+	{
+		<tr>
+			<td>@entity.Name</td>
+			@foreach (DateTime date in ViewBag.Dates)
+			{
+				<td>
+					@if (entity.EntityReservations.Any(o => o.ReservationBegin <= date && o.ReservationEnd >= date))
+					{
+						<a class="btn btn-info btn-sm btn-block">?</a>
+					}
+				</td>
+
+			}
+		</tr>
+
+	}
+	<tfoot>
+		
+	<th>
+		Названия номеров
+	</th>
+	@foreach (DateTime date in ViewBag.Dates)
+	{
+		<th>@date.Date.ToString("yy:MM:dd")</th>
+	}
+	</tfoot>
+</table>

@@ -76,55 +76,124 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 
 		public async Task<IActionResult> Edit(int? id)
 		{
-			EditNumberViewModel model = new EditNumberViewModel();
-			model.Number = await _context.Numbers.FindAsync(id);
+			Number model = await _context.Numbers.FindAsync(id);
+			model.Apartment = await _context.Apartments.FindAsync(model.ApartmentId);
 			
-			if (!await AllowEditASync(model.Number))
+			if (!await AllowEditASync(model))
 				return NotFound();
 
-			model.Count = _context.NumberEntities.Count(o => o.NumberId == model.Number.Id);
-			model.BedsSelect = new SelectList(_context.Beds.ToList(), "Id", "Name");
-			model.Rooms = _context.Rooms.ToList();
+			model.Count = _context.NumberEntities.Count(o => o.NumberId == model.Id);
+			ViewBag.BedsSelect = new SelectList(_context.Beds.ToList(), "Id", "Name");
+			ViewBag.Rooms = _context.Rooms.ToList();
 
-			if (_context.Registrations.Any(o => o.ApartmentId == model.Number.ApartmentId))
-				model.SetProps(_context.Registrations.Find(model.Number.ApartmentId));
 
-			model.Number.NumberType = await _context.NumberTypes.FindAsync(model.Number.NumberTypeId);
-			model.Number.NumberBeds = _context.NumberBeds.Where(o => o.NumberId == id).ToList();
-			if (model.Number.NumberType.HasRooms)
-				model.Number.NumberRooms = _context.NumberRooms.Where(o => o.NumberId == model.Number.Id).ToList();
+			model.NumberType = await _context.NumberTypes.FindAsync(model.NumberTypeId);
+			model.NumberBeds = _context.NumberBeds.Where(o => o.NumberId == id).ToList();
+			if (model.NumberType.HasRooms)
+				model.NumberRooms = _context.NumberRooms.Where(o => o.NumberId == model.Id).ToList();
 
 			return View(model);
 		}
 		[HttpPost]
-		public async Task<IActionResult> Edit(EditNumberViewModel model)
+		public async Task<IActionResult> Edit(Number model)
 		{
-			if (!await AllowEditASync(model.Number))
+			if (!await AllowEditASync(model))
 				return NotFound();
 			if (ModelState.IsValid)
 			{
-				model.Number.Finish = true;
-				_context.Update(model.Number);
+				model.Finish = true;
+				_context.Update(model);
 
-				if (_context.Registrations.Any( o => o.ApartmentId == model.Number.ApartmentId))
+				if (_context.Registrations.Any( o => o.ApartmentId == model.ApartmentId))
 				{
-					Registration registration = await _context.Registrations.FindAsync(model.Number.ApartmentId);
+					Registration registration = await _context.Registrations.FindAsync(model.ApartmentId);
 					registration.Numbers = true;
 					_context.Update(registration);
 				}
 
+				if (model.Count > 0)
+				{
+					model.NumberEntities = new List<NumberEntity>();
+					for(int i = 0; i < model.Count; i++)
+					{
+						
+						model.NumberEntities.Add(new NumberEntity { NumberId = model.Id });
+
+					}
+					await _context.NumberEntities.AddRangeAsync(model.NumberEntities);
+				}
+
 				await _context.SaveChangesAsync();
-				return RedirectToAction("Index", new { model.Number.Id });
+				return RedirectToAction("Index", new { model.Id });
 			}
 			return View(model);
 		}
 
-		[HttpPost]
-		public async Task<IActionResult> Delete(int id)
+		public async Task<ActionResult> Delete(int id)
 		{
-			if (!await AllowEditASync(await _context.Numbers.FindAsync(id)))
-				return NotFound();
-			return RedirectToAction("Index", new { id });
+			Number model = await _context.Numbers.FindAsync(id);
+			model.Apartment = await _context.Apartments.FindAsync(model.ApartmentId);
+			return View(model);
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> Delete(Number model)
+		{
+			int id = model.ApartmentId;
+			_context.Remove(model);
+			await _context.SaveChangesAsync();
+			return RedirectToAction("Index", "Number",  new { id });
+		}
+
+		public async Task<ActionResult> Reservations(int id)
+		{
+			Number model = await _context.Numbers.FindAsync(id);
+			model.Apartment = await _context.Apartments.FindAsync(model.ApartmentId);
+			return View(model);
+		}
+
+		public async Task<ActionResult> Payment(int id)
+		{
+			Number model = await _context.Numbers.FindAsync(id);
+			model.Apartment = await _context.Apartments.FindAsync(model.ApartmentId);
+			return View(model);
+		}
+
+		public async Task<ActionResult> Beds(int id)
+		{
+			Number model = await _context.Numbers.FindAsync(id);
+			model.Apartment = await _context.Apartments.FindAsync(model.ApartmentId);
+			return View(model);
+		}
+
+		public async Task<ActionResult> Services(int id)
+		{
+			Number model = await _context.Numbers.FindAsync(id);
+			model.Apartment = await _context.Apartments.FindAsync(model.ApartmentId);
+			return View(model);
+		}
+
+		public async Task<ActionResult> Table(int id)
+		{
+			Number model = await _context.Numbers.FindAsync(id);
+			model.Apartment = await _context.Apartments.FindAsync(model.ApartmentId);
+			model.NumberEntities = _context.NumberEntities.Where(o => o.NumberId == model.Id).ToList();
+			for(int i = 0; i < model.NumberEntities.Count; i++)
+			{
+				model.NumberEntities[i].EntityReservations = _context.EntityReservations.Where(o => o.NumberEntityId == model.NumberEntities[i].Id).ToList();
+			}
+			List<DateTime> dates = new List<DateTime>();
+			TimeSpan twoWeeks = TimeSpan.FromDays(14);
+			DateTime start = DateTime.Now;
+			start = start.Subtract(twoWeeks);
+			dates.Add(start);
+			for(int i = 0; i < 28; i++)
+			{
+				dates.Add(dates[i]);
+				dates[i + 1] = dates[i + 1].AddDays(1);
+			}
+			ViewBag.Dates = dates;
+			return View(model);
 		}
 	}
 }

@@ -45,5 +45,8 @@ namespace BookingLikeApp.Models
         public List<NumberEntity> NumberEntities { get; set; }
         public List<NumberRoom> NumberRooms { get; set; }
 
+		[NotMapped]
+		public int Count { get; set; }
+
 	}
 }
