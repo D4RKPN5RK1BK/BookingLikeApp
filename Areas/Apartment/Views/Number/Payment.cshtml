@@ -2,4 +2,175 @@
 @{ 
 	ViewData["Title"] = "Оплата";
 }
-	<h2>Оплата проживания</h2>
+
+<input asp-for="Id" type="hidden"/>
+
+<div class="card mt-3">
+	<div class="card-body">
+		<h2 class="card-title">Добавить новый элемент</h2>
+		<button type="button" class="btn btn-success text-white">Добавить новую сборку</button>
+
+	</div>
+</div>
+
+<div class="accordion mt-3" id="itemList">
+	<div class="card">
+		<div class="card-header" id="header_1">
+			<h2 class="mb-0">
+				<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse_1" aria-expanded="true" aria-controls="collapse_1">
+					Сборка 1
+				</button>
+			</h2>
+		</div>
+		<div id="collapse_1" class="collapse" aria-labelledby="header_1" data-parent="#itemList">
+			<div class="card-body">
+
+				<div class="row">
+					<div class="row col-sm-8">
+						<h2 class="card-title col-12">Название</h2>
+						<div class="form-group col-12">	
+							<input type="text" name="name" class="form-control col-12" />
+							<span class="alert-danger"></span>
+						</div>
+
+						<h2 class="card-title col-12">Сервисы</h2>
+
+						<div class="form-group col-12 col-sm-6">
+							<input type="checkbox" class="form-check-inline" />
+							<label class="col-form-label">Сервис 1</label>
+						</div>
+						<div class="form-group col-12 col-sm-6">
+							<input type="checkbox" class="form-check-inline" />
+							<label class="col-form-label">Сервис 2</label>
+						</div>
+						<div class="form-group col-12 col-sm-6">
+							<input type="checkbox" class="form-check-inline" />
+							<label class="col-form-label">Сервис 3</label>
+						</div>
+						<div class="form-group col-12 col-sm-6">
+							<input type="checkbox" class="form-check-inline" />
+							<label class="col-form-label">Сервис 4</label>
+						</div>
+
+						<h2 class="card-title col-12">Количество людей</h2>
+
+						<div id="peopleList" class="col-12">
+							<div class="row mb-3">
+								<div class="form-group col-6 mb-0">
+									<label class="col-form-label">Взрослые</label>
+									<input type="number" name="adults" class="form-control" />
+									<span class="alert-danger"></span>
+								</div>
+								<div class="form-group col-6 mb-0">
+									<label class="col-form-label">Дети</label>
+									<input type="number" name="childrens" class="form-control" />
+									<span class="alert-danger"></span>
+								</div>
+								<div class="form-group col-12 mt-1">
+									<label class="col-form-label">Стоимость</label>
+									<input type="text" name="price" class="form-control" />
+									<span class="alert-danger"></span>
+								</div>
+								<div class="col-6">
+									<button type="button" class="btn btn-danger btn-block">Удалить вариацию</button>
+								</div>
+							</div>
+							<div class="row">
+								<div class="form-group col-6 mb-0">
+									<label class="col-form-label">Взрослые</label>
+									<input type="number" name="adults" class="form-control" />
+									<span class="alert-danger"></span>
+								</div>
+								<div class="form-group col-6 mb-0">
+									<label class="col-form-label">Дети</label>
+									<input type="number" name="childrens" class="form-control" />
+									<span class="alert-danger"></span>
+								</div>
+								<div class="form-group col-12 mt-1">
+									<label class="col-form-label">Стоимость</label>
+									<input type="text" name="price" class="form-control" />
+									<span class="alert-danger"></span>
+								</div>
+								<div class="col-6">
+									<button type="button" class="btn btn-danger btn-block">Удалить вариацию</button>
+								</div>
+							</div>
+						</div>
+
+
+						<div class="col-12">
+							<button type="button" class="btn btn-success btn-block mt-5" s>Добавить вариацию</button>
+						</div>
+					</div>
+
+					<div class="col-sm-4">
+						<small class="small"> Название сборки поле будет видно только вам и требуется исключительно для навигации по вашим сборкам</small>
+					</div>
+				</div>
+				
+				
+				
+			</div>
+		</div>
+	</div>
+
+	<div class="card">
+		<div class="card-header" id="header_2">
+			<h2 class="mb-0">
+				<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse_2" aria-expanded="true" aria-controls="collapse_2">
+					Сборка 2
+				</button>
+			</h2>
+		</div>
+		<div id="collapse_2" class="collapse" aria-labelledby="header_2" data-parent="#itemList">
+			<div class="card-body">
+				<button type="button" class="btn btn-success text-white">Добавить новую сборку</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	<script>
+		$(document).ready(function () {
+
+			$("body").on("click", "#addPack", function () {
+				fetch("/apartment/pack/create", {
+					method: "POST",
+					headers: {
+						"accept": "application/json",
+						"content-type": "application/json"
+					},
+					body: JSON.stringify($("#Id").val())
+				})
+					.then(res => res.json())
+					.then(data => {
+						let content = `
+							<div class="card">
+								<div class="card-header" id="header_1">
+									<h2 class="mb-0">
+										<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse_1" aria-expanded="true" aria-controls="collapse_1">
+											WOW
+										</button>
+									</h2>
+								</div>
+								<div id="collapse_1" class="collapse" aria-labelledby="header_1" data-parent="#itemList">
+									<div class="card-body">
+										Text text text
+									</div>
+								</div>
+							</div>
+						`;
+					});
+			});
+
+			$("body").on("click", "deletePack", function () {
+
+			});
+
+			$("body").on("change", "@*блоки*@", function () {
+
+			});
+		});
+	</script>
+}

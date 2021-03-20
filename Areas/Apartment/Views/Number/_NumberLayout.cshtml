@@ -12,10 +12,12 @@
 		<div class="list-group">
 			<a asp-action="Edit" asp-controller="Number" asp-route-id="@Model.Id" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Общая информация" ? "active" : "")">Общая информация</a>
 			<a asp-action="Beds" asp-controller="Number" asp-route-id="@Model.Id" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Кровати" ? "active" : "")">Кровати и комнаты</a>
-			<a asp-action="Entities" asp-controller="Number" asp-route-id="@Model.Id" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Объекты" ? "active" : "")">Объеты</a>
-			<a asp-action="Reservations" asp-controller="Number" asp-route-id="@Model.Id" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Бронирования" ? "active" : "")">Бронирования</a>
 			<a asp-action="Services" asp-controller="Number" asp-route-id="@Model.Id" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Сервисы" ? "active" : "")">Сервисы</a>
+			<a asp-action="Entities" asp-controller="Number" asp-route-id="@Model.Id" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Объекты" ? "active" : "")">Объеты</a>
 			<a asp-action="Payment" asp-controller="Number" asp-route-id="@Model.Id" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Оплата" ? "active" : "")">Оплата</a>
+		</div>
+		<div class="list-group mt-3">
+			<a asp-action="Reservations" asp-controller="Number" asp-route-id="@Model.Id" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Бронирования" ? "active" : "")">Бронирования</a>
 		</div>
 		<div class="list-group mt-3">
 			<a asp-action="Delete" asp-controller="Number" asp-route-id="@Model.Id" class="list-group-item list-group-item-action list-group-item-danger @(ViewData["Title"].ToString() == "Удаление" ? "active" : "")">Удаление</a>

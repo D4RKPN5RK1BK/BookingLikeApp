@@ -22,11 +22,6 @@ namespace BookingLikeApp.Models
         [DisplayName("Отображаемое имя")]
         [MaxLength(256, ErrorMessage = "Длинна строки {0} не может превышать {1}")]
         public string Name { get; set; }
-		
-        [DisplayName("Стоимость (за ночь)")]
-        [Range(minimum:0, maximum:1000000000, ErrorMessage = "Значение для {0} должно должно быть от {1} до {2}")]
-        [Column(TypeName = "decimal(12,2)")]
-        public decimal Price { get; set; }
 
 		public bool Finish { get; set; }
 

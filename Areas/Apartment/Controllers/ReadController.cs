@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BookingLikeApp.Areas.Apartment.ViewModels;
 using BookingLikeApp.Data;
 using BookingLikeApp.Models;
 using Microsoft.AspNetCore.Identity;
@@ -37,7 +38,7 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 		{
 			if (_context.Apartments.Any(o => o.Name == name))
 				return View(_context.Apartments.Where(o => o.Name == name).ToList());
-			return View("Search", _context.Apartments.Where(o => o.Name.Contains(name)).ToList(), new { Name = name });
+			return View("Search", _context.Apartments.Where(o => o.Name.Contains(name)).ToList());
 		}
 
 		public async Task<ActionResult> Search(SearchViewModel model)

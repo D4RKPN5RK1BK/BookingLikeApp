@@ -114,13 +114,7 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 			if (!await AllowEditAsync(id)) return NotFound();
 			ServicesViewModel model = new ServicesViewModel(await _context.Apartments.FindAsync(id));
 			model.SetProps(await _context.Registrations.FindAsync(id));
-			model.ServicesList = _context.Services.ToList();
 			List<ApartmentService> services = _context.ApartmentServices.Where(o => o.ApartmentId == model.Id).ToList();
-
-			for (int i = 0; i < services.Count; i++)
-				for (int j = 0; j < model.ServicesList.Count; j++)
-					if (services[i].ServiceId == model.ServicesList[j].Id)
-						model.ServicesList[j].Select = true;
 
 			return View(model);
 		}
@@ -137,10 +131,6 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 				_context.RemoveRange(_context.ApartmentServices.Where(o => o.ApartmentId == apartment.Id));
 				List<ApartmentService> apartmentServices = new List<ApartmentService>();
 
-				foreach (var item in model.ServicesList.Where(o => o.Select))
-				{
-					apartmentServices.Add(new ApartmentService() { ApartmentId = apartment.Id, ServiceId = item.Id });
-				}
 				apartment.Registration.Services = true;
 
 				await _context.ApartmentServices.AddRangeAsync(apartmentServices);

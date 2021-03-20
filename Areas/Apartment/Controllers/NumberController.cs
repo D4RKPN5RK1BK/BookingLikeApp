@@ -159,10 +159,29 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 			return View(model);
 		}
 
+		public async Task<ActionResult> Entities(int id)
+		{
+			Number model = await _context.Numbers.FindAsync(id);
+
+			model.Count = _context.NumberEntities.Count(o => o.NumberId == model.Id);
+
+			model.Apartment = await _context.Apartments.FindAsync(model.ApartmentId);
+			return View(model);
+		}
+
 		public async Task<ActionResult> Beds(int id)
 		{
 			Number model = await _context.Numbers.FindAsync(id);
 			model.Apartment = await _context.Apartments.FindAsync(model.ApartmentId);
+
+			ViewBag.BedsSelect = new SelectList(_context.Beds.ToList(), "Id", "Name");
+			ViewBag.Rooms = _context.Rooms.ToList();
+
+			model.NumberType = await _context.NumberTypes.FindAsync(model.NumberTypeId);
+			model.NumberBeds = _context.NumberBeds.Where(o => o.NumberId == id).ToList();
+			if (model.NumberType.HasRooms)
+				model.NumberRooms = _context.NumberRooms.Where(o => o.NumberId == model.Id).ToList();
+
 			return View(model);
 		}
 
