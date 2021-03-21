@@ -189,6 +189,7 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 		{
 			Number model = await _context.Numbers.FindAsync(id);
 			model.Apartment = await _context.Apartments.FindAsync(model.ApartmentId);
+			model.NumberServices = _context.NumberServices.Where(o => o.NumberId == model.Id).ToList();
 			return View(model);
 		}
 

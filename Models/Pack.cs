@@ -17,6 +17,8 @@ namespace BookingLikeApp.Models
 		[DisplayName("Доступен")]
 		public bool Enable { get; set; }
 
+		public Number Number { get; set; }
+
 		
 	}
 }

@@ -3,45 +3,38 @@
 	ViewData["Title"] = "Сервисы";
 }
 
+<input type="hidden" asp-for="Id" />
+
 <div class="card mt-3">
 	<div class="card-body">
 		<div class="col-sm-8">
 			<div id="serviceList">
+				@foreach (var item in Model.NumberServices)
+				{
 				<div class="row">
-					<div class="form-group col-sm-6">
+					<div class="form-group col-sm-8" name="mainGroup">
+						<input type="hidden" name="id" value="@item.Id" />
 						<label>Название</label>
-						<input type="text" name="name" class="form-control" />
+						<input type="text" name="name" class="form-control" value="@item.Name" />
 						<span class="alert-danger"></span>
-						<input type="checkbox" name="free" />
+						<input type="checkbox" name="havePrice" @(item.HavePrice ? "checked='checked'" : "") />
 						<label>Платная услуга</label>
 						<button type="button" name="deleteService" class="btn btn-danger btn-sm btn-block">Удалить</button>
 					</div>
-					<div class="form-group col-sm-6">
-						<label>Стоимость</label>
-						<input type="text" name="name" class="form-control" />
-						<span class="alert-danger"></span>
-					</div>
-				</div>
+					@if (item.HavePrice)
+					{
+						<div class="form-group col-sm-4" name="priceGroup">
+							<label>Стоимость</label>
+							<input type="text" name="price" class="form-control" value="@item.Price" />
+							<span class="alert-danger"></span>
+						</div>
+					}
 
-				<div class="row">
-					<div class="form-group col-sm-6">
-						<label>Название</label>
-						<input type="text" name="name" class="form-control" />
-						<span class="alert-danger"></span>
-						<input type="checkbox" name="free" />
-						<label>Платная услуга</label>
-						<button type="button" name="deleteService" class="btn btn-danger btn-sm btn-block">Удалить</button>
-					</div>
-					<div class="form-group col-sm-6">
-						<label>Стоимость</label>
-						<input type="text" name="name" class="form-control" />
-						<span class="alert-danger"></span>
-					</div>
 				</div>
-
+				}
 			</div>
 			<div>
-				<button type="button" class="btn btn-success btn-block mt-5">Добавить сервис</button>
+				<button type="button" name="createService" class="btn btn-success btn-block mt-3">Добавить сервис</button>
 			</div>
 		</div>
 		
@@ -52,15 +45,82 @@
 	<script>
 		$(document).ready(function () {
 			$("body").on("click", "button[name='createService']", function () {
+				let content;
+				fetch("/apartment/numberService/create", {
+					method: "POST",
+					headers: {
+						"accept": "application/json",
+						"content-type": "application/json"
+					},
+					body: JSON.stringify($("#Id").val())
+				})
+					.then(res => res.json())
+					.then(data => {
+						content = `
+							<div class="row">
+								<div class="form-group col-sm-8" name="mainGroup">
+									<input type="hidden" name="id" value="${data.id}" />
+									<label>Название</label>
+									<input type="text" name="name" class="form-control" value="${data.name}" />
+									<span class="alert-danger"></span>
+									<input type="checkbox" name="havePrice" />
+									<label>Платная услуга</label>
+									<button type="button" name="deleteService" class="btn btn-danger btn-sm btn-block">Удалить</button>
+								</div>
+							</div>
+						`;
 
+						$("#serviceList").append(content);
+					});
 			});
 
 			$("body").on("click", "button[name='deleteService']", function () {
+				fetch("/apartment/numberService/delete", {
+					method: "DELETE",
+					headers: {
+						"accept": "application/json",
+						"content-type": "application/json"
+					},
+					body: JSON.stringify($(this).parent().children("input[name='id']").val())
+				});
+
+				$(this).parent().parent().remove();
 
 			});
 
-			$("body").on("change", "input[name='deleteService']", function () {
+			$("body").on("change", "input[name='havePrice'], input[name='price'], input[name='name']", function () {
+				let model = {
+					id: $(this).parent().parent().children("div[name='mainGroup']").children("input[name='id']").val(),
+					numberId: $("#Id").val(),
+					name: $(this).parent().parent().children("div[name='mainGroup']").children("input[name='name']").val(),
+					havePrice: $(this).parent().parent().children("div[name='mainGroup']").children("input[name='havePrice']").is(":checked"),
+					price: $(this).parent().parent().children("div[name='mainGroup']").children("input[name='havePrice']").is(":checked") ? $(this).parent().parent().children("div[name='priceGroup']").children("input[name='price']").val() : null
+				}
 
+				fetch("/apartment/numberService/update", {
+					method: "PUT",
+					headers: {
+						"accept": "application/json",
+						"content-type": "application/json"
+					},
+					body: JSON.stringify(model)
+				});
+			});
+
+			$("body").on("change", "input[name='havePrice']", function () {
+				if ($(this).is(":checked")) {
+					let content = `
+						<div class="form-group col-sm-4" name="priceGroup">
+							<label>Стоимость</label>
+							<input type="text" name="price" class="form-control" value="0" />
+							<span class="alert-danger"></span>
+						</div>
+					`;
+					$(this).parent().parent().append(content);
+				}
+				else {
+					$(this).parent().parent().children("div[name='priceGroup']").remove();
+				}
 			});
 		});
 	</script>

@@ -15,6 +15,9 @@ namespace BookingLikeApp.Models
         public string UserId { get; set; }
 		public int NumberEntityId { get; set; }
 
+		public int? Adults { get; set; }
+		public int? Childrens { get; set; }
+
         [DisplayName("Оценка")]
         [Range(1, 10, ErrorMessage = "Значение для {0} должно должно быть от {1} до {2}")]
         [Column(TypeName = "decimal(2,0)")]
@@ -31,7 +34,7 @@ namespace BookingLikeApp.Models
         public decimal Price { get; set; }
         
         [DisplayName("Дата оформления заявки")]
-        public DateTime ProceedDateTime { get; set; }
+        public DateTime TimeStamp { get; set; }
         
         [DisplayName("Крайний срок отмены")]
         public DateTime AbortCancel { get; set; }

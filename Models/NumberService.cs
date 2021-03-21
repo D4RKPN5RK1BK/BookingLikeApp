@@ -12,6 +12,7 @@ namespace BookingLikeApp.Models
 		public int Id { get; set; }
 		public int NumberId { get; set; }
 
+		[Required]
 		[DisplayName("Название")]
 		[MaxLength(64, ErrorMessage = "Название {0} не должно превышать {1}")]
 		public string Name { get; set; }

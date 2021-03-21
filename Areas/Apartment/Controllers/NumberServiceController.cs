@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookingLikeApp.Areas.Apartment.Controllers
 {
+	[Area("Apartment")]
 	public class NumberServiceController : Controller
 	{
 
@@ -18,19 +19,57 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 			_context = context;
 		}
 
-		public IActionResult Index()
+		[HttpPost]
+		public async Task<ActionResult> Create([FromBody]int numberId)
 		{
-			return View();
-		}
+			string name = string.Empty;
+			if (_context.NumberServices.Any(o => o.NumberId == numberId))
+			{
+				List <NumberService> services = _context.NumberServices.Where(o => o.NumberId == numberId).ToList();
 
-		public async Task<ActionResult> Create(int numberId)
-		{
+				for(int i = 1; i < int.MaxValue; i++)
+				{
+					if (!services.Any(o => o.Name == $"Услуга_{i}"))
+					{
+						name = $"Услуга_{i}";
+						break;
+					}
+				}
+			}
+			else
+			{
+				name = "Услуга_1";
+			}
+
 			NumberService model = new NumberService()
 			{
-				NumberId = numberId
+				Name = name,
+				NumberId = numberId,
+				HavePrice = false,
+				Price = null
 			};
 
+			await _context.AddAsync(model);
+			await _context.SaveChangesAsync();
+
+			model.Number = null;
+			model.Price = null;
+
 			return Json(model);
+		}
+
+		[HttpPut]
+		public async Task Update([FromBody]NumberService model)
+		{
+			_context.Update(model);
+			await _context.SaveChangesAsync();
+		}
+
+		[HttpDelete]
+		public async Task Delete([FromBody]int id)
+		{
+			_context.NumberServices.Remove(await _context.NumberServices.FindAsync(id));
+			await _context.SaveChangesAsync();
 		}
 	}
 }
