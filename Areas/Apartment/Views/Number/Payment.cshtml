@@ -47,36 +47,38 @@
 								</div>
 							}
 
-							<h2 class="card-title col-12">Настройки жильцов</h2>
+							<h2 class="card-title col-12">Настройка жильцов</h2>
 
-							<div id="peopleList" class="col-12">
+							<div id="peopleList_@item.Id" name="peopleList" class="col-12">
 								@foreach (var t in item.PackTenants)
 								{
-									<div class="row mb-3">
-										<div class="form-group col-6 mb-0">
-											<label class="col-form-label">Взрослые</label>
-											<input type="number" name="adults" class="form-control" value="@t.Adults" />
-											<span class="alert-danger"></span>
-										</div>
-										<div class="form-group col-6 mb-0">
-											<label class="col-form-label">Дети</label>
-											<input type="number" name="childrens" class="form-control" value="@t.Childrens" />
-											<span class="alert-danger"></span>
-										</div>
-										<div class="form-group col-12 mt-1">
-											<label class="col-form-label">Стоимость</label>
-											<input type="text" name="price" class="form-control" value="@t.Price" />
-											<span class="alert-danger"></span>
-										</div>
-										<div class="col-6">
-											<button type="button" class="btn btn-danger btn-block">Удалить вариацию</button>
-										</div>
+								<div class="row mb-3" id="set_@t.Id">
+									<input type="hidden" name='packId' value="@item.Id" />
+									<input type="hidden" name='packTenantId' value="@t.Id" />
+									<div class="form-group col-6 mb-0">
+										<label class="col-form-label">Взрослые</label>
+										<input type="number" name="adults" class="form-control" value="@t.Adults" />
+										<span class="alert-danger"></span>
 									</div>
+									<div class="form-group col-6 mb-0">
+										<label class="col-form-label">Дети</label>
+										<input type="number" name="childrens" class="form-control" value="@t.Childrens" />
+										<span class="alert-danger"></span>
+									</div>
+									<div class="form-group col-12 mt-1">
+										<label class="col-form-label">Стоимость</label>
+										<input type="text" name="price" class="form-control" value="@t.Price" />
+										<span class="alert-danger"></span>
+									</div>
+									<div class="col-6">
+										<button type="button" name="deletePeople" class="btn btn-danger btn-block">Удалить вариацию</button>
+									</div>
+								</div>
 								}
 							</div>
 
 							<div class="col-12">
-								<button type="button" class="btn btn-success btn-block" s>Добавить вариацию</button>
+								<button type="button" class="btn btn-success btn-block" name="createTenant">Добавить вариацию</button>
 							</div>
 						</div>
 						<div class="col-sm-4">
@@ -163,13 +165,13 @@
 
 														${servicesContent}
 
-														<h2 class="card-title col-12">Настройки жильцов</h2>
+														<h2 class="card-title col-12">Настройка жильцов</h2>
 
-														<div id="peopleList" class="col-12">
+														<div id="peopleList_${pack.id}" class="col-12">
 														</div>
 
 														<div class="col-12">
-															<button type="button" class="btn btn-success btn-block" s>Добавить вариацию</button>
+															<button type="button" class="btn btn-success btn-block" name="createTenant">Добавить вариацию</button>
 														</div>
 													</div>
 													<div class="col-sm-4">
@@ -234,7 +236,7 @@
 				console.log(service);
 
 				if ($(this).is(":checked")) {
-					
+
 					fetch("/apartment/pack/createService", {
 						method: "POST",
 						headers: {
@@ -257,7 +259,82 @@
 
 			});
 
-			//Запросы по количеству посетителей
+			//CRUD апросы по количеству посетителей
+
+			$("body").on("click", "button[name='createTenant']", function () {
+				fetch("/apartment/pack/createPackTenant", {
+					method: "POST",
+					headers: {
+						"accept": "application/json",
+						"content-type": "application/json",
+					},
+					body: JSON.stringify($(this).parent().parent().children("input[name='id']").val())
+				})
+					.then(res => res.json())
+					.then(data => {
+						let content = `
+							<div class="row mb-3" id="set_${data.id}">
+								<input type="hidden" name='packId' value="${data.packId}"/>
+								<input type="hidden" name='packTenantId' value="${data.id}" />
+								<div class="form-group col-6 mb-0">
+									<label class="col-form-label">Взрослые</label>
+									<input type="number" name="adults" class="form-control" value="${data.adults}" />
+									<span class="alert-danger"></span>
+								</div>
+								<div class="form-group col-6 mb-0">
+									<label class="col-form-label">Дети</label>
+									<input type="number" name="childrens" class="form-control" value="${data.childrens}" />
+									<span class="alert-danger"></span>
+								</div>
+								<div class="form-group col-12 mt-1">
+									<label class="col-form-label">Стоимость</label>
+									<input type="text" name="price" class="form-control" value="${data.price}" />
+									<span class="alert-danger"></span>
+								</div>
+								<div class="col-6">
+									<button type="button" name="deletePeople" class="btn btn-danger btn-block">Удалить вариацию</button>
+								</div>
+							</div>
+						`;
+						$("#peopleList_" + data.packId).append(content);
+					});
+			});
+
+			$("body").on("click", "button[name='deletePeople']", function () {
+				let id = $(this).parent().parent().children("input[name='packTenantId']").val();
+				fetch("/apartment/pack/deletePackTenant", {
+					method: "DELETE",
+					headers: {
+						"accept": "application/json",
+						"content-type": "application/json"
+					},
+					body: JSON.stringify(id)
+				})
+					.then(function () {
+						$("#set_" + id).remove();
+					});
+			});
+
+			$("body").on("change", "input[name='adults'], input[name='childrens'], input[name='price']", function () {
+				let setId = $(this).parent().parent().children("input[name='packTenantId']").val();
+				let packTenant = {
+					id: $("#set_" + setId).children("input[name='packTenantId']").val(),
+					packId: $("#set_" + setId).children("input[name='packId']").val(),
+					adults: $("#set_" + setId).children("div").children("div input[name='adults']").val(),
+					childrens: $("#set_" + setId).children("div").children("input[name='childrens']").val(),
+					price: $("#set_" + setId).children("div").children("input[name='price']").val(),
+				};
+				console.log($(this).val())
+				console.log(packTenant);
+				fetch("/apartment/pack/updatePackTenant", {
+					method: "PUT",
+					headers: {
+						"accept": "application/json",
+						"content-type": "application/json"
+					},
+					body: JSON.stringify(packTenant)
+				});
+			});
 		});
 	</script>
 }
