@@ -7,24 +7,25 @@
 
 <div class="card mt-3">
 	<div class="card-body">
+		<h2 class="card-title col-sm-8">Сервисы номера</h2>
 		<div class="col-sm-8">
 			<div id="serviceList">
 				@foreach (var item in Model.NumberServices)
 				{
 				<div class="row">
-					<div class="form-group col-sm-8" name="mainGroup">
+					<div class="form-group col-sm-7" name="mainGroup">
 						<input type="hidden" name="id" value="@item.Id" />
-						<label>Название</label>
+						<label class="col-form-label">Название</label>
 						<input type="text" name="name" class="form-control" value="@item.Name" />
 						<span class="alert-danger"></span>
 						<input type="checkbox" name="havePrice" @(item.HavePrice ? "checked='checked'" : "") />
-						<label>Платная услуга</label>
-						<button type="button" name="deleteService" class="btn btn-danger btn-sm btn-block">Удалить</button>
+						<label class="col-form-label-sm">Платная услуга</label>
+						<button type="button" name="deleteService" class="btn btn-danger btn-sm d-block">Удалить</button>
 					</div>
 					@if (item.HavePrice)
 					{
-						<div class="form-group col-sm-4" name="priceGroup">
-							<label>Стоимость</label>
+						<div class="form-group col-sm-5" name="priceGroup">
+							<label class="col-form-label">Стоимость (руб.)</label>
 							<input type="text" name="price" class="form-control" value="@item.Price" />
 							<span class="alert-danger"></span>
 						</div>
@@ -111,7 +112,7 @@
 				if ($(this).is(":checked")) {
 					let content = `
 						<div class="form-group col-sm-4" name="priceGroup">
-							<label>Стоимость</label>
+							<label>Стоимость (руб.)</label>
 							<input type="text" name="price" class="form-control" value="0" />
 							<span class="alert-danger"></span>
 						</div>

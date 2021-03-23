@@ -639,6 +639,10 @@ namespace BookingLikeApp.Migrations
                     b.Property<bool>("Enable")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("NumberId")
                         .HasColumnType("int");
 
@@ -647,6 +651,28 @@ namespace BookingLikeApp.Migrations
                     b.HasIndex("NumberId");
 
                     b.ToTable("Packs");
+                });
+
+            modelBuilder.Entity("BookingLikeApp.Models.PackService", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int?>("NumberServiceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PackId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NumberServiceId");
+
+                    b.HasIndex("PackId");
+
+                    b.ToTable("PackServices");
                 });
 
             modelBuilder.Entity("BookingLikeApp.Models.PackTenant", b =>
@@ -1187,7 +1213,7 @@ namespace BookingLikeApp.Migrations
             modelBuilder.Entity("BookingLikeApp.Models.NumberService", b =>
                 {
                     b.HasOne("BookingLikeApp.Models.Number", "Number")
-                        .WithMany()
+                        .WithMany("NumberServices")
                         .HasForeignKey("NumberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1206,10 +1232,27 @@ namespace BookingLikeApp.Migrations
                     b.Navigation("Number");
                 });
 
+            modelBuilder.Entity("BookingLikeApp.Models.PackService", b =>
+                {
+                    b.HasOne("BookingLikeApp.Models.NumberService", "NumberService")
+                        .WithMany("PackServices")
+                        .HasForeignKey("NumberServiceId");
+
+                    b.HasOne("BookingLikeApp.Models.Pack", "Pack")
+                        .WithMany("PackServices")
+                        .HasForeignKey("PackId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("NumberService");
+
+                    b.Navigation("Pack");
+                });
+
             modelBuilder.Entity("BookingLikeApp.Models.PackTenant", b =>
                 {
                     b.HasOne("BookingLikeApp.Models.Pack", "Pack")
-                        .WithMany()
+                        .WithMany("PackTenants")
                         .HasForeignKey("PackId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1349,6 +1392,8 @@ namespace BookingLikeApp.Migrations
 
                     b.Navigation("NumberRooms");
 
+                    b.Navigation("NumberServices");
+
                     b.Navigation("Packs");
                 });
 
@@ -1362,9 +1407,21 @@ namespace BookingLikeApp.Migrations
                     b.Navigation("NumberRoomBeds");
                 });
 
+            modelBuilder.Entity("BookingLikeApp.Models.NumberService", b =>
+                {
+                    b.Navigation("PackServices");
+                });
+
             modelBuilder.Entity("BookingLikeApp.Models.NumberType", b =>
                 {
                     b.Navigation("Numbers");
+                });
+
+            modelBuilder.Entity("BookingLikeApp.Models.Pack", b =>
+                {
+                    b.Navigation("PackServices");
+
+                    b.Navigation("PackTenants");
                 });
 
             modelBuilder.Entity("BookingLikeApp.Models.Room", b =>

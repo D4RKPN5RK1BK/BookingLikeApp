@@ -34,6 +34,7 @@ namespace BookingLikeApp.Data
 		public DbSet<ApartmentType> ApartmentTypes { get; set; }
 		public DbSet<ApartmentService> ApartmetServices { get; set; }
 		public DbSet<Pack> Packs { get; set; }
+		public DbSet<PackService> PackServices { get; set; }
 		public DbSet<PackTenant> PackTenants { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -61,12 +62,6 @@ namespace BookingLikeApp.Data
 
             builder.Entity<Card>().HasData(new Card() { Id = 1, Name = "MasterCard" });
             builder.Entity<Card>().HasData(new Card() { Id = 2, Name = "ВТБ" });
-
-			/*builder.Entity<Season>().HasData(new Season() { Id = 1, Name = "Круглый год" });
-			builder.Entity<Season>().HasData(new Season() { Id = 2, Name = "Весна", Begin = 3, End = 6 });
-			builder.Entity<Season>().HasData(new Season() { Id = 3, Name = "Лето", Begin = 6, End = 9 });
-			builder.Entity<Season>().HasData(new Season() { Id = 4, Name = "Осень", Begin = 9, End = 12 });
-			builder.Entity<Season>().HasData(new Season() { Id = 5, Name = "Зима", Begin = 12, End = 3 });*/
         }
     }
 }

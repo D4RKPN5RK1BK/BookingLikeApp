@@ -156,6 +156,16 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 		{
 			Number model = await _context.Numbers.FindAsync(id);
 			model.Apartment = await _context.Apartments.FindAsync(model.ApartmentId);
+			model.Packs = _context.Packs.Where(o => o.NumberId == model.Id).ToList();
+
+			foreach(var i in model.Packs)
+			{
+				i.PackServices = _context.PackServices.Where(o => o.PackId == i.Id).ToList();
+				i.PackTenants = _context.PackTenants.Where(o => o.PackId == i.Id).ToList();
+			}
+
+			ViewBag.NumberServices = _context.NumberServices.Where(o => o.NumberId == model.Id).ToList();
+
 			return View(model);
 		}
 

@@ -5,134 +5,107 @@
 
 <input asp-for="Id" type="hidden"/>
 
-<div class="card mt-3">
-	<div class="card-body">
-		<h2 class="card-title">Добавить новый элемент</h2>
-		<button type="button" class="btn btn-success text-white">Добавить новую сборку</button>
-
-	</div>
-</div>
-
 <div class="accordion mt-3" id="itemList">
-	<div class="card">
-		<div class="card-header" id="header_1">
-			<h2 class="mb-0">
-				<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse_1" aria-expanded="true" aria-controls="collapse_1">
-					Сборка 1
-				</button>
-			</h2>
+	<div class="card bg-warning">
+		<div class="card-header">
+			<h2 class="card-title">Очень важная информация</h2>
 		</div>
-		<div id="collapse_1" class="collapse" aria-labelledby="header_1" data-parent="#itemList">
-			<div class="card-body">
-
-				<div class="row">
-					<div class="row col-sm-8">
-						<h2 class="card-title col-12">Название</h2>
-						<div class="form-group col-12">	
-							<input type="text" name="name" class="form-control col-12" />
-							<span class="alert-danger"></span>
-						</div>
-
-						<h2 class="card-title col-12">Сервисы</h2>
-
-						<div class="form-group col-12 col-sm-6">
-							<input type="checkbox" class="form-check-inline" />
-							<label class="col-form-label">Сервис 1</label>
-						</div>
-						<div class="form-group col-12 col-sm-6">
-							<input type="checkbox" class="form-check-inline" />
-							<label class="col-form-label">Сервис 2</label>
-						</div>
-						<div class="form-group col-12 col-sm-6">
-							<input type="checkbox" class="form-check-inline" />
-							<label class="col-form-label">Сервис 3</label>
-						</div>
-						<div class="form-group col-12 col-sm-6">
-							<input type="checkbox" class="form-check-inline" />
-							<label class="col-form-label">Сервис 4</label>
-						</div>
-
-						<h2 class="card-title col-12">Количество людей</h2>
-
-						<div id="peopleList" class="col-12">
-							<div class="row mb-3">
-								<div class="form-group col-6 mb-0">
-									<label class="col-form-label">Взрослые</label>
-									<input type="number" name="adults" class="form-control" />
-									<span class="alert-danger"></span>
-								</div>
-								<div class="form-group col-6 mb-0">
-									<label class="col-form-label">Дети</label>
-									<input type="number" name="childrens" class="form-control" />
-									<span class="alert-danger"></span>
-								</div>
-								<div class="form-group col-12 mt-1">
-									<label class="col-form-label">Стоимость</label>
-									<input type="text" name="price" class="form-control" />
-									<span class="alert-danger"></span>
-								</div>
-								<div class="col-6">
-									<button type="button" class="btn btn-danger btn-block">Удалить вариацию</button>
-								</div>
+		<div class="card-body">
+			<p>На данный момент я не знаю как в четвертом бутстрапе настроить аккордеон для одного элемента, так что решил поставить сюда обязательный второй блок</p>
+		</div>
+	</div>
+	@foreach (var item in Model.Packs)
+	{
+		<div class="card" id="pack_@item.Id">
+			<div class="card-header" id="header_@item.Id">
+				<h2 class="mb-0 mt-0">
+					<button class="btn btn-link btn-block btn-lg text-dark text-left" id="nameButton_@item.Id" type="button" data-toggle="collapse" data-target="#collapse_@item.Id" aria-expanded="true" aria-controls="collapse_@item.Id">
+						@item.Name
+					</button>
+				</h2>
+			</div>
+			<div id="collapse_@item.Id" class="collapse" aria-labelledby="header_@item.Id" data-parent="#itemList">
+				<div class="card-body">
+					<div class="row align-items-end">			
+						<div class="row col-sm-8">
+							<input type="hidden" name="id" value="@item.Id" />
+							<h2 class="card-title col-12">Название</h2>
+							<div class="form-group col-12">
+								<input type="text" name="name" class="form-control col-12" value="@item.Name" />
+								<span class="alert-danger"></span>
+								<input type="checkbox" name="enable" @(item.Enable ? "checked='checked'" : "") class="form-check-inline" />
+								<label class="col-form-label">Открыть доступ</label>
 							</div>
-							<div class="row">
-								<div class="form-group col-6 mb-0">
-									<label class="col-form-label">Взрослые</label>
-									<input type="number" name="adults" class="form-control" />
-									<span class="alert-danger"></span>
+
+							<h2 class="card-title col-12">Сервисы</h2>
+
+							@foreach (var s in ViewBag.NumberServices)
+							{
+								<div class="form-group col-12 col-sm-6">
+									<input type="checkbox" name="service" value="@s.Id" class="form-check-inline" @(item.PackServices.Any(o => o.NumberServiceId == s.Id) ? "checked='checked'" : "") />
+									<label class="col-form-label">@s.Name</label>
 								</div>
-								<div class="form-group col-6 mb-0">
-									<label class="col-form-label">Дети</label>
-									<input type="number" name="childrens" class="form-control" />
-									<span class="alert-danger"></span>
-								</div>
-								<div class="form-group col-12 mt-1">
-									<label class="col-form-label">Стоимость</label>
-									<input type="text" name="price" class="form-control" />
-									<span class="alert-danger"></span>
-								</div>
-								<div class="col-6">
-									<button type="button" class="btn btn-danger btn-block">Удалить вариацию</button>
-								</div>
+							}
+
+							<h2 class="card-title col-12">Настройки жильцов</h2>
+
+							<div id="peopleList" class="col-12">
+								@foreach (var t in item.PackTenants)
+								{
+									<div class="row mb-3">
+										<div class="form-group col-6 mb-0">
+											<label class="col-form-label">Взрослые</label>
+											<input type="number" name="adults" class="form-control" value="@t.Adults" />
+											<span class="alert-danger"></span>
+										</div>
+										<div class="form-group col-6 mb-0">
+											<label class="col-form-label">Дети</label>
+											<input type="number" name="childrens" class="form-control" value="@t.Childrens" />
+											<span class="alert-danger"></span>
+										</div>
+										<div class="form-group col-12 mt-1">
+											<label class="col-form-label">Стоимость</label>
+											<input type="text" name="price" class="form-control" value="@t.Price" />
+											<span class="alert-danger"></span>
+										</div>
+										<div class="col-6">
+											<button type="button" class="btn btn-danger btn-block">Удалить вариацию</button>
+										</div>
+									</div>
+								}
+							</div>
+
+							<div class="col-12">
+								<button type="button" class="btn btn-success btn-block" s>Добавить вариацию</button>
 							</div>
 						</div>
-
-
-						<div class="col-12">
-							<button type="button" class="btn btn-success btn-block mt-5" s>Добавить вариацию</button>
+						<div class="col-sm-4">
+							<input type="hidden" name="id" value="@item.Id" />
+							<button name="deletePack" class="btn btn-danger btn-block">Удалить сборку</button>
 						</div>
-					</div>
-
-					<div class="col-sm-4">
-						<small class="small"> Название сборки поле будет видно только вам и требуется исключительно для навигации по вашим сборкам</small>
 					</div>
 				</div>
-				
-				
-				
+			</div>
+		</div>
+	}
+
+
+	<div class="card" id="pack_new">
+		<div id="collapse_new" aria-labelledby="header_new" data-parent="#itemList">
+			<div class="card-body">
+				<h2 class="card-title">Новая сборка</h2>
+				<button type="button" class="btn btn-success text-white" id="addPack">Добавить новую сборку</button>
 			</div>
 		</div>
 	</div>
 
-	<div class="card">
-		<div class="card-header" id="header_2">
-			<h2 class="mb-0">
-				<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse_2" aria-expanded="true" aria-controls="collapse_2">
-					Сборка 2
-				</button>
-			</h2>
-		</div>
-		<div id="collapse_2" class="collapse" aria-labelledby="header_2" data-parent="#itemList">
-			<div class="card-body">
-				<button type="button" class="btn btn-success text-white">Добавить новую сборку</button>
-			</div>
-		</div>
-	</div>
 </div>
 
 @section Scripts {
 	<script>
 		$(document).ready(function () {
+
+			//CRUD запросы по сборкам
 
 			$("body").on("click", "#addPack", function () {
 				fetch("/apartment/pack/create", {
@@ -144,33 +117,147 @@
 					body: JSON.stringify($("#Id").val())
 				})
 					.then(res => res.json())
-					.then(data => {
-						let content = `
-							<div class="card">
-								<div class="card-header" id="header_1">
-									<h2 class="mb-0">
-										<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse_1" aria-expanded="true" aria-controls="collapse_1">
-											WOW
-										</button>
-									</h2>
-								</div>
-								<div id="collapse_1" class="collapse" aria-labelledby="header_1" data-parent="#itemList">
-									<div class="card-body">
-										Text text text
+					.then(pack => {
+						fetch("/apartment/pack/servicesList/" + pack.numberId, {
+							method: "GET",
+							headers: {
+								"accept": "application/json",
+								"content-type": "application/json"
+							},
+						})
+							.then(res => res.json())
+							.then(services => {
+								let servicesContent = "";
+								for (let i = 0; i < $(services).length; i++) {
+									servicesContent += `
+										<div class="form-group col-12 col-sm-6">
+											<input type="checkbox" class="form-check-inline"/>
+											<label class="col-form-label">${services[i].name}</label>
+										</div>
+									`;
+								}
+								console.log(services);
+								let content = `
+									<div class="card" id="pack_${pack.id}">
+										<div class="card-header" id="header_${pack.id}">
+											<h2 class="mb-0 mt-0">
+												<button class="btn btn-link btn-block btn-lg text-dark text-left" id="nameButton_${pack.id}" type="button" data-toggle="collapse" data-target="#collapse_${pack.id}" aria-expanded="true" aria-controls="collapse_${pack.id}">
+													${pack.name}
+												</button>
+											</h2>
+										</div>
+										<div id="collapse_${pack.id}" class="collapse" aria-labelledby="header_${pack.id}" data-parent="#itemList">
+											<div class="card-body">
+												<div class="row align-items-end">
+													<div class="row col-sm-8">
+														<input type="hidden" name="id" value="${pack.id}" />
+														<h2 class="card-title col-12">Название</h2>
+														<div class="form-group col-12">
+															<input type="text" name="name" class="form-control col-12" value="${pack.name}" />
+															<span class="alert-danger"></span>
+															<input type="checkbox" name="enable" class="form-check-inline" />
+															<label class="col-form-label">Открыть доступ</label>
+														</div>
+
+														<h2 class="card-title col-12">Сервисы</h2>
+
+														${servicesContent}
+
+														<h2 class="card-title col-12">Настройки жильцов</h2>
+
+														<div id="peopleList" class="col-12">
+														</div>
+
+														<div class="col-12">
+															<button type="button" class="btn btn-success btn-block" s>Добавить вариацию</button>
+														</div>
+													</div>
+													<div class="col-sm-4">
+														<input type="hidden" name="id" value="${pack.id}" />
+														<button name="deletePack" class="btn btn-danger btn-block">Удалить сборку</button>
+													</div>
+												</div>
+											</div>
+										</div>
 									</div>
-								</div>
-							</div>
-						`;
+								`;
+								$("#pack_new").before(content);
+							});
+
+					});
+				});
+
+			$("body").on("click", "button[name='deletePack']", function () {
+				let id = $(this).parent().children("input[name='id']").val();
+				fetch("/apartment/pack/delete", {
+					method: "delete",
+					headers: {
+						"accept": "aplication/json",
+						"content-type": "application/json"
+					},
+					body: JSON.stringify(id)
+				})
+					.then(function () {
+						$("#pack_" + id).remove();
+					});
+
+			});
+
+			$("body").on("change", "input[name='name'], input[name='enable']", function () {
+				let pack = {
+					id: $(this).parent().parent().children("input[name='id']").val(),
+					numberId: $("#Id").val(),
+					name: $(this).parent().children("input[name='name']").val(),
+					enable: $(this).parent().children("input[name='enable']").is(":checked")
+				};
+				fetch("/apartment/pack/update", {
+					method: "PUT",
+					headers: {
+						"accept": "aplication/json",
+						"content-type": "application/json"
+					},
+					body: JSON.stringify(pack)
+				})
+					.then(function () {
+						$("#nameButton_" + pack.id).html(pack.name);
 					});
 			});
 
-			$("body").on("click", "deletePack", function () {
+			//Запрос по сервисам сборки
+
+			$("body").on("change", "input[name='service']", function () {
+
+				let service = {
+					packId: $(this).parent().parent().children("input[name='id']").val(),
+					numberServiceId: $(this).val()
+				}
+				console.log(service);
+
+				if ($(this).is(":checked")) {
+					
+					fetch("/apartment/pack/createService", {
+						method: "POST",
+						headers: {
+							"accept": "application/json",
+							"content-type": "application/json"
+						},
+						body: JSON.stringify(service)
+					});
+				}
+				else {
+					fetch("/apartment/pack/deleteService", {
+						method: "DELETE",
+						headers: {
+							"accept": "application/json",
+							"content-type": "application/json"
+						},
+						body: JSON.stringify(service)
+					});
+				}
 
 			});
 
-			$("body").on("change", "@*блоки*@", function () {
-
-			});
+			//Запросы по количеству посетителей
 		});
 	</script>
 }

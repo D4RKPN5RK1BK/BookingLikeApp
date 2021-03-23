@@ -24,5 +24,6 @@ namespace BookingLikeApp.Models
 		public decimal? Price { get; set; }
 
 		public Number Number { get; set; }
+		public IEnumerable<PackService> PackServices { get; set; }
 	}
 }

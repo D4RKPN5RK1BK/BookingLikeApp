@@ -14,11 +14,16 @@ namespace BookingLikeApp.Models
 		public int Id { get; set; }
 		public int NumberId { get; set; }
 
+		[Required]
+		[DisplayName("Название сборки")]
+		public string? Name { get; set; }
+
 		[DisplayName("Доступен")]
 		public bool Enable { get; set; }
 
 		public Number Number { get; set; }
+		public IEnumerable<PackTenant> PackTenants { get; set; }
+		public IEnumerable<PackService> PackServices { get; set; }
 
-		
 	}
 }
