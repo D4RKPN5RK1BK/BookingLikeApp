@@ -29,6 +29,6 @@ namespace BookingLikeApp.Models
         public DateTime RegistationDate { get; set; }
 
         public IEnumerable<Apartment> Apartments { get; set; }
-        public IEnumerable<EntityReservation> EntityReservations { get; set; }
+        public IEnumerable<Reservation> Reservations { get; set; }
     }
 }

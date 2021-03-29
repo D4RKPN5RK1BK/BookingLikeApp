@@ -5,22 +5,105 @@
 
 <div class="card mt-3">
 	<div class="card-body">
-		<h2 class="display-4">@Model.Name</h2>
+		<h2 class="display-4">[@Model.ApartmentType.Name] @Model.Name</h2>
+		<h4>Количество звезд: @Model.Stars</h4>
 
 	</div>
 </div>
 
-@foreach(var item in Model.Numbers)
-{
-	<div class="card mt-3">
-		<div class="card-body">
-			<h2>@item.Name</h2>
-			<div class="row justify-content-end">
-				<form action="/" method="post">
-					<input asp-for="@item.Id" type="hidden"/>
-					<input type="submit" value="Снять номер" class="btn btn-primary mr-3"/>
-				</form>
+<div class="row">
+	<div class="col-sm-3 mt-3">
+		<div class="card sticky-top" style="top: 50px">
+			<div class="card-header bg-warning">
+				<h2 class="card-title">Поиск номера</h2>
+			</div>
+			<div class="card-body">
+				<div class="form-group">
+					<label class="col-form-label">Название</label>
+					<input type="text" name="name" value="" class="form-control" />
+				</div>
+				<div class="form-group">
+					<label class="col-form-label">Начало бронирования</label>
+					<input type="date" name="name" value="" class="form-control" />
+					<label class="col-form-label">Коец бронирования</label>
+					<input type="date" name="name" value="" class="form-control" />
+				</div>
+				<button class="btn btn-primary btn-block">Начать поиск</button>
+				<div class="form-group">
+					<label class="col-form-label">Итоговая стоимость</label>
+					<input type="text" readonly name="name" value="1000" class="form-control" />
+				</div>
+				<button class="btn btn-success btn-block">Зарезервировать</button>
 			</div>
 		</div>
 	</div>
-}
+	
+	<div class="col-sm-9">
+		@foreach (var number in Model.Numbers.Where(o => o.Enable))
+		{
+			<div class="card mt-3">
+				<div class="card-body">
+					<h2>[@number.NumberType.Code] @number.Name</h2>
+					<h4>Кооличество квадратных метров: @number.Area</h4>
+					<h4>Всего в наличии: @number.NumberEntities.Count</h4>
+				</div>
+				<table class="table table-striped">
+					<thead>
+						<th>Название сборки</th>
+						<th>Предоставляемые услуги</th>
+						<th>Количество людей</th>
+						<th>Количество Номеров</th>
+					</thead>
+					@foreach (var pack in number.Packs)
+					{
+						<tr>
+							<td>@pack.Name</td>
+							<td>
+								<div class="list-group">
+									@foreach (var packService in pack.PackServices)
+									{
+										<p class="list-group-item">@number.NumberServices.First(o => o.Id == packService.NumberServiceId).Name</p>
+									}
+								</div>
+							</td>
+							<td>
+								<div class="form-group">
+									<label class="col-form-label">Взрослые</label>
+									<select class="custom-select">
+										<option value="0">0</option>
+										@foreach (var t in pack.PackTenants)
+										{
+											<option value="@t.Adults">@t.Adults</option>
+										}
+									</select>
+									<label class="col-form-label">Дети</label>
+									<select class="custom-select">
+										<option value="0">0</option>
+										@foreach (var t in pack.PackTenants)
+										{
+											<option value="@t.Childrens">@t.Childrens</option>
+										}
+									</select>
+								</div>
+							</td>
+							<td>
+								<label class="col-form-label">Количество номеров</label>
+								<select class="custom-select">
+									<option value="value">text</option>
+								</select>
+							</td>
+						</tr>
+					}
+					<tfoot>
+						<th>Название сборки</th>
+						<th>Предоставляемые услуги</th>
+						<th>Количество людей</th>
+						<th>Количество Номеров</th>
+					</tfoot>
+				</table>
+			</div>
+		}
+	</div>
+</div>
+
+

@@ -12,34 +12,21 @@ namespace BookingLikeApp.Models
     public class EntityReservation
     {
         public int Id { get; set; }
-        public string UserId { get; set; }
+		public int ReservationId { get; set; }
 		public int NumberEntityId { get; set; }
+		public int? PackId { get; set; }
+		public int? PackTenantId { get; set; }
 
-		public int? Adults { get; set; }
-		public int? Childrens { get; set; }
+		[DisplayName("Взрослые")]
+		[Range(1, int.MaxValue, ErrorMessage = "Значение не может быть отрицательным или превышать {2}")]
+		public int Adults { get; set; }
+		[DisplayName("Дети")]
+		[Range(1, int.MaxValue, ErrorMessage = "Значение не может быть отрицательным или превышать {2}")]
+		public int Childrens { get; set; }
 
-        [DisplayName("Оценка")]
-        [Range(1, 10, ErrorMessage = "Значение для {0} должно должно быть от {1} до {2}")]
-        [Column(TypeName = "decimal(2,0)")]
-        public decimal Points { get; set; }
-
-		[DisplayName("Начало бронирования")]
-		public DateTime ReservationBegin { get; set; }
-
-		[DisplayName("Конец бронирования")]
-		public DateTime ReservationEnd { get; set; }
-
-        [DisplayName("Стоимость")]
-        [Column(TypeName = "decimal(12,2)")]
-        public decimal Price { get; set; }
-        
-        [DisplayName("Дата оформления заявки")]
-        public DateTime TimeStamp { get; set; }
-        
-        [DisplayName("Крайний срок отмены")]
-        public DateTime AbortCancel { get; set; }
-
-        public User User { get; set; }
+		public Reservation Reservation { get; set; }
 		public NumberEntity NumberEntity { get; set; }
-    }
+		public Pack Pack { get; set; }
+		public PackTenant PackTenant { get; set; }
+	}
 }

@@ -4,14 +4,16 @@ using BookingLikeApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BookingLikeApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210329061004_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -363,33 +365,22 @@ namespace BookingLikeApp.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int>("Adults")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Childrens")
-                        .HasColumnType("int");
-
                     b.Property<int>("NumberEntityId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PackId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PackTenantId")
                         .HasColumnType("int");
 
                     b.Property<int>("ReservationId")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NumberEntityId");
 
-                    b.HasIndex("PackId");
-
-                    b.HasIndex("PackTenantId");
-
                     b.HasIndex("ReservationId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("EntityReservations");
                 });
@@ -766,11 +757,23 @@ namespace BookingLikeApp.Migrations
                     b.Property<DateTime>("AbortCancel")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Adults")
+                        .HasColumnType("int");
+
                     b.Property<bool>("Cencel")
                         .HasColumnType("bit");
 
+                    b.Property<int>("Childrens")
+                        .HasColumnType("int");
+
                     b.Property<bool>("Confirm")
                         .HasColumnType("bit");
+
+                    b.Property<int?>("PackId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PackTenantId")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("Points")
                         .HasColumnType("decimal(2,0)");
@@ -791,6 +794,10 @@ namespace BookingLikeApp.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PackId");
+
+                    b.HasIndex("PackTenantId");
 
                     b.HasIndex("UserId");
 
@@ -1147,25 +1154,17 @@ namespace BookingLikeApp.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BookingLikeApp.Models.Pack", "Pack")
-                        .WithMany()
-                        .HasForeignKey("PackId");
-
-                    b.HasOne("BookingLikeApp.Models.PackTenant", "PackTenant")
-                        .WithMany()
-                        .HasForeignKey("PackTenantId");
-
                     b.HasOne("BookingLikeApp.Models.Reservation", "Reservation")
                         .WithMany("EntityReservations")
                         .HasForeignKey("ReservationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BookingLikeApp.Models.User", null)
+                        .WithMany("EntityReservations")
+                        .HasForeignKey("UserId");
+
                     b.Navigation("NumberEntity");
-
-                    b.Navigation("Pack");
-
-                    b.Navigation("PackTenant");
 
                     b.Navigation("Reservation");
                 });
@@ -1331,9 +1330,21 @@ namespace BookingLikeApp.Migrations
 
             modelBuilder.Entity("BookingLikeApp.Models.Reservation", b =>
                 {
+                    b.HasOne("BookingLikeApp.Models.Pack", "Pack")
+                        .WithMany()
+                        .HasForeignKey("PackId");
+
+                    b.HasOne("BookingLikeApp.Models.PackTenant", "PackTenant")
+                        .WithMany()
+                        .HasForeignKey("PackTenantId");
+
                     b.HasOne("BookingLikeApp.Models.User", "User")
-                        .WithMany("Reservations")
+                        .WithMany()
                         .HasForeignKey("UserId");
+
+                    b.Navigation("Pack");
+
+                    b.Navigation("PackTenant");
 
                     b.Navigation("User");
                 });
@@ -1501,7 +1512,7 @@ namespace BookingLikeApp.Migrations
                 {
                     b.Navigation("Apartments");
 
-                    b.Navigation("Reservations");
+                    b.Navigation("EntityReservations");
                 });
 #pragma warning restore 612, 618
         }

@@ -36,9 +36,22 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 
 		public IActionResult SearchByName (string name)
 		{
+			List<Models.Apartment> apartments;
 			if (_context.Apartments.Any(o => o.Name == name))
-				return View(_context.Apartments.Where(o => o.Name == name).ToList());
-			return View("Search", _context.Apartments.Where(o => o.Name.Contains(name)).ToList());
+			{
+				apartments = _context.Apartments.Where(o => o.Name == name).ToList();
+			}
+			else
+			{
+				apartments = _context.Apartments.Where(o => o.Name.Contains(name)).ToList();
+			}
+
+			foreach (var a in apartments)
+			{
+				a.ApartmentType = _context.ApartmentTypes.Find(a.ApartmentTypeId);
+			}
+
+			return View("Search", apartments);
 		}
 
 		public async Task<ActionResult> Search(SearchViewModel model)
@@ -49,7 +62,22 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 		public IActionResult Details(int id)
 		{
 			Models.Apartment apartment = _context.Apartments.Find(id);
-			apartment.Numbers = _context.Numbers.Where(o => o.Id == apartment.Id).ToList();
+			apartment.ApartmentType = _context.ApartmentTypes.Find(apartment.ApartmentTypeId);
+			apartment.Numbers = _context.Numbers.Where(o => o.ApartmentId == apartment.Id).ToList();
+			apartment.ApartmentServices = _context.ApartmentServices.Where(o => o.ApartmentId == apartment.Id).ToList();
+			foreach(var n in apartment.Numbers)
+			{
+				n.NumberType = _context.NumberTypes.Find(n.NumberTypeId);
+				n.NumberBeds = _context.NumberBeds.Where(o => o.NumberId == n.Id).ToList();
+				n.NumberEntities = _context.NumberEntities.Where(o => o.NumberId == n.Id).ToList();
+				n.NumberServices = _context.NumberServices.Where(o => o.NumberId == n.Id).ToList();
+				n.Packs = _context.Packs.Where(o => o.NumberId == n.Id).ToList();
+				foreach(var p in n.Packs)
+				{
+					p.PackServices = _context.PackServices.Where(o => o.PackId == p.Id).ToList();
+					p.PackTenants = _context.PackTenants.Where(o => o.PackId == p.Id).ToList();
+				}
+			}
 			return View(apartment);
 		}
 	}

@@ -1,5 +1,6 @@
 ﻿using BookingLikeApp.Data;
 using BookingLikeApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace BookingLikeApp.Areas.Apartment.Controllers
 {
+	[Authorize]
 	[Area("Apartment")]
     public class CreateController : Controller
     {

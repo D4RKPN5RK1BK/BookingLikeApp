@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace BookingLikeApp.Areas.Apartment.Controllers
 {
+	[Authorize]
 	[Area("apartment")]
 	public class NumberController : Controller
 	{

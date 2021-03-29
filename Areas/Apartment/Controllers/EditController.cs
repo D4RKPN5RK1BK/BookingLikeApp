@@ -1,6 +1,7 @@
 ﻿using BookingLikeApp.Areas.Apartment.ViewModels;
 using BookingLikeApp.Data;
 using BookingLikeApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -14,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace BookingLikeApp.Areas.Apartment.Controllers
 {
+	[Authorize]
 	[Area("Apartment")]
 	public class EditController : Controller
     {

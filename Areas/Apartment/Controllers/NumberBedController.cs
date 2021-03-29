@@ -6,11 +6,13 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using BookingLikeApp.Data;
 using BookingLikeApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace BookingLikeApp.Areas.Apartment.Controllers
-{	
+{
+	[Authorize]
 	[Area("apartment")]
 	public class NumberBedController : Controller
 	{

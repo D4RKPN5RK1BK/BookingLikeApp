@@ -19,10 +19,10 @@
 			@foreach (DateTime date in ViewBag.Dates)
 			{
 				<td>
-					@if (entity.EntityReservations.Any(o => o.ReservationBegin <= date && o.ReservationEnd >= date))
+					@*@if (entity.EntityReservations.Any(o => o.ReservationBegin <= date && o.ReservationEnd >= date))
 					{
 						<a class="btn btn-info btn-sm btn-block">?</a>
-					}
+					}*@
 				</td>
 
 			}

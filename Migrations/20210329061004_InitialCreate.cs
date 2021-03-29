@@ -599,40 +599,6 @@ namespace BookingLikeApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "EntityReservations",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    NumberEntityId = table.Column<int>(type: "int", nullable: false),
-                    Adults = table.Column<int>(type: "int", nullable: true),
-                    Childrens = table.Column<int>(type: "int", nullable: true),
-                    Points = table.Column<decimal>(type: "decimal(2,0)", nullable: false),
-                    ReservationBegin = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ReservationEnd = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(12,2)", nullable: false),
-                    TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AbortCancel = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EntityReservations", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_EntityReservations_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_EntityReservations_NumberEntities_NumberEntityId",
-                        column: x => x.NumberEntityId,
-                        principalTable: "NumberEntities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "NumberRoomBeds",
                 columns: table => new
                 {
@@ -666,8 +632,7 @@ namespace BookingLikeApp.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PackId = table.Column<int>(type: "int", nullable: false),
-                    NumberServiceId = table.Column<int>(type: "int", nullable: true),
-                    Var = table.Column<int>(type: "int", nullable: false)
+                    NumberServiceId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -706,6 +671,82 @@ namespace BookingLikeApp.Migrations
                         name: "FK_PackTenants_Packs_PackId",
                         column: x => x.PackId,
                         principalTable: "Packs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Reservation",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    PackId = table.Column<int>(type: "int", nullable: true),
+                    PackTenantId = table.Column<int>(type: "int", nullable: true),
+                    Confirm = table.Column<bool>(type: "bit", nullable: false),
+                    Cencel = table.Column<bool>(type: "bit", nullable: false),
+                    Adults = table.Column<int>(type: "int", nullable: false),
+                    Childrens = table.Column<int>(type: "int", nullable: false),
+                    Points = table.Column<decimal>(type: "decimal(2,0)", nullable: false),
+                    ReservationBegin = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ReservationEnd = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(12,2)", nullable: false),
+                    TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AbortCancel = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reservation", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reservation_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Reservation_Packs_PackId",
+                        column: x => x.PackId,
+                        principalTable: "Packs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Reservation_PackTenants_PackTenantId",
+                        column: x => x.PackTenantId,
+                        principalTable: "PackTenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EntityReservations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ReservationId = table.Column<int>(type: "int", nullable: false),
+                    NumberEntityId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EntityReservations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EntityReservations_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_EntityReservations_NumberEntities_NumberEntityId",
+                        column: x => x.NumberEntityId,
+                        principalTable: "NumberEntities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EntityReservations_Reservation_ReservationId",
+                        column: x => x.ReservationId,
+                        principalTable: "Reservation",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -858,6 +899,11 @@ namespace BookingLikeApp.Migrations
                 column: "NumberEntityId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_EntityReservations_ReservationId",
+                table: "EntityReservations",
+                column: "ReservationId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_EntityReservations_UserId",
                 table: "EntityReservations",
                 column: "UserId");
@@ -938,6 +984,21 @@ namespace BookingLikeApp.Migrations
                 column: "ApartmentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Reservation_PackId",
+                table: "Reservation",
+                column: "PackId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reservation_PackTenantId",
+                table: "Reservation",
+                column: "PackTenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reservation_UserId",
+                table: "Reservation",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Streets_CityId",
                 table: "Streets",
                 column: "CityId");
@@ -979,9 +1040,6 @@ namespace BookingLikeApp.Migrations
                 name: "PackServices");
 
             migrationBuilder.DropTable(
-                name: "PackTenants");
-
-            migrationBuilder.DropTable(
                 name: "Photos");
 
             migrationBuilder.DropTable(
@@ -997,6 +1055,9 @@ namespace BookingLikeApp.Migrations
                 name: "NumberEntities");
 
             migrationBuilder.DropTable(
+                name: "Reservation");
+
+            migrationBuilder.DropTable(
                 name: "Beds");
 
             migrationBuilder.DropTable(
@@ -1006,10 +1067,13 @@ namespace BookingLikeApp.Migrations
                 name: "NumberServices");
 
             migrationBuilder.DropTable(
-                name: "Packs");
+                name: "PackTenants");
 
             migrationBuilder.DropTable(
                 name: "Rooms");
+
+            migrationBuilder.DropTable(
+                name: "Packs");
 
             migrationBuilder.DropTable(
                 name: "Numbers");

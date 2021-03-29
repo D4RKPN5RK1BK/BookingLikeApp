@@ -8,8 +8,10 @@
 	<div class="col-sm-3">
 		<form asp-action="Search" asp-controller="Read">
 			<div class="card">
+				<div class="card-header bg-warning">
+					<h2 class="card-title text-center">Поиск отеля</h2>
+				</div>
 				<div class="card-body">
-					<h4 class="card-title text-center">Поиск отеля</h4>
 					<div class="form-group">
 						<label class="col-form-label">Название</label>
 						<input type="text" name="name" value="" class="form-control" />
@@ -17,10 +19,10 @@
 					</div>
 					<div class="form-group">
 						<label class="col-form-label">Дата начала</label>
-						<input type="date" name="name" value="" class="form-control-sm" />
+						<input type="date" name="name" value="" class="form-control" />
 						<span></span>
 						<label class="col-form-label">Дата конца</label>
-						<input type="date" name="name" value="" class="form-control-sm" />
+						<input type="date" name="name" value="" class="form-control" />
 						<span></span>
 					</div>
 					<div class="form-group">
@@ -33,10 +35,10 @@
 					</div>
 					<div class="form-group">
 						<label class="col-form-label">Количество взрослых</label>
-						<input type="number" value="" class="form-control-sm" />
+						<input type="number" value="" class="form-control" />
 						<span></span>
 						<label class="col-form-label">Количество детей</label>
-						<input type="number" value="" class="form-control-sm" />
+						<input type="number" value="" class="form-control" />
 						<span></span>
 					</div>
 				</div>
@@ -49,7 +51,7 @@
 			@foreach (var item in Model)
 			{
 				<a asp-action="Details" asp-route-id="@item.Id" class="list-group-item-action list-group-item">
-					<h2>@item.Name</h2>
+					<h2>[@item.ApartmentType.Name] @item.Name</h2>
 				</a>
 			}
 		</div>

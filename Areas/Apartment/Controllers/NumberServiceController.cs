@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using BookingLikeApp.Data;
 using BookingLikeApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingLikeApp.Areas.Apartment.Controllers
 {
+	[Authorize]
 	[Area("Apartment")]
 	public class NumberServiceController : Controller
 	{
