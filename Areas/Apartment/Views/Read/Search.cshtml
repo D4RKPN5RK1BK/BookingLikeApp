@@ -1,12 +1,12 @@
-﻿@model List<Apartment>
+﻿@model SearchApartmentViewModel
+@addTagHelper *, BookingLikeApp
 @{ 
 	ViewData["Title"] = "Поиск";
 }
 
-@*Поиcковая панель*@
 <div class="row mt-5">
 	<div class="col-sm-3">
-		<form asp-action="Search" asp-controller="Read">
+		<form asp-action="Search" asp-controller="Read" method="get">
 			<div class="card">
 				<div class="card-header bg-warning">
 					<h2 class="card-title text-center">Поиск отеля</h2>
@@ -14,31 +14,15 @@
 				<div class="card-body">
 					<div class="form-group">
 						<label class="col-form-label">Название</label>
-						<input type="text" name="name" value="" class="form-control" />
-						<span></span>
-					</div>
-					<div class="form-group">
-						<label class="col-form-label">Дата начала</label>
-						<input type="date" name="name" value="" class="form-control" />
-						<span></span>
-						<label class="col-form-label">Дата конца</label>
-						<input type="date" name="name" value="" class="form-control" />
+						<input asp-for="Name" class="form-control" />
 						<span></span>
 					</div>
 					<div class="form-group">
 						<label class="col-form-label">Страна</label>
-						<input type="text" name="name" value="" class="form-control" />
+						<input asp-for="Country" class="form-control" />
 						<span></span>
 						<label class="col-form-label">Город</label>
-						<input type="text" name="name" value="" class="form-control" />
-						<span></span>
-					</div>
-					<div class="form-group">
-						<label class="col-form-label">Количество взрослых</label>
-						<input type="number" value="" class="form-control" />
-						<span></span>
-						<label class="col-form-label">Количество детей</label>
-						<input type="number" value="" class="form-control" />
+						<input asp-for="City" class="form-control" />
 						<span></span>
 					</div>
 				</div>
@@ -47,14 +31,48 @@
 		</form>
 	</div>
 	<div class="col-sm-9">
-		<div class="list-group">
-			@foreach (var item in Model)
+		@if (Model.Apartments.Count > 0)
+		{
+			@if (Model.PageModel.TotalPages > 1)
 			{
-				<a asp-action="Details" asp-route-id="@item.Id" class="list-group-item-action list-group-item">
-					<h2>[@item.ApartmentType.Name] @item.Name</h2>
-				</a>
+				<search-link page-view-model="Model.PageModel" page-action="Search"></search-link>
 			}
-		</div>
+
+			<div class="list-group mb-3">
+				@foreach (var item in Model.Apartments)
+				{
+
+					<a asp-action="Details" asp-route-id="@item.Id" class="list-group-item-action list-group-item row no-gutters">
+						<div class="row">
+							<div class="col-md-4">
+								@if (item.Photos.Count > 0)
+								{
+									<img src="@item.Photos.FirstOrDefault().PhotoUrl" alt="Изображение не найдено" class="img-fluid rounded" />
+
+								}
+								else
+					{
+						<h2>Нет изображения</h2>
+					}
+							</div>
+							<div class="col-md-6">
+								<h2>[@item.ApartmentType.Name] @item.Name</h2>
+								<h4>Количество звезд: @item.Stars</h4>
+							</div>
+						</div>
+					</a>
+				}
+			</div>
+			@if (Model.PageModel.TotalPages > 1)
+			{
+				<search-link page-view-model="Model.PageModel" page-action="Search"></search-link>
+			}
+		}
+		else
+		{
+			<h4>Не найдено отелей по запросу</h4>
+		}
+
 	</div>
 </div>
 

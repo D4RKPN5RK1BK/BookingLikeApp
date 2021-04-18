@@ -28,6 +28,11 @@ namespace BookingLikeApp.Controllers
             return View();
         }
 
+		public ActionResult Test(string name = "qwe", int page= 2)
+		{
+			return View("Test", new { name = "qwe", page = 2 });
+		}
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

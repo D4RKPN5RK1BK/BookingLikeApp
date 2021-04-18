@@ -22,8 +22,8 @@ namespace BookingLikeApp.Models
 		public bool Enable { get; set; }
 
 		public Number Number { get; set; }
-		public IEnumerable<PackTenant> PackTenants { get; set; }
-		public IEnumerable<PackService> PackServices { get; set; }
+		public List<PackTenant> PackTenants { get; set; }
+		public List<PackService> PackServices { get; set; }
 
 	}
 }

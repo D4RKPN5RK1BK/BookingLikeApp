@@ -43,7 +43,6 @@ namespace BookingLikeApp.Models
 		public DateTime AbortCancel { get; set; }
 
 		public User User { get; set; }
-		
 		public List<EntityReservation> EntityReservations { get; set; }
 	}
 }

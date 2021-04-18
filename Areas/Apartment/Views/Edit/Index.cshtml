@@ -8,27 +8,66 @@
 
 <div class="row">
 	<div class="col-sm-4">
-		<div class="card">
-			<div class="card-body">
-				<h2 class="card-title">PLACEHOLDER</h2>
-			</div>
+		<div class="text-center m-3">
+			<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" fill="currentColor" class="bi bi-toggles" viewBox="0 0 16 16">
+				<path d="M4.5 9a3.5 3.5 0 1 0 0 7h7a3.5 3.5 0 1 0 0-7h-7zm7 6a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5zm-7-14a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zm2.45 0A3.49 3.49 0 0 1 8 3.5 3.49 3.49 0 0 1 6.95 6h4.55a2.5 2.5 0 0 0 0-5H6.95zM4.5 0h7a3.5 3.5 0 1 1 0 7h-7a3.5 3.5 0 1 1 0-7z" />
+			</svg>
 		</div>
+
 		<a asp-controller="Edit" asp-action="BasicInfo" asp-route-id="@Model.Id" class="btn btn-primary btn-block">Базовая информация</a>
 	</div>
 	<div class="col-sm-4">
-		<div class="card">
-			<div class="card-body">
-				<h2 class="card-title">PLACEHOLDER</h2>
-			</div>
+		<div class="text-center m-3">
+			<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" fill="currentColor" class="bi bi-stack" viewBox="0 0 16 16">
+				<path d="m14.12 10.163 1.715.858c.22.11.22.424 0 .534L8.267 15.34a.598.598 0 0 1-.534 0L.165 11.555a.299.299 0 0 1 0-.534l1.716-.858 5.317 2.659c.505.252 1.1.252 1.604 0l5.317-2.66zM7.733.063a.598.598 0 0 1 .534 0l7.568 3.784a.3.3 0 0 1 0 .535L8.267 8.165a.598.598 0 0 1-.534 0L.165 4.382a.299.299 0 0 1 0-.535L7.733.063z" />
+				<path d="m14.12 6.576 1.715.858c.22.11.22.424 0 .534l-7.568 3.784a.598.598 0 0 1-.534 0L.165 7.968a.299.299 0 0 1 0-.534l1.716-.858 5.317 2.659c.505.252 1.1.252 1.604 0l5.317-2.659z" />
+			</svg>
 		</div>
 		<a asp-controller="Number" asp-action="Index" asp-route-id="@Model.Id" class="btn btn-primary btn-block">Номера</a>
 	</div>
 	<div class="col-sm-4">
-		<div class="card">
-			<div class="card-body">
-				<h2 class="card-title">PLACEHOLDER</h2>
-			</div>
+		<div class="text-center m-3">
+			<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" fill="currentColor" class="bi bi-toggles" viewBox="0 0 16 16">
+				<path d="M3.1.7a.5.5 0 0 1 .4-.2h9a.5.5 0 0 1 .4.2l2.976 3.974c.149.185.156.45.01.644L8.4 15.3a.5.5 0 0 1-.8 0L.1 5.3a.5.5 0 0 1 0-.6l3-4zm11.386 3.785-1.806-2.41-.776 2.413 2.582-.003zm-3.633.004.961-2.989H4.186l.963 2.995 5.704-.006zM5.47 5.495 8 13.366l2.532-7.876-5.062.005zm-1.371-.999-.78-2.422-1.818 2.425 2.598-.003zM1.499 5.5l5.113 6.817-2.192-6.82L1.5 5.5zm7.889 6.817 5.123-6.83-2.928.002-2.195 6.828z" />
+			</svg>
 		</div>
 		<a asp-controller="Edit" asp-action="Services" asp-route-id="@Model.Id" class="btn btn-primary btn-block">Сервисы</a>
 	</div>
+	<div class="col-sm-4">
+		<div class="text-center m-3">
+			<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" fill="currentColor" class="bi bi-toggles" viewBox="0 0 16 16">
+				<path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+				<path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z" />
+			</svg>
+		</div>
+		<a asp-controller="Edit" asp-action="Photos" asp-route-id="@Model.Id" class="btn btn-primary btn-block">Фотографии</a>
+	</div>
+	<div class="col-sm-4">
+		<div class="text-center m-3">
+			<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" fill="currentColor" class="bi bi-toggles" viewBox="0 0 16 16">
+				<path d="M1 0a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h5v-1H2v-1h4v-1H4v-1h2v-1H2v-1h4V9H4V8h2V7H2V6h4V2h1v4h1V4h1v2h1V2h1v4h1V4h1v2h1V2h1v4h1V1a1 1 0 0 0-1-1H1z" />
+			</svg>
+		</div>
+		<a asp-controller="Edit" asp-action="Rules" asp-route-id="@Model.Id" class="btn btn-primary btn-block">Правила</a>
+	</div>
+	<div class="col-sm-4">
+		<div class="text-center m-3">
+			<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" fill="currentColor" class="bi bi-toggles" viewBox="0 0 16 16">
+				<path d="M12.136.326A1.5 1.5 0 0 1 14 1.78V3h.5A1.5 1.5 0 0 1 16 4.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 13.5v-9a1.5 1.5 0 0 1 1.432-1.499L12.136.326zM5.562 3H13V1.78a.5.5 0 0 0-.621-.484L5.562 3zM1.5 4a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-13z" />
+			</svg>
+		</div>
+		<a asp-controller="Edit" asp-action="Payment" asp-route-id="@Model.Id" class="btn btn-primary btn-block">Оплата</a>
+	</div>
 </div>
+<div class="row justify-content-center">
+	<div class="col-sm-4 mt-5">
+		<div class="text-center m-3">
+			<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" fill="currentColor" class="bi bi-toggles" viewBox="0 0 16 16">
+				<path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353L4.54.146zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1H5.1z" />
+				<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+			</svg>
+		</div>
+		<a asp-controller="Delete" asp-action="Index" asp-route-id="@Model.Id" class="btn btn-danger btn-block ">Удалить</a>
+	</div>
+</div>
+

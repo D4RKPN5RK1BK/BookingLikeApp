@@ -88,7 +88,7 @@ namespace BookingLikeApp.Models
         public bool AnimalsAllowed { get; set; }
 
         [Range(0, 14, ErrorMessage = "Значение для {0} должно быть от {1} до {2}")]
-        [DisplayName("Количество дней до начала резерванции")]
+        [DisplayName("Количество дней до заезда")]
         public int DaysUntilCancelEnds { get; set; }
         [DisplayName("Стоимость отмены бронирования")]
         public bool CancelPrice { get; set; }

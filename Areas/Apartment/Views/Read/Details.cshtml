@@ -1,12 +1,12 @@
-﻿@model Apartment
+﻿@model ApartmentDetailsViewModel
 @{
 	ViewData["Title"] = "Информация";
 }
 
 <div class="card mt-3">
 	<div class="card-body">
-		<h2 class="display-4">[@Model.ApartmentType.Name] @Model.Name</h2>
-		<h4>Количество звезд: @Model.Stars</h4>
+		<h2 class="display-4">[@Model.Apartment.ApartmentType.Name] @Model.Apartment.Name</h2>
+		<h4>Количество звезд: @Model.Apartment.Stars</h4>
 
 	</div>
 </div>
@@ -15,85 +15,103 @@
 	<div class="col-sm-3 mt-3">
 		<div class="card sticky-top" style="top: 50px">
 			<div class="card-header bg-warning">
-				<h2 class="card-title">Поиск номера</h2>
+				<h3 class="card-title">Бронирование номера</h3>
 			</div>
 			<div class="card-body">
-				<div class="form-group">
-					<label class="col-form-label">Название</label>
-					<input type="text" name="name" value="" class="form-control" />
-				</div>
-				<div class="form-group">
-					<label class="col-form-label">Начало бронирования</label>
-					<input type="date" name="name" value="" class="form-control" />
-					<label class="col-form-label">Коец бронирования</label>
-					<input type="date" name="name" value="" class="form-control" />
-				</div>
-				<button class="btn btn-primary btn-block">Начать поиск</button>
-				<div class="form-group">
-					<label class="col-form-label">Итоговая стоимость</label>
-					<input type="text" readonly name="name" value="1000" class="form-control" />
-				</div>
-				<button class="btn btn-success btn-block">Зарезервировать</button>
+				<form asp-action="SearchNumber" asp-controller="Read">
+					<input type="hidden" asp-for="Apartment.Id" />
+					<div class="form-group">
+						<label class="col-form-label">Название</label>
+						<input asp-for="Name" class="form-control" />
+					</div>
+					<div class="form-group">
+						<label class="col-form-label">Начало бронирования</label>
+						<input type="date" asp-for="Begin" class="form-control" min="@Model.MinDate.ToString("yyyy-MM-dd")" max="@Model.MaxDate.ToString("yyyy-MM-dd")"/>
+						<label class="col-form-label">Коец бронирования</label>
+						<input type="date" asp-for="End" class="form-control" min="@Model.MinDate.ToString("yyyy-MM-dd")" max="@Model.MaxDate.ToString("yyyy-MM-dd")"/>
+					</div>
+					<button class="btn btn-primary btn-block">Найти номера</button>
+				</form>
+				@if (Model.EnableReservation)
+				{
+					<hr>
+					<div class="form-group">
+						<label class="col-form-label">Итоговая стоимость</label>
+						<input type="text" readonly id="final_price" class="form-control" />
+					</div>
+					<button type="button" id="create_reservation" name="createReservaiton" class="btn btn-success btn-block">Зарезервировать</button>
+					<div name="numberReservations" id="number_reservations">
+						
+					</div>
+				}
 			</div>
 		</div>
 	</div>
 	
-	<div class="col-sm-9">
-		@foreach (var number in Model.Numbers.Where(o => o.Enable))
+	<div class="col-sm-9" id="number_list" name="numberList">
+		@foreach (var number in Model.Apartment.Numbers.Where(o => o.Enable))
 		{
-			<div class="card mt-3">
+			<div class="card mt-3" name="number" id="number_@number.Id">
+				<input type="hidden" id="number_id_@number.Id" name="numberId" value="@number.Id"/>
 				<div class="card-body">
 					<h2>[@number.NumberType.Code] @number.Name</h2>
-					<h4>Кооличество квадратных метров: @number.Area</h4>
+					<h4>Количество квадратных метров: @number.Area</h4>
 					<h4>Всего в наличии: @number.NumberEntities.Count</h4>
 				</div>
-				<table class="table table-striped">
+				<table class="table table-striped" id="pack_table_@number.Id" name="packTable">
 					<thead>
 						<th>Название сборки</th>
 						<th>Предоставляемые услуги</th>
 						<th>Количество людей</th>
 						<th>Количество Номеров</th>
 					</thead>
-					@foreach (var pack in number.Packs)
-					{
-						<tr>
-							<td>@pack.Name</td>
-							<td>
-								<div class="list-group">
-									@foreach (var packService in pack.PackServices)
-									{
-										<p class="list-group-item">@number.NumberServices.First(o => o.Id == packService.NumberServiceId).Name</p>
-									}
-								</div>
-							</td>
-							<td>
-								<div class="form-group">
-									<label class="col-form-label">Взрослые</label>
-									<select class="custom-select">
-										<option value="0">0</option>
-										@foreach (var t in pack.PackTenants)
-										{
-											<option value="@t.Adults">@t.Adults</option>
-										}
-									</select>
-									<label class="col-form-label">Дети</label>
-									<select class="custom-select">
-										<option value="0">0</option>
-										@foreach (var t in pack.PackTenants)
-										{
-											<option value="@t.Childrens">@t.Childrens</option>
-										}
-									</select>
-								</div>
-							</td>
-							<td>
-								<label class="col-form-label">Количество номеров</label>
-								<select class="custom-select">
-									<option value="value">text</option>
-								</select>
-							</td>
-						</tr>
-					}
+						<tbody>
+							@foreach (var pack in number.Packs)
+							{
+
+								<tr name="pack" id="pack_@pack.Id">
+									<input type="hidden" name="packId" value="@pack.Id" />
+									<td>@pack.Name</td>
+									<td>
+										<ul class="list-unstyled">
+											@foreach (var packService in pack.PackServices)
+											{
+												<li class=" text-success">
+													<p>@number.NumberServices.First(o => o.Id == packService.NumberServiceId).Name</p>
+												</li>
+											}
+										</ul>
+										<div class="list-group">
+
+										</div>
+									</td>
+									<td name="packTenant">
+										<div class="form-group">
+											<label class="col-form-label">Постояльцы</label>
+											<select class="custom-select" name="packTenantId">
+												<option value="0">0</option>
+												@foreach (var t in pack.PackTenants)
+												{
+													<option value="@t.Id">@t.Adults взр. + @t.Childrens реб. (@t.Price руб.)</option>
+												}
+											</select>
+										</div>
+									</td>
+									<td name="count">
+										<div class="form-group">
+											<label class="col-form-label">Количество номеров</label>
+											<select class="custom-select" id="pack_count_@pack.Id" name="count" @(!Model.EnableReservation ? "disabled" : "")>
+												@for (int i = 0; i <= number.NumberEntities.Count; i++)
+												{
+													<option value="@i">@i</option>
+												}
+											</select>
+
+										</div>
+									</td>
+								</tr>
+							}
+						</tbody>	
 					<tfoot>
 						<th>Название сборки</th>
 						<th>Предоставляемые услуги</th>
@@ -106,4 +124,116 @@
 	</div>
 </div>
 
+@section Scripts {
+	<script>
+		$(document).ready(function () {
+			let entityReservationsList = [];
+			let prices = [];
 
+			$("body").on("change", "select[name='packTenantId'], select[name='count']", function () {
+				let entityReservation = {
+					packId: Number($(this).parent().parent().parent().children("input[name='packId']").val()),
+					packTenantId: Number($(this).parent().parent().parent().children("td[name='packTenant']").children().first().children("select[name='packTenantId']").val()),
+					count: Number($(this).parent().parent().parent().children("td[name='count']").children().first().children("select[name='count']").val()),
+				};
+
+				fetch("/apartment/read/price/" + entityReservation.packTenantId, {
+					method: "GET",
+					headers: {
+						"accept": "application/json",
+						"content-type": "application/json"
+					}
+				})
+					.then(res => res.json())
+					.then(data => {
+						let index = entityReservationsList.findIndex(e => entityReservation.packId == String( e.packId));
+						let price = data * entityReservation.count;
+
+						if (index < 0) {
+							entityReservationsList.push(entityReservation);
+							
+							prices.push(Number(price));
+						}
+						else {
+							entityReservationsList[index] = entityReservation;
+							prices[index] = Number(price);
+						}
+
+						let tempPrice = 0;
+						for (let i = 0; i < prices.length; i++) {
+							tempPrice += prices[i];
+						}
+
+						
+
+						$("#final_price").val(tempPrice);
+
+					});
+			});
+
+			$("body").on("change", "select[name='count']", function () {
+				let countSum = 0;
+				let maxCount = 0;
+				let numberId = $(this).parents("div[name='number']").first().children("input[name='numberId']").first().val();
+				let packId = $(this).parents("tr[name='pack']").first().children("input[name='packId']").val();
+				let packs = $("#pack_table_" + numberId).children("tbody").children();
+				let packsArr = [];
+
+				packs.each(function (index, value) {
+					packsArr.push({
+						count: $(value).children("td[name='count']").children().children("select[name='count']").val(),
+						id: $(value).children("input[name='packId']").val()
+					});
+
+				});
+
+				maxCount = $(this).children().last().val();
+
+				packsArr.forEach(function (value, index) {
+					countSum += Number(value.count);
+				});
+
+				packsArr.forEach(function (value, i) {
+
+					$("#pack_count_" + value.id).children().each(function (j, element) {
+						if (element.value > Number(maxCount) - Number(countSum) + Number(value.count)) {
+							$(this).prop("disabled", true);
+						}
+						else {
+							$(this).prop("disabled", false);
+						}
+					});
+					
+				});
+
+			});
+
+			$("body").on("click", "#create_reservation", function () {
+				let model = {
+					reservationBegin: $("#Begin").val(),
+					reservationEnd: $("#End").val(),
+					packs: entityReservationsList
+				};
+				fetch("/apartment/reservation/create", {
+					method: "POST",
+					headers: {
+						"accept": "application/Json",
+						"content-type": "application/json"
+					},
+					body: JSON.stringify(model)
+				})
+					.then(res => res.json())
+					.then(data => {
+						if (data.success) {
+							window.location.replace("/apartment/Reservation/Read/" + data.reservationId);
+
+						}
+						else {
+							console.log(data.exception);
+						}
+					});
+
+			});
+		});
+	</script>
+}

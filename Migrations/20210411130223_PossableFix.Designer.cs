@@ -4,14 +4,16 @@ using BookingLikeApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BookingLikeApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210411130223_PossableFix")]
+    partial class PossableFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -366,6 +368,9 @@ namespace BookingLikeApp.Migrations
                     b.Property<int?>("NumberEntityId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("PackId")
+                        .HasColumnType("int");
+
                     b.Property<int>("PackTenantId")
                         .HasColumnType("int");
 
@@ -375,6 +380,8 @@ namespace BookingLikeApp.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("NumberEntityId");
+
+                    b.HasIndex("PackId");
 
                     b.HasIndex("PackTenantId");
 
@@ -1134,6 +1141,10 @@ namespace BookingLikeApp.Migrations
                         .WithMany("EntityReservations")
                         .HasForeignKey("NumberEntityId");
 
+                    b.HasOne("BookingLikeApp.Models.Pack", "Pack")
+                        .WithMany()
+                        .HasForeignKey("PackId");
+
                     b.HasOne("BookingLikeApp.Models.PackTenant", "PackTenant")
                         .WithMany()
                         .HasForeignKey("PackTenantId")
@@ -1147,6 +1158,8 @@ namespace BookingLikeApp.Migrations
                         .IsRequired();
 
                     b.Navigation("NumberEntity");
+
+                    b.Navigation("Pack");
 
                     b.Navigation("PackTenant");
 

@@ -1,0 +1,51 @@
+﻿@model ReservationsViewModel
+@addTagHelper *, BookingLikeApp
+@{
+	ViewData["Title"] = "Бронирования";
+}
+
+
+<div class="col-sm-8">
+	<h2 class="display-4">Список бронирований</h2>
+
+	@if (Model.ReservationDataPacks.Count > 0)
+	{
+		@if (Model.PageInfo.TotalPages > 1)
+		{
+			<div class="row justify-content-center">
+				<page-link page-view-model="Model.PageInfo" page-action="Index"></page-link>
+			</div>
+		}
+
+		<div class="list-group my-3">
+			@foreach (var r in Model.ReservationDataPacks)
+			{
+				<a asp-action="read" asp-controller="reservation" asp-route-id="@r.Reservation.Id" class="list-group-item-action list-group-item">
+					<div class="card-title">
+						<div class="row col-12">
+							<p class="flex-grow-1"><b>@r.Apartment.Name</b></p>
+							<p class="mr-3">@r.Reservation.ReservationBegin.ToString("yyyy.MM.dd") - @r.Reservation.ReservationEnd.ToString("yyyy.MM.dd")</p>
+						</div>
+					</div>
+					<div class="card-body p-0">
+						<p>Стоимость: @r.Reservation.Price руб.</p>
+						<p>Оценка: @r.Reservation.Points</p>
+					</div>
+				</a>
+			}
+
+		</div>
+		@if (Model.PageInfo.TotalPages > 1)
+		{
+			<div class="row justify-content-center">
+				<page-link page-view-model="Model.PageInfo" page-action="Index"></page-link>
+			</div>
+		}
+	}
+	else
+	{
+		<h2>На данный момент у вас нет бронирований</h2>
+	}
+
+
+</div>

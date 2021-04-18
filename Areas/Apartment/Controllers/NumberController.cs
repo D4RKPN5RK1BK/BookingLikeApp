@@ -111,21 +111,7 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 					registration.Numbers = true;
 					_context.Update(registration);
 				}
-
-				if (model.Count > 0)
-				{
-					model.NumberEntities = new List<NumberEntity>();
-					for(int i = 0; i < model.Count; i++)
-					{
-						
-						model.NumberEntities.Add(new NumberEntity { NumberId = model.Id });
-
-					}
-					await _context.NumberEntities.AddRangeAsync(model.NumberEntities);
-				}
-
 				await _context.SaveChangesAsync();
-				return RedirectToAction("Index", new { model.Id });
 			}
 			return View(model);
 		}
@@ -212,7 +198,15 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 			model.NumberEntities = _context.NumberEntities.Where(o => o.NumberId == model.Id).ToList();
 			for(int i = 0; i < model.NumberEntities.Count; i++)
 			{
+				model.NumberEntities[i].Reservations = new List<Reservation>();
 				model.NumberEntities[i].EntityReservations = _context.EntityReservations.Where(o => o.NumberEntityId == model.NumberEntities[i].Id).ToList();
+
+				for(int j = 0; j < model.NumberEntities[i].EntityReservations.Count; j++)
+				{
+					Reservation reservation = _context.Reservations.Find(model.NumberEntities[i].EntityReservations[j].ReservationId);
+					if (!model.NumberEntities[i].Reservations.Any(o => o.Id == reservation.Id))
+						model.NumberEntities[i].Reservations.Add(reservation);
+				}
 			}
 			List<DateTime> dates = new List<DateTime>();
 			TimeSpan twoWeeks = TimeSpan.FromDays(14);

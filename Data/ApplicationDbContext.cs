@@ -19,6 +19,7 @@ namespace BookingLikeApp.Data
 		public DbSet<Number> Numbers { get; set; }
 		public DbSet<Registration> Registrations { get; set; }
 		public DbSet<Card> Cards { get; set; }
+		public DbSet<Reservation> Reservations { get; set; }
 		public DbSet<EntityReservation> EntityReservations { get; set; }
 		public DbSet<Bed> Beds { get; set; }
 		public DbSet<Room> Rooms { get; set; }
@@ -49,7 +50,7 @@ namespace BookingLikeApp.Data
             builder.Entity<ApartmentType>().HasData(new ApartmentType() { Id = 2, Description = "Частный дом обчно сожержит несколько квартир", Name = "Дом" });
 
             builder.Entity<NumberType>().HasData(new NumberType() { Id = 1, Name = "Одноместный номер", HasRooms = false, Share = false});
-            builder.Entity<NumberType>().HasData(new NumberType() { Id = 2, Name = "Двуместный номер", HasRooms = true, Share = false });
+            builder.Entity<NumberType>().HasData(new NumberType() { Id = 2, Name = "Двухместный номер", HasRooms = true, Share = false });
             builder.Entity<NumberType>().HasData(new NumberType() { Id = 3, Name = "Общая комната", HasRooms = false, Share = true });
             builder.Entity<NumberType>().HasData(new NumberType() { Id = 4, Name = "Апартаменты", HasRooms = true, Share = true });
 

@@ -4,14 +4,16 @@ using BookingLikeApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BookingLikeApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210411062716_ReserationUpdate04112021_1")]
+    partial class ReserationUpdate04112021_1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -363,10 +365,19 @@ namespace BookingLikeApp.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int?>("NumberEntityId")
+                    b.Property<int>("Adults")
                         .HasColumnType("int");
 
-                    b.Property<int>("PackTenantId")
+                    b.Property<int>("Childrens")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NumberEntityId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PackId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PackTenantId")
                         .HasColumnType("int");
 
                     b.Property<int>("ReservationId")
@@ -375,6 +386,8 @@ namespace BookingLikeApp.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("NumberEntityId");
+
+                    b.HasIndex("PackId");
 
                     b.HasIndex("PackTenantId");
 
@@ -1132,13 +1145,17 @@ namespace BookingLikeApp.Migrations
                 {
                     b.HasOne("BookingLikeApp.Models.NumberEntity", "NumberEntity")
                         .WithMany("EntityReservations")
-                        .HasForeignKey("NumberEntityId");
+                        .HasForeignKey("NumberEntityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookingLikeApp.Models.Pack", "Pack")
+                        .WithMany()
+                        .HasForeignKey("PackId");
 
                     b.HasOne("BookingLikeApp.Models.PackTenant", "PackTenant")
                         .WithMany()
-                        .HasForeignKey("PackTenantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PackTenantId");
 
                     b.HasOne("BookingLikeApp.Models.Reservation", "Reservation")
                         .WithMany("EntityReservations")
@@ -1147,6 +1164,8 @@ namespace BookingLikeApp.Migrations
                         .IsRequired();
 
                     b.Navigation("NumberEntity");
+
+                    b.Navigation("Pack");
 
                     b.Navigation("PackTenant");
 
