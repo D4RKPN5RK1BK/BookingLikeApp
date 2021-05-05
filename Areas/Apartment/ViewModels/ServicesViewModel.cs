@@ -24,6 +24,8 @@ namespace BookingLikeApp.Areas.Apartment.ViewModels
         [Range(0, 2, ErrorMessage = "Данное значение должно быть от {1} до {2}")]
         public int Breakfest { get; set; }
 
+		public List<ApartmentService> ApartmentServices { get; set; }
+
         public ServicesViewModel() { }
 
         public ServicesViewModel(Models.Apartment apartment) : base(apartment)

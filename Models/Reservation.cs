@@ -19,12 +19,6 @@ namespace BookingLikeApp.Models
 		[DisplayName("Отменен")]
 		public bool Cencel { get; set; }
 
-		
-
-		[DisplayName("Оценка")]
-		[Range(1, 10, ErrorMessage = "Значение для {0} должно должно быть от {1} до {2}")]
-		[Column(TypeName = "decimal(2,0)")]
-		public decimal Points { get; set; }
 
 		[DisplayName("Начало бронирования")]
 		public DateTime ReservationBegin { get; set; }
@@ -43,6 +37,7 @@ namespace BookingLikeApp.Models
 		public DateTime AbortCancel { get; set; }
 
 		public User User { get; set; }
+		public Review Review { get; set; }
 		public List<EntityReservation> EntityReservations { get; set; }
 	}
 }

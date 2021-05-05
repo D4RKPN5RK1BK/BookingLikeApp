@@ -1,0 +1,52 @@
+﻿@model ReservationReadViewModel
+@{
+	ViewData["Title"] = "Отзыв";
+	Layout = "_ReservationLayout";
+}
+<div class="card mt-3">
+	<div class="card-header">
+		<h2 class="card-title">Отзыв</h2>
+	</div>
+	<div class="card-body">
+		<form method="post" asp-action="updateReview" id="update_form">
+			<input type="hidden" name="ReservationId" value="@Model.Reservation.Id" />
+			<div class="row" name="reviewScores" id="review_scores">
+				@for (int i = 0; i < Model.Scores.Count; i++)
+				{
+				<div class=" col-sm-4">
+					<input type="hidden" value="@Model.Reservation.Id" name="ReviewScores[@i].ReviewId" />
+					<input type="hidden" value="@Model.Scores[i].Id" name="ReviewScores[@i].ScoreId" />
+					<label>@Model.Scores[i].Name</label>
+					<select class="custom-select" name="ReviewScores[@i].Value">
+						@for (int j = 1; j < Model.Scores[i].MaxValue + 1; j++)
+						{
+							@if (j == Model.Reservation.Review.ReviewScores[i].Value)
+							{
+								<option selected value="@j">@j</option>
+							}
+							else
+							{
+								<option value="@j">@j</option>
+							}
+
+						}
+					</select>
+				</div>
+				}
+			</div>
+			<div class="form-group">
+				<label>Сообщение к отзыву</label>
+				<textarea class="form-control" name="message">@Model.Reservation.Review.Message</textarea>
+			</div>
+		</form>
+		<span class="alert-success">@ViewData["Message"]</span>
+		<div class="row col-12 mt-3">
+			<div class="flex-grow-1">
+				<input type="submit" form="update_form" value="Обновить отзыв" class="btn btn-primary " />
+			</div>
+			<form asp-action="deleteReview" asp-route-id="@Model.Reservation.Id" method="post">
+				<input type="submit" value="Удалить" class="btn btn-danger" />
+			</form>
+		</div>
+	</div>
+</div>

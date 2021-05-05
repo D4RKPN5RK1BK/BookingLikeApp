@@ -20,7 +20,7 @@
 		<div class="list-group my-3">
 			@foreach (var r in Model.ReservationDataPacks)
 			{
-				<a asp-action="read" asp-controller="reservation" asp-route-id="@r.Reservation.Id" class="list-group-item-action list-group-item">
+				<a asp-action="info" asp-controller="reservation" asp-route-id="@r.Reservation.Id" class="list-group-item-action list-group-item">
 					<div class="card-title">
 						<div class="row col-12">
 							<p class="flex-grow-1"><b>@r.Apartment.Name</b></p>
@@ -29,7 +29,6 @@
 					</div>
 					<div class="card-body p-0">
 						<p>Стоимость: @r.Reservation.Price руб.</p>
-						<p>Оценка: @r.Reservation.Points</p>
 					</div>
 				</a>
 			}

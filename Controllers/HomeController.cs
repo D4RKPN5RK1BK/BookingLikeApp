@@ -28,10 +28,8 @@ namespace BookingLikeApp.Controllers
             return View();
         }
 
-		public ActionResult Test(string name = "qwe", int page= 2)
-		{
-			return View("Test", new { name = "qwe", page = 2 });
-		}
+		[HttpGet]
+		public ActionResult Secret() => View();
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -39,9 +37,6 @@ namespace BookingLikeApp.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public IActionResult AjaxTest()
-        {
-            return PartialView("AjaxTest");
-        }
+        
     }
 }

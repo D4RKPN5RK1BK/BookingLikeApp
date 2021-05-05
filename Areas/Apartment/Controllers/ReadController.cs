@@ -92,6 +92,7 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 			model.MaxDate = DateTime.Now.AddDays(90);
 			model.EnableReservation = false;
 			model.Apartment = _context.Apartments.Find(id);
+			model.Apartment.Photos = _context.Photos.Where(o => o.ApartmentId == id).ToList();
 			model.Apartment.ApartmentType = _context.ApartmentTypes.Find(model.Apartment.ApartmentTypeId);
 			model.Apartment.Numbers = _context.Numbers.Where(o => o.ApartmentId == model.Apartment.Id).ToList();
 			model.Apartment.ApartmentServices = _context.ApartmentServices.Where(o => o.ApartmentId == model.Apartment.Id).ToList();
@@ -107,6 +108,10 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 					p.PackServices = _context.PackServices.Where(o => o.PackId == p.Id).ToList();
 					p.PackTenants = _context.PackTenants.Where(o => o.PackId == p.Id).ToList();
 				}
+				foreach(var b in n.NumberBeds)
+				{
+					b.Bed = _context.Beds.Find(b.BedId);
+				}
 			}
 			return View(model);
 		}
@@ -119,6 +124,7 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 			model.Apartment = _context.Apartments.Find(model.Apartment.Id);
 			model.EnableReservation = true;
 			model.Apartment.ApartmentType = _context.ApartmentTypes.Find(model.Apartment.ApartmentTypeId);
+			model.Apartment.Photos = _context.Photos.Where(o => o.ApartmentId == model.Apartment.Id).ToList();
 			
 			if (model.Name == string.Empty || model.Name == null)
 				model.Apartment.Numbers = _context.Numbers.Where(o => o.ApartmentId == model.Apartment.Id).ToList();
@@ -133,6 +139,11 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 				model.Apartment.Numbers[i].NumberEntities = _context.NumberEntities.Where(o => o.NumberId == model.Apartment.Numbers[i].Id).ToList();
 				model.Apartment.Numbers[i].NumberServices = _context.NumberServices.Where(o => o.NumberId == model.Apartment.Numbers[i].Id).ToList();
 				model.Apartment.Numbers[i].Packs = _context.Packs.Where(o => o.NumberId == model.Apartment.Numbers[i].Id).ToList();
+
+				for(int j = 0; j < model.Apartment.Numbers[i].NumberBeds.Count; j++)
+				{
+					model.Apartment.Numbers[i].NumberBeds[j].Bed = _context.Beds.Find(model.Apartment.Numbers[i].NumberBeds[j].BedId);
+				}
 
 				foreach(var e in model.Apartment.Numbers[i].Packs)
 				{

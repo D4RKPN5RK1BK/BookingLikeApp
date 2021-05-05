@@ -1,0 +1,20 @@
+﻿@model ReservationReadViewModel
+@{
+	ViewData["Title"] = "Информаия о бронировании";
+	Layout = "_ReservationLayout";
+}
+@foreach (var er in Model.ERDataPacks)
+{
+	<div class="card mt-3">
+		<div class="card-body">
+			<h2>Пакет услуг: @er.Pack.Name</h2>
+			<h4 class="card-title">Номер: @er.Number.Name</h4>
+			<h4>Количество номеров: @er.Count</h4>
+
+			<div class="form-group">
+				<p class="col-form-label">Взрослые: @er.PackTenant.Adults</p>
+				<p class="col-form-label">Дети: @er.PackTenant.Childrens</p>
+			</div>
+		</div>
+	</div>
+}

@@ -29,14 +29,17 @@ namespace BookingLikeApp.Data
 		public DbSet<NumberType> NumberTypes { get; set; }
 		public DbSet<NumberRoomBed> NumberRoomBeds { get; set; }
 		public DbSet<NumberService> NumberServices { get; set; }
+		public DbSet<Apartment> Apartments { get; set; }
 		public DbSet<ApartmentCard> ApartmentCards { get; set; }
 		public DbSet<ApartmentService> ApartmentServices { get; set; }
-		public DbSet<Apartment> Apartments { get; set; }
 		public DbSet<ApartmentType> ApartmentTypes { get; set; }
 		public DbSet<ApartmentService> ApartmetServices { get; set; }
 		public DbSet<Pack> Packs { get; set; }
 		public DbSet<PackService> PackServices { get; set; }
 		public DbSet<PackTenant> PackTenants { get; set; }
+		public DbSet<Review> Reviews { get; set; }
+		public DbSet<Score> Scores { get; set; }
+		public DbSet<ReviewScore> ReviewScores { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

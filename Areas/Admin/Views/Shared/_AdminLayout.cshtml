@@ -5,13 +5,14 @@
 	<div class="col-sm-3">
 		<div class="list-group">
 			<a asp-action="Index" asp-controller="Users" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Пользователи" ? "active" : "")">Пользователи</a>
-			<a asp-action="Index" asp-controller="Apartments" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Отели" ? "active" : "")">Отели</a>
 		</div>
 		<div class="list-group mt-3">
 			<a asp-action="Index" asp-controller="ApartmentTypes" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Типы отелей" ? "active" : "")">Типы отелей</a>
 			<a asp-action="Index" asp-controller="NumberTypes" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Типы номеров" ? "active" : "")">Типы номеров</a>
 			<a asp-action="Index" asp-controller="Beds" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Типы кроватей" ? "active" : "")">Типы кроватей</a>
 			<a asp-action="Index" asp-controller="Rooms" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Комнаты" ? "active" : "")">Комнаты</a>
+			<a asp-action="Index" asp-controller="Scores" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Оценки" ? "active" : "")">Оценки</a>
+
 		</div>
 		<div class="list-group mt-3">
 			<a asp-action="Index" asp-controller="Cards" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Банковские карты" ? "active" : "")">Банковские карты</a>
@@ -28,5 +29,5 @@
 </div>
 
 @section Scripts {
-	@await RenderSectionAsync("AdminScripts", required: false)
+	@await RenderSectionAsync("Scripts", required: false)
 }

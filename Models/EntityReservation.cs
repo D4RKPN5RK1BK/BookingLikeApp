@@ -12,9 +12,9 @@ namespace BookingLikeApp.Models
     public class EntityReservation
     {
         public int Id { get; set; }
-		public int ReservationId { get; set; }
-		public int NumberEntityId { get; set; }
-		public int PackTenantId { get; set; }
+		public int? ReservationId { get; set; }
+		public int? NumberEntityId { get; set; }
+		public int? PackTenantId { get; set; }
 
 		public Reservation Reservation { get; set; }
 		public NumberEntity NumberEntity { get; set; }

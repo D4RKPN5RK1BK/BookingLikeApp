@@ -127,8 +127,6 @@ namespace BookingLikeApp.Models
         public List<Photo> Photos { get; set; }
         public List<Number> Numbers { get; set; }
         public List<ApartmentCard> ApartmentCards { get; set; }
-
-		[DisplayName("Сервисы")]
 		public List<ApartmentService> ApartmentServices { get; set; }
 
 		[NotMapped]

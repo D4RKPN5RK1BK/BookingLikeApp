@@ -1,0 +1,72 @@
+﻿@model ReservationReadViewModel
+@{
+	Layout = "_Layout";
+}
+
+<div class="row">
+	<div class="col-sm-4 mt-3">
+		<div class="card">
+			<div class="card-header">
+				<h2 class="card-title">Бронирование</h2>
+
+			</div>
+			<div class="list-group list-group-flush">
+				<div class="list-group-item">
+					<h4>Дата начала:</h4>
+					<p>@Model.Reservation.ReservationBegin.ToString("yyyy.MM.dd")</p>
+					<h4>Дата окончания:</h4>
+					<p>@Model.Reservation.ReservationEnd.ToString("yyyy.MM.dd")</p>
+					<h4>Отель:</h4>
+					<a asp-action="Details" asp-controller="Read" asp-route-id="@Model.Apartment.Id">@Model.Apartment.Name</a>
+				</div>
+				<div class="list-group-item">
+					<h4>Итоговая стоимость</h4>
+					<p>@Model.Reservation.Price ₽</p>
+				</div>
+				@if (!Model.Reservation.Confirm && !Model.Reservation.Cencel)
+				{
+					<div class="list-group-item">
+						<form asp-action="Confirm" asp-controller="Reservation" asp-route-id="@Model.Reservation.Id">
+							<div class="form-group">
+								<p>Бронирование еще не подтверждено</p>
+								<input type="submit" value="Подтвердить бронирование" class="btn btn-success btn-block" />
+							</div>
+						</form>
+						<form asp-action="Cencel" asp-controller="Reservation" asp-route-id="@Model.Reservation.Id">
+							<div class="form-group">
+								<p>Бронирование можно отменить</p>
+								<input type="submit" value="Отменить бронирование" class="btn btn-danger btn-block" />
+							</div>
+						</form>
+					</div>
+				}
+				else
+				{
+					<div class="list-group-item list-group-item-success">
+						<h5>Бронирование подтверждено</h5>
+					</div>
+				}
+			</div>
+
+		</div>
+		<a asp-action="Index"><h4 class="mt-3 col-12">К списку бронирований</h4></a>
+	</div>
+	<div class="col-sm-8">
+		<div class="list-group list-group-horizontal mt-3">
+			<a asp-action="info" class="list-group-item list-group-item-action text-center @(ViewData["Title"].ToString() == "Информаия о бронировании" ? "active" : "")" asp-route-id="@Model.Reservation.Id">Информация</a>
+			@if (Model.Reservation.Review == null)
+			{
+				<a asp-action="createReview" class="list-group-item list-group-item-action text-center @(ViewData["Title"].ToString() == "Отзыв" ? "active" : "")" asp-route-id="@Model.Reservation.Id">Оставить отзыв</a>
+			}
+			else
+			{
+				<a asp-action="updateReview" class="list-group-item list-group-item-action text-center @(ViewData["Title"].ToString() == "Отзыв" ? "active" : "") list-group-item-success" asp-route-id="@Model.Reservation.Id">Отзыв</a>
+			}
+		</div>
+		@RenderBody()
+	</div>
+</div>
+
+@section Scripts {
+	@await RenderSectionAsync("Scripts", required: false)
+}

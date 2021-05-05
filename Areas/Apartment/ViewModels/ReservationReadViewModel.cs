@@ -18,6 +18,7 @@ namespace BookingLikeApp.Areas.Apartment.ViewModels
 	{
 		public Models.Apartment Apartment { get; set; }
 		public Models.Reservation Reservation { get; set; }
-		public List<EntityReservationDataPack> ERDataPacks { get; set; }
+		public List<Models.Score> Scores { get; set; }
+ 		public List<EntityReservationDataPack> ERDataPacks { get; set; }
 	}
 }

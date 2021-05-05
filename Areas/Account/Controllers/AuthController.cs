@@ -1,8 +1,13 @@
 ﻿using BookingLikeApp.Areas.Account.ViewModels;
 using BookingLikeApp.Data;
 using BookingLikeApp.Models;
+using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MimeKit;
+using MimeKit.Text;
+using NETCore.MailKit.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,13 +18,15 @@ namespace BookingLikeApp.Areas.Account.Controllers
     [Area("account")]
     public class AuthController : Controller
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
+        protected readonly UserManager<User> _userManager;
+        protected readonly SignInManager<User> _signInManager;
+		protected readonly IEmailService _emailService;
 
-        public AuthController(SignInManager<User> signInManager, UserManager<User> userManager)
+        public AuthController(SignInManager<User> signInManager, UserManager<User> userManager, IEmailService emailService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
+			_emailService = emailService;
         }
 
         public IActionResult Login() => View(); 
@@ -27,7 +34,7 @@ namespace BookingLikeApp.Areas.Account.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model) 
         {
-            User user = await _userManager.FindByEmailAsync(model.Email);
+            User user = await _userManager.FindByNameAsync(model.UserName);
 
             if(user == null)
             {
@@ -60,16 +67,50 @@ namespace BookingLikeApp.Areas.Account.Controllers
                 User user = new User
                 {
                     UserName = model.UserName,
-                    Email = model.Email,
                     LockoutEnabled = true,
+					RegistationDate = DateTime.Now,
+					DisplayName = model.UserName
                 };
+
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
-                    return RedirectToAction("Index", "Home", new { area = "" });
-                }
-                else
+					//было
+					var signInResult = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
+
+					if (signInResult.Succeeded)
+					{
+						return RedirectToAction("Index", "Home", new { area = "" });
+					}
+					else
+					{
+						return BadRequest();
+					}
+
+					//стало (с отправкой на письма на почту)
+
+					/*var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+					var link = Url.Action(nameof(VerifyEmail), "Auth", new { userId = user.Id, code });
+
+					var email = new MimeMessage();
+					email.From.Add(MailboxAddress.Parse("BookingLIkeApp@ya.ru"));
+					email.To.Add(MailboxAddress.Parse(model.Email));
+					email.Subject = "Подтверждение почты";
+					email.Body = new TextPart(TextFormat.Html) { Text = $"<a href=\"{link}\"'>Подтвердить почту</a>" };
+
+					using (var smtp = new SmtpClient())
+					{
+						smtp.Connect("smtp.yandex.ru", 465, true);
+						smtp.Authenticate("BookingLikeApp@ya.ru", "ajbcgcasabhzacvl");
+						smtp.Send(email);
+						smtp.Disconnect(true);
+					}
+
+
+					return RedirectToAction("VerifyEmail");*/
+
+				}
+				else
                 {
                     foreach (var error in result.Errors)
                         ModelState.AddModelError(error.Code, error.Description);
@@ -78,6 +119,11 @@ namespace BookingLikeApp.Areas.Account.Controllers
             }
             return View(model);
         }
+
+		public async Task<ActionResult> VerifyEmail(string userId, string code)
+		{
+			return View();
+		}
 
         public async Task<IActionResult> Logout()
         {

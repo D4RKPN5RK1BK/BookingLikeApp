@@ -11,18 +11,18 @@ namespace BookingLikeApp.Areas.Account.ViewModels
     {
         [DisplayName("Имя пользователя")]
         public string UserName { get; set; }
-
+/*
         [DisplayName("Электронная почта")]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
-
+*/
         [DisplayName("Пароль")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
         
         [DisplayName("Подтвердите пароль")]
         [DataType(DataType.Password)]
-        [Compare("Password", ErrorMessage = "Passwords do not match")]
+        [Compare("Password", ErrorMessage = "Пароли не совпадают")]
         public string ConfirmPassword { get; set; }
     }
 }

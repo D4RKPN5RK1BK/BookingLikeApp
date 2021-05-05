@@ -1,26 +1,77 @@
 ﻿@{
     ViewData["Title"] = "Security";
 }
-<h2 class="display-4">Защита</h2>
-<table class="table">
-    <tr>
-        <td><b>Пароль</b></td>
-        <td>Сбросить пароль</td>
-        <td><a asp-controller="Security" asp-action="ChangePassword" class="btn btn-light">Изменить</a></td>
-    </tr>
-    <tr>
-        <td><b>Аутентификация</b></td>
-        <td>Добавить или отрегулированть настройки двухфакторной аутентификации</td>
-        <td><a asp-controller="" asp-action="" class="btn btn-light">Изменить</a></td>
-    </tr>
-    <tr>
-        <td><b>Активные сессии</b></td>
-        <td>Сьпрсит все активные сессии</td>
-        <td><a asp-controller="" asp-action="" class="btn btn-warning">Выйти</a></td>
-    </tr>
-    <tr>
-        <td><b>Удалить аккаунт</b></td>
-        <td>Полностью удалить аккаунт</td>
-        <td><a asp-controller="" asp-action="" class="btn btn-danger">Удалить</a></td>
-    </tr>
-</table>
+
+
+<div class="list-group-flush">
+	<div class="list-group-item">
+		<h2 class="card-title col-sm-8">Пароль</h2>
+		<div class="row col-12">
+			<p class="col-sm-7"><b>Дата последнего изменения пароля</b></p>
+			<i>Дата изменения</i>
+		</div>
+		<div class="row col-12">
+			<p class="col-sm-7"><b>Установить новый пароль</b></p>
+			<button type="button" class="btn btn-primary btn-block col-sm-4" data-toggle="modal" data-target="#change_password_modal">Изменить</button>
+			<div class="modal fade" id="change_password_modal" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h2 class="modal-title">Изменение пароля</h2>
+						</div>
+						<div class="modal-body">
+							<form asp-controller="Security" asp-action="ChangePassword" method="post">
+								<div class="col-8">
+									<div class="form-group">
+										<label class="col-form-label">Старый пароль</label>
+										<input name="CurrentPassword" class="form-control" type="password" />
+									</div>
+									<div class="form-group">
+										<label name="NewPassword" class="col-form-label">Новый пароль</label>
+										<input name="NewPassword" class="form-control" type="password" />
+									</div>
+									<div class="form-group">
+										<label name="ConfirmPassword" class="col-form-label">Подтвердите пароль</label>
+										<input name="ConfirmPassword" class="form-control" type="password" />
+									</div>
+								</div>
+								<div class="btn-group col-8 mt-3">
+									<input type="submit" value="Подтвердить" class="btn btn-success" />
+									<button type="button" data-dismiss="modal" class="btn btn-secondary btn-g">Закрыть</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	@*<div class="list-group-item">
+		<h2 class="card-title col-sm-8">Аутентификация</h2>
+		<div class="row col-12">
+			<p class="col-sm-7">Режим работы двухфакторной аутентификации</p>
+			<a asp-controller="Security" asp-action="ChangePassword" class="btn btn-primary btn-block col-sm-4">Изменить</a>
+		</div>
+	</div>*@
+	@*<div class="list-group-item">
+		<h2 class="card-title col-sm-8">Уведомления</h2>
+		<div class="row col-12">
+			<p class="col-sm-7">Присылать уведомления на почту</p>
+			<a asp-controller="Security" asp-action="ChangePassword" class="btn btn-primary btn-block col-sm-4">Изменить</a>
+		</div>
+	</div>*@
+	<div class="list-group-item">
+		<h2 class="card-title col-sm-8">Активность</h2>
+		<div class="row col-12">
+			<p class="col-sm-7">Сбросить все активные сессии</p>
+			<a asp-controller="Security" asp-action="ChangePassword" class="btn btn-warning btn-block col-sm-4">Сбросить</a>
+		</div>
+	</div>
+	<div class="list-group-item">
+		<h2 class="card-title col-sm-8">Заморозка и удаление</h2>
+		<div class="row col-12">
+			<p class="col-sm-7">Удалить аккаунт ез возможности востановления</p>
+			<a asp-controller="Security" asp-action="ChangePassword" class="btn btn-danger btn-block col-sm-4">Удалить</a>
+		</div>
+	</div>
+</div>

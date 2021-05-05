@@ -2,33 +2,30 @@
 using BookingLikeApp.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using NETCore.MailKit.Extensions;
+using NETCore.MailKit.Infrastructure.Internal;
 
 namespace BookingLikeApp
 {
-    public class Startup
+	public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public IConfiguration _config { get; }
+        public Startup(IConfiguration config)
         {
-            Configuration = configuration;
+            _config = config;
         }
 
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+                options.UseSqlServer(_config.GetConnectionString("DefaultConnection"))
             );
 
             services.AddIdentity<User, IdentityRole>(options =>
@@ -39,14 +36,12 @@ namespace BookingLikeApp
                 options.Password.RequireUppercase = false;
                 options.Password.RequireNonAlphanumeric = false;
             })
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+				.AddDefaultTokenProviders();
             
-            services.AddControllersWithViews(/*mvcOptions =>
-			{
-				mvcOptions.EnableEndpointRouting = false;
-			}*/);
+            services.AddControllersWithViews();
 
-            
+			services.AddMailKit(config => config.UseMailKit(_config.GetSection("Email").Get<MailKitOptions>()));            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,15 +65,6 @@ namespace BookingLikeApp
             app.UseAuthentication();
             app.UseAuthorization();
 
-			/*app.UseMvc(routes =>
-			{
-				routes.MapRoute(
-					name: "default",
-					template: "{controller=Home}/{action=Index}/{id?}");
-				routes.MapRoute(
-					name: "area",
-					template: "{area}/{controller=Home}/{action=Index}/{id?}");
-			});*/
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapControllerRoute(

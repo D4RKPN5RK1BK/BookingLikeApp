@@ -205,14 +205,15 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 			
 		}
 
+		
+
 		[HttpGet]
-		public ActionResult Read(int id)
+		public ActionResult Info(int id)
 		{
 			ReservationReadViewModel model = new ReservationReadViewModel();
 			model.ERDataPacks = new List<EntityReservationDataPack>();
 			model.Reservation = _context.Reservations.Find(id);
 			model.Reservation.EntityReservations = _context.EntityReservations.Where(o => o.ReservationId == model.Reservation.Id).ToList();
-
 			foreach(var er in model.Reservation.EntityReservations)
 			{
 				if (!model.ERDataPacks.Any(o => o.EntityReservation.PackTenantId == er.PackTenantId))
@@ -230,6 +231,15 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 			}
 
 			model.Apartment = _context.Apartments.Find(model.ERDataPacks.First().Number.ApartmentId);
+
+			if (_context.Reviews.Any(o => o.ReservationId == id))
+			{
+				model.Reservation.Review = _context.Reviews.Find(id);
+			}
+			else
+			{
+				model.Reservation.Review = null;
+			}
 
 			return View(model);
 
@@ -253,6 +263,70 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 			_context.Update(reservation);
 			_context.SaveChanges();
 			return RedirectToAction("Read", new { id = id });
+		}
+
+		//Обзывы
+
+		[HttpGet]
+		public ActionResult CreateReview(int id)
+		{
+			ReservationReadViewModel model = new ReservationReadViewModel();
+			model.ERDataPacks = new List<EntityReservationDataPack>();
+			model.Reservation = _context.Reservations.Find(id);
+			model.Reservation.EntityReservations = _context.EntityReservations.Where(o => o.ReservationId == model.Reservation.Id).ToList();
+			model.Scores = _context.Scores.ToList();
+			model.Reservation.Review = _context.Reviews.Find(id);
+			model.Apartment = _context.Apartments.Find(_context.Numbers.Find(_context.NumberEntities.Find(model.Reservation.EntityReservations.FirstOrDefault().NumberEntityId).NumberId).ApartmentId);
+
+			return View(model);
+		}
+		[HttpPost]
+		public ActionResult CreateReview(Review model)
+		{
+			model.CreateAt = DateTime.Now;
+			_context.Add(model);
+			_context.SaveChanges();
+			return RedirectToAction("UpdateReview", new {id = model.ReservationId});
+		}
+
+		[HttpGet]
+		public ActionResult UpdateReview(int id, bool success = false)
+		{
+			ReservationReadViewModel model = new ReservationReadViewModel();
+			model.ERDataPacks = new List<EntityReservationDataPack>();
+			model.Reservation = _context.Reservations.Find(id);
+			model.Reservation.Review = _context.Reviews.Find(id);
+			model.Reservation.Review.ReviewScores = _context.ReviewScores.Where(o => o.ReviewId == id).ToList();
+			model.Reservation.EntityReservations = _context.EntityReservations.Where(o => o.ReservationId == model.Reservation.Id).ToList();
+			model.Scores = _context.Scores.ToList();
+			model.Apartment = _context.Apartments.Find(_context.Numbers.Find(_context.NumberEntities.Find(model.Reservation.EntityReservations.FirstOrDefault().NumberEntityId).NumberId).ApartmentId);
+			if (success)
+				ViewData["Message"] = "Данные успешно обновлены";
+
+			return View(model);
+		}
+		[HttpPost]
+		public ActionResult UpdateReview(Review model)
+		{
+			if(ModelState.IsValid)
+			{
+				model.CreateAt = DateTime.Now;
+				var result = _context.Update(model);
+				_context.SaveChanges();
+				return RedirectToAction("UpdateReview", new { id = model.ReservationId, success = true});
+			}
+			else
+			{
+				return RedirectToAction("UpdateReview", new { id = model.ReservationId, success = false });
+			}
+		}
+
+		[HttpPost]
+		public ActionResult DeleteReview(int id)
+		{
+			_context.Reviews.Remove(_context.Reviews.Find(id));
+			_context.SaveChanges();
+			return RedirectToAction("Info", new { id = id});
 		}
 	}
 }

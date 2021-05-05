@@ -4,10 +4,69 @@
 }
 
 <div class="card mt-3">
-	<div class="card-body">
-		<h2 class="display-4">[@Model.Apartment.ApartmentType.Name] @Model.Apartment.Name</h2>
-		<h4>Количество звезд: @Model.Apartment.Stars</h4>
+	<div class="card-header">
+		<div class="row">
+			<div class="col-sm-8">
+				<h2 class="display-4 card-title">[@Model.Apartment.ApartmentType.Name] @Model.Apartment.Name</h2>
 
+			</div>
+			<div class="col-sm-4">
+				<h4 class="text-center">Количество звезд: @Model.Apartment.Stars</h4>
+				<a asp-action="reviews" asp-route-id="@Model.Apartment.Id" class="btn btn-block btn-primary">Отзывы на @Model.Apartment.Name</a>
+			</div>
+
+		</div>
+
+	</div>
+	<div class="list-group list-group-flush">
+		<div class="list-group-item">
+			<div class="row">
+				<div class="col-sm-8">
+					<h2 class="card-title">Фотографии</h2>
+					<div class="row">
+						@foreach (var p in Model.Apartment.Photos)
+						{
+							<div class="col-4 col-sm-3 figure-img w-100">
+								<img src="@p.PhotoUrl" class="overflow-auto img-fluid h-100 w-100">
+
+							</div>
+						}
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<h2 class="card-title">Сервисы</h2>
+					<ul class="list-unstyled">
+						@foreach (var s in Model.Apartment.ApartmentServices)
+						{
+							<li class="">
+								<b>
+									@s.Name
+								</b>
+								@if (s.HavePrice)
+								{
+									<b>
+										- @s.Price руб.
+									</b>
+								}
+							</li>
+						}
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="list-group-item">
+			<h2 class="card-title">Условия</h2>
+			<div class="cols-wm-8">
+				<h4>
+					Регистрация заезда:
+					<b>@Model.Apartment.ArrivalTimeStarts.ToString("HH:mm") - @Model.Apartment.ArrivalTimeEnds.ToString("HH:mm")</b>
+				</h4>
+				<h4>
+					Регистрация заезда:
+					<b>@Model.Apartment.DepartureTimeStarts.ToString("HH:mm") - @Model.Apartment.DepartureTimeEnds.ToString("HH:mm")</b>
+				</h4>
+			</div>
+		</div>
 	</div>
 </div>
 
@@ -52,78 +111,113 @@
 		@foreach (var number in Model.Apartment.Numbers.Where(o => o.Enable))
 		{
 			<div class="card mt-3" name="number" id="number_@number.Id">
-				<input type="hidden" id="number_id_@number.Id" name="numberId" value="@number.Id"/>
+				<input type="hidden" id="number_id_@number.Id" name="numberId" value="@number.Id" />
+				<div class="card-header">
+					<h1>[@number.NumberType.Code] @number.Name</h1>
+
+				</div>
 				<div class="card-body">
-					<h2>[@number.NumberType.Code] @number.Name</h2>
-					<h4>Количество квадратных метров: @number.Area</h4>
-					<h4>Всего в наличии: @number.NumberEntities.Count</h4>
+					
+					<div class="row">
+						<div class="col-sm-8">
+							<h2 class="card-title">Кровати</h2>
+							<div class="row">
+								@foreach (var b in number.NumberBeds)
+								{
+									<div class="col-sm-6">
+										<div class="card mt-2 mt-sm-0">
+											<div class="col-12">
+												<h4>@b.Bed.Name</h4>
+												<p>Количество: @b.Quantity</p>
+											</div>
+										</div>
+									</div>
+								}
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<h2 class="card-title">Информация</h2>
+							<ul class="list-unstyled">
+								<li><b>Площадь: @number.Area</b></li>
+								<li><b>Всего в наличии: @number.NumberEntities.Count</b></li>
+							</ul>
+						</div>
+					</div>
+					
 				</div>
 				<table class="table table-striped" id="pack_table_@number.Id" name="packTable">
 					<thead>
-						<th>Название сборки</th>
-						<th>Предоставляемые услуги</th>
-						<th>Количество людей</th>
-						<th>Количество Номеров</th>
+					<th>Пакет</th>
+					<th>Услуги</th>
+					<th>Количество людей</th>
+					<th>Количество Номеров</th>
 					</thead>
-						<tbody>
-							@foreach (var pack in number.Packs)
-							{
+					<tbody>
+						@foreach (var pack in number.Packs)
+						{
 
-								<tr name="pack" id="pack_@pack.Id">
-									<input type="hidden" name="packId" value="@pack.Id" />
-									<td>@pack.Name</td>
-									<td>
-										<ul class="list-unstyled">
-											@foreach (var packService in pack.PackServices)
+							<tr name="pack" id="pack_@pack.Id">
+								<input type="hidden" name="packId" value="@pack.Id" />
+								<td>@pack.Name</td>
+								<td>
+									<ul class="list-unstyled">
+										@foreach (var packService in pack.PackServices)
+										{
+											<li class=" text-success">
+												<p>@number.NumberServices.First(o => o.Id == packService.NumberServiceId).Name</p>
+											</li>
+										}
+									</ul>
+									<div class="list-group">
+
+									</div>
+								</td>
+								<td name="packTenant">
+									<div class="form-group">
+										<label class="col-form-label">Постояльцы</label>
+										<select class="custom-select" name="packTenantId">
+											<option value="0">0</option>
+											@foreach (var t in pack.PackTenants)
 											{
-												<li class=" text-success">
-													<p>@number.NumberServices.First(o => o.Id == packService.NumberServiceId).Name</p>
-												</li>
+												<option value="@t.Id">@t.Adults взр. + @t.Childrens реб. (@t.Price руб.)</option>
 											}
-										</ul>
-										<div class="list-group">
+										</select>
+									</div>
+								</td>
+								<td name="count">
+									<div class="form-group">
+										<label class="col-form-label">Номера</label>
+										<select class="custom-select" id="pack_count_@pack.Id" name="count" @(!Model.EnableReservation ? "disabled" : "")>
+											@for (int i = 0; i <= number.NumberEntities.Count; i++)
+											{
+												<option value="@i">@i</option>
+											}
+										</select>
 
-										</div>
-									</td>
-									<td name="packTenant">
-										<div class="form-group">
-											<label class="col-form-label">Постояльцы</label>
-											<select class="custom-select" name="packTenantId">
-												<option value="0">0</option>
-												@foreach (var t in pack.PackTenants)
-												{
-													<option value="@t.Id">@t.Adults взр. + @t.Childrens реб. (@t.Price руб.)</option>
-												}
-											</select>
-										</div>
-									</td>
-									<td name="count">
-										<div class="form-group">
-											<label class="col-form-label">Количество номеров</label>
-											<select class="custom-select" id="pack_count_@pack.Id" name="count" @(!Model.EnableReservation ? "disabled" : "")>
-												@for (int i = 0; i <= number.NumberEntities.Count; i++)
-												{
-													<option value="@i">@i</option>
-												}
-											</select>
-
-										</div>
-									</td>
-								</tr>
-							}
-						</tbody>	
+									</div>
+								</td>
+							</tr>
+						}
+					</tbody>
 					<tfoot>
-						<th>Название сборки</th>
-						<th>Предоставляемые услуги</th>
-						<th>Количество людей</th>
-						<th>Количество Номеров</th>
+					<th>Пакет</th>
+					<th>Услуги</th>
+					<th>Количество людей</th>
+					<th>Количество Номеров</th>
 					</tfoot>
 				</table>
 			</div>
 		}
+		
+	</div>
+
+	
+</div>
+<div class="mt-3 card">
+	<div class="card-body">
+		<h2 class="card-title">Отзывы</h2>
 	</div>
 </div>
-
 @section Scripts {
 	<script>
 		$(document).ready(function () {

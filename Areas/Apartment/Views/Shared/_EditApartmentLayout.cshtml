@@ -8,6 +8,11 @@
 <div class="row">
 	<div class="col-sm-3 mt-3">
 		<div class="list-group">
+			<div class="row">
+				<div class="col-sm-4">
+
+				</div>
+			</div>
 			<a asp-controller="Edit" asp-action="BasicInfo" asp-route-id="@ViewData["Id"]" class="list-group-item list-group-item-action @(Model.BasicInfo ?  "list-group-item-success" : "") @(ViewData["Title"].ToString() == "Общая информация" ? "active" : "")">Общая информация</a>
 			<a asp-controller="Number" asp-action="Index" asp-route-id="@ViewData["Id"]" class="list-group-item list-group-item-action @(Model.Numbers ?  "list-group-item-success" : "")  @(ViewData["Title"].ToString() == "Номера" ? "active" : "")">Номера</a>
 			<a asp-controller="Edit" asp-action="Services" asp-route-id="@ViewData["Id"]" class="list-group-item list-group-item-action @(Model.Services ?  "list-group-item-success" : "")  @(ViewData["Title"].ToString() == "Услуги" ? "active" : "")">Услуги</a>
@@ -30,5 +35,5 @@
 </div>
 
 @section Scripts {
-	@await RenderSectionAsync("ApartmentScripts", required: false)
+	@await RenderSectionAsync("Scripts", required: false)
 }

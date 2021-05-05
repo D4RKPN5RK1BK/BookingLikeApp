@@ -18,7 +18,7 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 	[Authorize]
 	[Area("Apartment")]
 	public class EditController : Controller
-    {
+	{
 		private readonly UserManager<User> _userManager;
 		private readonly ApplicationDbContext _context;
 		private readonly IWebHostEnvironment _env;
@@ -62,7 +62,7 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 				Models.Apartment apartment = await _context.Apartments.FindAsync(model.Id);
 				apartment.SetBasicInfo(model);
 				_context.Update(apartment);
-				
+
 				if (_context.Registrations.Any(o => o.ApartmentId == apartment.Id))
 				{
 					apartment.Registration = await _context.Registrations.FindAsync(apartment.Id);
@@ -105,17 +105,21 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 				}
 
 				await _context.SaveChangesAsync();
-				
+
 				return RedirectToAction("Payment", "Edit", new { apartment.Id });
 			}
 			return View(model);
 		}
 
+		//Сервисы отеля
+
+		[HttpGet]
 		public async Task<IActionResult> Services(int id)
 		{
 			if (!await AllowEditAsync(id)) return NotFound();
 			ServicesViewModel model = new ServicesViewModel(await _context.Apartments.FindAsync(id));
 			model.SetProps(await _context.Registrations.FindAsync(id));
+			model.ApartmentServices = _context.ApartmentServices.Where(o => o.ApartmentId == id).ToList();
 			List<ApartmentService> services = _context.ApartmentServices.Where(o => o.ApartmentId == model.Id).ToList();
 
 			return View(model);
@@ -143,6 +147,40 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 			}
 			return View(model);
 		}
+
+		[HttpPost]
+		public async Task<ActionResult> CreateService([FromBody]int id)
+		{
+			ApartmentService model = new ApartmentService()
+			{
+				Name = "Новый сервис",
+				HavePrice = false,
+				Price = null,
+				ApartmentId = id
+			};
+			await _context.AddAsync(model);
+			await _context.SaveChangesAsync();
+			return Json(model);
+		}
+
+		[HttpDelete]
+		public void DeleteService([FromBody]int id)
+		{
+			_context.Remove(_context.ApartmentServices.Find(id));
+			_context.SaveChanges();
+		}
+
+		[HttpPut]
+		public async Task UpdateService([FromBody]ApartmentService model)
+		{
+			if (model.Price == null)
+				model.HavePrice = false;
+			
+			_context.Update(model);
+			await _context.SaveChangesAsync();
+		}
+
+		//Фотографии отеля
 
 		public async Task<IActionResult> Photos(int id)
 		{

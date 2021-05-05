@@ -6,6 +6,7 @@
 
 <div class="col-sm-4">
     <h2 class="display-4">Регистрация</h2>
+	<p><a asp-action="Login">У вас уже есть аккаунт?</a></p>
 
     <form asp-controller="Auth" asp-action="Register">
         <div asp-validation-summary="All"></div>
@@ -14,11 +15,11 @@
             <input asp-for="@Model.UserName" class="form-control" />
             <span asp-validation-for="@Model.UserName" class="alert-danger"></span>
         </div>
-        <div class="form-group">
+        @*<div class="form-group">
             <label asp-for="@Model.Email" class="col-form-label"></label>
             <input asp-for="@Model.Email" class="form-control" />
             <span asp-validation-for="@Model.Email" class="alert-danger"></span>
-        </div>
+        </div>*@
         <div class="form-group">
             <label asp-for="@Model.Password" class="col-form-label"></label>
             <input asp-for="@Model.Password" class="form-control" />

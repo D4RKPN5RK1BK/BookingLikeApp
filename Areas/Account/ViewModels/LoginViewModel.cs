@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BookingLikeApp.Areas.Account.ViewModels
 {
-    public class LoginViewModel
+	public class LoginViewModel
     {
-        [DataType(DataType.EmailAddress)]
-        public string Email { get; set; }
+        [DataType(DataType.Text)]
+		[DisplayName("Имя пользователя")]
+        public string UserName { get; set; }
 
         [DataType(DataType.Password)]
+		[DisplayName("Пароль")]
         public string Password { get; set; }
 
+		[DisplayName("Запомнить меня")]
         public bool RememberMe { get; set; }
     }
 }

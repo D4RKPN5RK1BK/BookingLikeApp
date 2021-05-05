@@ -1,0 +1,83 @@
+﻿@model List<Score>
+@{ 
+	ViewData["Title"] = "Оценки";
+}
+<form asp-action="create" method="post">
+	<div class="card">
+		<div class="card-body">
+			<h2 class="card-title col-sm-12">Добавить оценку</h2>
+			<div class="col-sm-4">
+				<div class="form-group">
+					<label>Название Оценки</label>
+					<input type="text" name="name" class="form-control"/>
+					<span class="alert-danger"></span>
+				</div>
+				<div class="form-group">
+					<label>Максимальное значение оценки</label>
+					<input type="number" name="maxValue" class="form-control"/>
+					<span class="alert-danger"></span>
+				</div>
+			</div>
+			<div class="form-group col-sm-4">
+				<input type="submit" value="Добавить" class="btn btn-success btn-block"/>
+			</div>
+		</div>
+	</div>
+</form>
+<div class="card mt-3">
+	<table class="table table-borderless" id="score_list">
+		<thead>
+		<th>Название</th>
+		<th>Максимальное значение</th>
+		<th>Удалить</th>
+		</thead>
+		@foreach (var s in Model)
+		{
+			<tr>
+				<form asp-action="update">
+					<input type="hidden" name="id" asp-for="@s.Id" />
+					<td name="nameCol">
+						<input name="name" asp-for="@s.Name" class="form-control" />
+					</td>
+					<td name="maxValueCol">
+						<input name="maxValue" asp-for="@s.MaxValue" class="form-control" />
+					</td>
+				</form>
+				<form asp-action="delete" asp-route-id="@s.Id" method="post">
+					<td>
+						<button type="submit" class="btn btn-danger">
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-circle d-flex align-items-center" viewBox="0 0 16 16">
+								<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+								<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+							</svg>
+						</button>
+					</td>
+				</form>
+
+			</tr>
+		}
+	</table>
+</div>
+
+
+@section Scripts {
+	<script>
+		$(document).ready(function () {
+			$("body").on("change", "input[name='name'], input[name='maxValue']", function () {
+				let score = {
+					id: $(this).parent().siblings("input[name='id']").val(),
+					name: $(this).parent().parent().children().children("input[name='name']").val(),
+					maxValue: $(this).parent().parent().children().children("input[name='maxValue']").val()
+				};
+				fetch("/admin/scores/update", {
+					method: "PUT",
+					headers: {
+						"accept": "application/json",
+						"content-type": "application/json"
+					},
+					body: JSON.stringify(score)
+				});
+			});
+		});
+	</script>
+}
