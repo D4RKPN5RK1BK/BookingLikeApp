@@ -38,7 +38,7 @@
 					<ul class="list-unstyled">
 						@foreach (var s in Model.Apartment.ApartmentServices)
 						{
-							<li class="">
+							<li class="text-success">
 								<b>
 									@s.Name
 								</b>
@@ -56,15 +56,31 @@
 		</div>
 		<div class="list-group-item">
 			<h2 class="card-title">Условия</h2>
-			<div class="cols-wm-8">
-				<h4>
-					Регистрация заезда:
-					<b>@Model.Apartment.ArrivalTimeStarts.ToString("HH:mm") - @Model.Apartment.ArrivalTimeEnds.ToString("HH:mm")</b>
-				</h4>
-				<h4>
-					Регистрация заезда:
-					<b>@Model.Apartment.DepartureTimeStarts.ToString("HH:mm") - @Model.Apartment.DepartureTimeEnds.ToString("HH:mm")</b>
-				</h4>
+			<div class="row">
+				<div class="col-sm-8">
+					<h4>
+						Регистрация заезда:
+						<b>@Model.Apartment.ArrivalTimeStarts.ToString("HH:mm") - @Model.Apartment.ArrivalTimeEnds.ToString("HH:mm")</b>
+					</h4>
+					<h4>
+						Регистрация заезда:
+						<b>@Model.Apartment.DepartureTimeStarts.ToString("HH:mm") - @Model.Apartment.DepartureTimeEnds.ToString("HH:mm")</b>
+					</h4>
+				</div>
+				<div class="col-sm-4">
+					<ul class="list-unstyled">
+						@if (Model.Apartment.AnimalsAllowed)
+						{
+							<li><h4>Разрешены животные</h4></li>
+						}
+						@if (Model.Apartment.ChildrensAllowed)
+						{
+							<li><h4>Разрешены дети</h4></li>
+						}
+
+					</ul>
+					
+				</div>
 			</div>
 		</div>
 	</div>
@@ -213,11 +229,11 @@
 
 	
 </div>
-<div class="mt-3 card">
+@*<div class="mt-3 card">
 	<div class="card-body">
 		<h2 class="card-title">Отзывы</h2>
 	</div>
-</div>
+</div>*@
 @section Scripts {
 	<script>
 		$(document).ready(function () {
