@@ -1,0 +1,76 @@
+﻿@model UserInfoViewModel
+@addTagHelper *, BookingLikeApp
+@{
+	ViewData["Title"] = "Отели";
+	Layout = "_UserLayout";
+}
+<div class="card mb-3">
+	<div class="card-body">
+		<h2 class="card-title">Отели пользователя <b>@Model.User.UserName</b></h2>
+	</div>
+</div>
+<filter-page-link-helper page-view-model="@Model.SearchApartments.Page">
+</filter-page-link-helper>
+@if (Model.SearchApartments.Apartments.Count > 0)
+{
+<table class="table table-borderless">
+	<thead>
+		<th>Название</th>
+		<th>Страница</th>
+		<th>Закончен</th>
+		<th>Доступен</th>
+		<th>Проверен</th>
+		<th>Дата регистрации</th>
+	</thead>
+	@foreach (var apartment in Model.SearchApartments.Apartments)
+	{
+		<tr>
+			<td><a asp-action="Read" asp-controller="Apartments" asp-route-id="@apartment.Id">@apartment.Name</a></td>
+			<td>
+				@if (apartment.Finished && apartment.Enable)
+				{
+					<a asp-action="Details" asp-controller="Read" asp-area="Apartment" asp-route-id="@apartment.Id">Ссылка</a>
+				}
+			</td>
+			<td>
+				@if (@apartment.Finished)
+				{
+					<span class="badge badge-secondary">Да</span>
+				}
+				else
+				{
+					<span class="badge badge-danger">Нет</span>
+				}
+			</td>
+			<td>
+				@if (@apartment.Enable)
+				{
+					<span class="badge badge-secondary">Да</span>
+				}
+				else
+				{
+					<span class="badge badge-danger">Нет</span>
+				}
+			</td>
+			<td>
+				@if (@apartment.Checked)
+				{
+					<span class="badge badge-secondary">Да</span>
+				}
+				else
+				{
+					<span class="badge badge-danger">Нет</span>
+				}
+			</td>
+			<td>@apartment.RegistrationDate</td>
+		</tr>
+	}
+</table>
+}
+else
+{
+	<h2>По данному запросу не найдено элементов</h2>
+}
+
+<filter-page-link-helper page-view-model="@Model.SearchApartments.Page">
+</filter-page-link-helper>

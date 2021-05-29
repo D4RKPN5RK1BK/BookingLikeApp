@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using BookingLikeApp.Data;
 using BookingLikeApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingLikeApp.Areas.Admin.Controllers
 {
 	[Area("admin")]
+	[Authorize(Roles = "staff")]
 	public class NumberTypesController : Controller
 	{
 		protected readonly ApplicationDbContext _context;

@@ -14,7 +14,9 @@ namespace BookingLikeApp.Areas.Apartment.ViewModels
 
 		public DateTime Begin { get; set; }
 		public DateTime End { get; set; }
+
 		public bool EnableReservation { get; set; }
+
 		public Models.Apartment Apartment { get; set; }
 		public List<EntityReservation> EntityReservations { get; set; }
 	}

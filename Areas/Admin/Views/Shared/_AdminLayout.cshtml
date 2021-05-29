@@ -2,28 +2,68 @@
 	Layout = "_Layout";
 }
 <div class="row">
-	<div class="col-sm-3">
+	<div class="col-sm-3 mt-3">
 		<div class="list-group">
-			<a asp-action="Index" asp-controller="Users" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Пользователи" ? "active" : "")">Пользователи</a>
+			<a asp-action="Index" asp-controller="Users" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Пользователи" ? "active" : "")">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
+					<path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+					<path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z" />
+					<path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" />
+				</svg>
+				Пользователи
+			</a>
+			<a asp-action="Index" asp-controller="Apartments" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Отели" ? "active" : "")">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-building" viewBox="0 0 16 16">
+					<path fill-rule="evenodd" d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022zM6 8.694L1 10.36V15h5V8.694zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5V15z" />
+					<path d="M2 11h1v1H2v-1zm2 0h1v1H4v-1zm-2 2h1v1H2v-1zm2 0h1v1H4v-1zm4-4h1v1H8V9zm2 0h1v1h-1V9zm-2 2h1v1H8v-1zm2 0h1v1h-1v-1zm2-2h1v1h-1V9zm0 2h1v1h-1v-1zM8 7h1v1H8V7zm2 0h1v1h-1V7zm2 0h1v1h-1V7zM8 5h1v1H8V5zm2 0h1v1h-1V5zm2 0h1v1h-1V5zm0-2h1v1h-1V3z" />
+				</svg>
+				Отели
+			</a>
 		</div>
 		<div class="list-group mt-3">
-			<a asp-action="Index" asp-controller="ApartmentTypes" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Типы отелей" ? "active" : "")">Типы отелей</a>
-			<a asp-action="Index" asp-controller="NumberTypes" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Типы номеров" ? "active" : "")">Типы номеров</a>
-			<a asp-action="Index" asp-controller="Beds" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Типы кроватей" ? "active" : "")">Типы кроватей</a>
-			<a asp-action="Index" asp-controller="Rooms" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Комнаты" ? "active" : "")">Комнаты</a>
-			<a asp-action="Index" asp-controller="Scores" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Оценки" ? "active" : "")">Оценки</a>
+			<a asp-action="Index" asp-controller="ApartmentTypes" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Типы отелей" ? "active" : "")">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box" viewBox="0 0 16 16">
+					<path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5 8 5.961 14.154 3.5 8.186 1.113zM15 4.239l-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923l6.5 2.6zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464L7.443.184z" />
+				</svg>	
+				Типы отелей
+			</a>
+			<a asp-action="Index" asp-controller="NumberTypes" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Типы номеров" ? "active" : "")">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box" viewBox="0 0 16 16">
+					<path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5 8 5.961 14.154 3.5 8.186 1.113zM15 4.239l-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923l6.5 2.6zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464L7.443.184z" />
+				</svg>	
+				Типы номеров
+			</a>
+			<a asp-action="Index" asp-controller="Beds" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Типы кроватей" ? "active" : "")">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box" viewBox="0 0 16 16">
+					<path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5 8 5.961 14.154 3.5 8.186 1.113zM15 4.239l-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923l6.5 2.6zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464L7.443.184z" />
+				</svg>
+				Типы кроватей
+			</a>
+			<a asp-action="Index" asp-controller="Scores" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Оценки" ? "active" : "")">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box" viewBox="0 0 16 16">
+					<path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5 8 5.961 14.154 3.5 8.186 1.113zM15 4.239l-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923l6.5 2.6zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464L7.443.184z" />
+				</svg>
+				Оценки
+			</a>
 
 		</div>
 		<div class="list-group mt-3">
-			<a asp-action="Index" asp-controller="Cards" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Банковские карты" ? "active" : "")">Банковские карты</a>
-		</div>
-		<div class="list-group mt-3">
-			<a asp-action="Index" asp-controller="Countries" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Страны" ? "active" : "")">Страны</a>
-			<a asp-action="Index" asp-controller="Cities" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Города" ? "active" : "")">Города</a>
-			<a asp-action="Index" asp-controller="Streets" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Улицы" ? "active" : "")">Улицы</a>
+			<a asp-action="Index" asp-controller="Countries" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Страны" ? "active" : "")">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-compass-fill" viewBox="0 0 16 16">
+					<path d="M15.5 8.516a7.5 7.5 0 1 1-9.462-7.24A1 1 0 0 1 7 0h2a1 1 0 0 1 .962 1.276 7.503 7.503 0 0 1 5.538 7.24zm-3.61-3.905L6.94 7.439 4.11 12.39l4.95-2.828 2.828-4.95z" />
+				</svg>
+				Страны
+			</a>
+			<a asp-action="Index" asp-controller="Cities" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Города" ? "active" : "")">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-compass" viewBox="0 0 16 16">
+					<path d="M8 16.016a7.5 7.5 0 0 0 1.962-14.74A1 1 0 0 0 9 0H7a1 1 0 0 0-.962 1.276A7.5 7.5 0 0 0 8 16.016zm6.5-7.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z" />
+					<path d="M6.94 7.44l4.95-2.83-2.83 4.95-4.949 2.83 2.828-4.95z" />
+				</svg>
+				Города
+			</a>
 		</div>
 	</div>
-	<div class="col-sm-9">
+	<div class="col-sm-9 mt-3">
 		@RenderBody()
 	</div>
 </div>

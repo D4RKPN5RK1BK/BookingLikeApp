@@ -1,31 +1,43 @@
-﻿@{ 
-    Layout = "_Layout";
-    ViewData["Title"] = "Выбор типа";
+﻿@{
+	Layout = "_Layout";
+	ViewData["Title"] = "Выбор типа";
 }
 
-<h2 class="display-4">Регистрация объекта</h2>
-@if((bool)ViewData["Exist"])
-{
-    <div class="card">
-        <div class="card-body">
-            <h2 class="card-title">Вы уже начали регистрацию объекта.</h2>
-            <p>Его редактирование можно продолжить перейдя по ссылке.</p>
-            <a asp-controller="Edit" asp-action="BasicInfo" asp-route-id="@ViewData["Id"]" class="btn btn-success">Продолжить редактировать</a>
-        </div>
-    </div>
-}
+<h2 class="display-4 col-12">Регистрация объекта</h2>
 
-<div class="row my-5 align-items-end">
-    @foreach (var item in ViewBag.ApartmentTypes)
-    {
-	<div class="text-center col-sm-3">
-		<form asp-action="Initialize" asp-controller="Create">
-			<img src="@item.PhotoUrl" alt="Image not found" class="text-center img-thumbnail" />
-			<div class="text-center mt-2">
-				<input type="hidden" name="apartmentType" value="@item.Id" />
-				<input type="submit" value="@item.Name" class="btn btn-primary btn-block" />
+<div class="card-deck mt-3">
+	@foreach (var item in ViewBag.ApartmentTypes)
+	{
+		<div class="col-sm-6 col-md-4 mb-3">
+			<div class="card h-100">
+				<img src="@item.PhotoUrl" alt="Изображение не найдено" height="300" class="card-img-top text-center" style="object-fit:cover" />
+
+				<div class="card-body">
+					<div class="card-text text-justify">@item.Description</div>
+				</div>
+				<form asp-action="Initialize" asp-controller="Create">
+
+					<div class="form-group col-12">
+						<input type="hidden" name="apartmentType" value="@item.Id" />
+						<input type="submit" value="@item.Name" class="btn btn-primary btn-block" />
+					</div>
+				</form>
 			</div>
-		</form>
-	</div>
-    }
+		</div>
+	}
 </div>
+
+<div class="row">
+	
+	
+</div>
+
+@if ((bool)ViewData["Exist"])
+{
+	<div class="col-sm-8">
+		<a asp-controller="Edit" asp-action="BasicInfo" asp-route-id="@ViewData["Id"]" class="btn btn-success">Продолжить предыдущую регистрацию</a>
+
+	</div>
+	
+}
+

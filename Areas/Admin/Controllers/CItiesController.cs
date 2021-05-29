@@ -1,17 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using BookingLikeApp.Data;
 using BookingLikeApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BookingLikeApp.Areas.Admin.Controllers
 {
 	[Area("admin")]
+	[Authorize(Roles = "staff")]
 	public class CitiesController : Controller
 	{
 		protected readonly ApplicationDbContext _context;
@@ -22,7 +24,7 @@ namespace BookingLikeApp.Areas.Admin.Controllers
 		{
 			if (file != null)
 			{
-				string path = "/images/" + file.FileName;
+				string path = "/images/" + Guid.NewGuid() + file.FileName;
 
 				using (var fileStream = new FileStream(_env.WebRootPath + path, FileMode.Create))
 				{
@@ -41,58 +43,62 @@ namespace BookingLikeApp.Areas.Admin.Controllers
 			_env = env;
 		}
 
-		public IActionResult Index()
-		{
-			return View(_context.Cities.ToList());
-		}
+		[HttpGet]
+		public IActionResult Index() => View(_context.Cities.ToList());
 
-		public async Task<IActionResult> Edit(int id)
+		[HttpGet]
+		public async Task<ActionResult> Edit(int id)
 		{
-			ViewBag.CountryList = _context.Countries.ToList();
-			return View(await _context.Cities.FindAsync(id));
+			City model = await _context.Cities.FindAsync(id);
+			ViewData["Countries"] = new SelectList(_context.Countries.ToList(), "Id", "Name", model.CountryId);
+			return View(model);
 		}
 		[HttpPost]
-		public async Task<IActionResult> Edit(City model)
+		public async Task<ActionResult> Edit(City model)
 		{
-			if (ModelState.IsValid)
+			if(ModelState.IsValid)
 			{
-				await AddImageAsync(model.File);
-				model.CountryId = _context.Countries.Where(o => o.Name == model.CountryName).FirstOrDefault().Id;
+				if (model.File != null)
+					model.PhotoUrl = await AddImageAsync(model.File);
 				_context.Update(model);
 				await _context.SaveChangesAsync();
 				return RedirectToAction("Index");
 			}
-			return View();
+			ViewData["Countries"] = new SelectList(_context.Countries.ToList(), "Id", "Name", model.CountryId);
+			return View("Index");
 		}
 
-		public async Task<IActionResult> Delete(int id) => View(await _context.Cities.FindAsync(id));
+		[HttpGet]
+		public async Task<ActionResult> Delete(int id) => View(await _context.Cities.FindAsync(id));
 		[HttpPost]
-		public async Task<IActionResult> Delete(City model)
+		public async Task<ActionResult> Delete(City model)
 		{
 			_context.Remove(model);
 			await _context.SaveChangesAsync();
 			return View();
 		}
 
-		public IActionResult Create(int id)
+		[HttpGet]
+		public ActionResult Create(int id)
 		{
-			ViewBag.CountryList = _context.Countries.ToList();
+			ViewBag.Countries = new SelectList(_context.Countries.ToList(), "Id", "Name");
 			return View(new City());
 		}
 		[HttpPost]
-		public async Task<IActionResult> Create(City model)
+		public async Task<ActionResult> Create(City model)
 		{
-			if (ModelState.IsValid)
+			if(model.CountryId <1)
+				ModelState.AddModelError("CountryId", "Данный пункт обязателен к заполнению");
+			else if (ModelState.IsValid)
 			{
-				await AddImageAsync(model.File);
-
-				model.CountryId = _context.Countries.Where(o => o.Name == model.CountryName).FirstOrDefault().Id;
-
+				model.PhotoUrl = await AddImageAsync(model.File);
 				await _context.AddAsync(model);
 				await _context.SaveChangesAsync();
 				return RedirectToAction("Index");
 			}
-			return View();
+
+			ViewBag.Countries = new SelectList(_context.Countries.ToList(), "Id", "Name", model.CountryId);
+			return View("Index");
 		}
 	}
 }

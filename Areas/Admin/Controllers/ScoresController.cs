@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookingLikeApp.Areas.Admin.Controllers
 {
 	[Area("admin")]
-	[Authorize]
+	[Authorize(Roles = "staff")]
 	public class ScoresController : Controller
 	{
 		protected readonly ApplicationDbContext _context;
@@ -25,7 +25,7 @@ namespace BookingLikeApp.Areas.Admin.Controllers
 		[HttpPost]
 		public async Task<ActionResult> Create(Score model)
 		{
-			_context.Add(model);
+			await _context.AddAsync(model);
 			return RedirectToAction("Index");
 		}
 

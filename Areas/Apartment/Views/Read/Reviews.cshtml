@@ -1,1 +1,32 @@
-﻿
+﻿@model ReviewsListViewModel
+@addTagHelper *, BookingLikeApp
+@{ 
+	ViewData["Title"] = "Отзывы";
+}
+<div class="col-sm-12">
+	<h2 class="display-4">Отзывы на <a asp-action="Details" asp-route-id="@Model.Apartment.Id">@Model.Apartment.Name</a></h2>
+	<page-link page-view-model="Model.PageViewModel"></page-link>
+	@foreach (var r in Model.Reviews)
+	{
+		<div class="card mb-2">
+			<div class="card-body">
+				<div class="col-12">
+					<div class="row align-items-end">
+						<profile-picture img-url="@r.Reservation.User.PFPUrl" image-size="50"></profile-picture>
+						<h3 class="ml-2">@r.Reservation.User.DisplayName</h3>
+					</div>
+				</div>
+				<div class="row mt-2">
+					@foreach (var s in r.ReviewScores)
+					{
+						<div class="col-sm-4">
+							<h5>@Model.Scores.First(o => o.Id == s.ScoreId).Name: <b>@s.Value</b></h5>
+						</div>
+					}
+				</div>
+				<pre style="white-space: pre-wrap" class="mt-2 card-text">@r.Message</pre>
+			</div>
+		</div>
+	}
+	<page-link page-view-model="Model.PageViewModel"></page-link>
+</div>

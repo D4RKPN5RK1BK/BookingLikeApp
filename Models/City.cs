@@ -13,11 +13,8 @@ namespace BookingLikeApp.Models
 	{
 		public int Id { get; set; }
 
-		public int CountryId { get; set; }
 		[Required]
-		[NotMapped]
-		[DisplayName("Страна")]
-		public string CountryName { get; set; }
+		public int CountryId { get; set; }
 
         [DisplayName("Название")]
         [MaxLength(256, ErrorMessage = "Длинна строки {0} не может превышать {1}")]
@@ -32,6 +29,6 @@ namespace BookingLikeApp.Models
         public bool Blocked { get; set; }
 
         public Country Country { get; set; }
-        public IEnumerable<Street> Streets { get; set; }
+		public List<Apartment> Apartments { get; set; }
     }
 }

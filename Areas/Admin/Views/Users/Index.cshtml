@@ -1,22 +1,90 @@
-﻿@model List<User>
+﻿@model SearchUsersViewModel
+@addTagHelper *, BookingLikeApp
 @{
 	ViewData["Title"] = "Пользователи";
+	
 }
 
-<h2 class="display-4">Пользователи</h2>
+<div class="card mb-3">
+	<div class="card-body">
+		<form asp-action="Index" method="get">
+			<h2 class="card-title">Поиск пользоватлей</h2>
+			<div class="row">
+				<div class="input-group mb-3 col-sm-4">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Имя</span>
+					</div>
+					<input type="text" name="name" asp-for="@Model.FilterUserViewModel.Name" class="form-control" />
+				</div>
+				<div class="input-group col-sm-8 mb-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Регистрация</span>
+					</div>
+					<input name="registrationDateBegin" type="date" asp-for="@Model.FilterUserViewModel.RegistrationDateBegin" class="form-control" />
+					<input name="registrationDateEnd" type="date" asp-for="@Model.FilterUserViewModel.RegistrationDateEnd" class="form-control" />
+				</div>
+				<div class="input-group col-sm-6 mb-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Сортировать по</span>
+					</div>
+					<select name="sortOrder" asp-for="@Model.SortUsersViewModel.Current" class="custom-select">
+						<option value="0" selected>По имени</option>
+						<option value="1">По имени (рев.)</option>
+						<option value="2">По дате регистрации</option>
+						<option value="3">По дате регистрации (рев.)</option>
+						<option value="4">По количеству апартоментов</option>
+						<option value="5">По количеству апартоментов (рев.)</option>
+					</select>
+				</div>
+				<div class="col-sm-6 form-group">
+					<input type="checkbox" name="withApartments" asp-for="@Model.FilterUserViewModel.WithApartments" class="form-check-inline" />
+					<label>Искать только людей с апартаментами</label>
+				</div>
+			</div>
+			<div class="mt-3">
+				<input type="submit" value="Найти пользователей" class="btn btn-success" />
+			</div>
 
-<table class="table">
-	@foreach(var item in Model)
-	{
-		<tr>
-			<td>@item.UserName</td>
-			<td>@item.Email</td>
-			<td>
-				<a asp-action="Info" class="btn btn-secondary">Подробнее</a>
-				<a asp-action="Edit" class="btn btn-primary">Редактировать</a>
-				<a asp-action="Delete" class="btn btn-danger">Удалить</a>
-			</td>
-		</tr>
+		</form>
+	</div>
+</div>
 
-	}
-</table>
+<filter-page-link-helper page-view-model="Model.PageViewModel"
+						 page-url-name="Model.FilterUserViewModel.Name"
+						 page-url-registrationDateBegin="Model.FilterUserViewModel.RegistrationDateBegin"
+						 page-url-registrationDateEnd="Model.FilterUserViewModel.RegistrationDateEnd"
+						 page-url-withApartments="Model.FilterUserViewModel.WithApartments"
+						 page-url-sortOrder="Model.SortUsersViewModel.Current">
+</filter-page-link-helper>
+@if (Model.Users.Count > 0)
+{
+	<table class="table mt-3 table-borderless table-responsive ">
+		@foreach (var item in Model.Users)
+		{
+			<tr>
+				<td><profile-picture image-size="30" img-url="@item.PFPUrl"></profile-picture></td>
+				<td>
+					<a asp-action="read" asp-route-id="@item.Id">@item.UserName</a>
+				</td>
+				<td>
+					@item.DisplayName
+				</td>
+				<td>
+					@item.RegistationDate.ToShortDateString()
+				</td>
+			</tr>
+		}
+	</table>
+}
+else
+{
+	<h2>По данному запросу ничего не найдено</h2>
+}
+
+<filter-page-link-helper page-view-model="Model.PageViewModel"
+						 page-url-name="Model.FilterUserViewModel.Name"
+						 page-url-registrationDateBegin="Model.FilterUserViewModel.RegistrationDateBegin"
+						 page-url-registrationDateEnd="Model.FilterUserViewModel.RegistrationDateEnd"
+						 page-url-withApartments="Model.FilterUserViewModel.WithApartments"
+						 page-url-sortOrder="Model.SortUsersViewModel.Current">
+</filter-page-link-helper>

@@ -1,0 +1,30 @@
+﻿@model Apartment
+@{
+	ViewData["Title"] = "Завершение";
+	ViewData["Id"] = Model.Id;
+}
+
+<form asp-controller="Edit" asp-action="Enable" method="post">
+    <div class="card">
+        <div class="card-body">
+			<div class="col-sm-8">
+				@if (Model.Registration != null)
+				{
+					<h2 class="card-title">Завершить регистрацию и открыть доступ к отелю?</h2>
+				}
+				else
+				{
+					<h2 class="card-title">Открыть доступ к отелю?</h2>
+				}
+				<div class="form-group">
+					<input type="hidden" asp-for="Id" />
+					<input asp-for="Enable" class="form-check-inline" />
+					<label class="col-form-label">Возможность снимать недвижемость.</label>
+				</div>
+				<div class="form-group">
+					<input type="submit" value="Подтвердить" class="btn btn-success"/>
+				</div>
+			</div>
+        </div>
+    </div>
+</form>

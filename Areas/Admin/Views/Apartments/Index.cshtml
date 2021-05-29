@@ -1,6 +1,165 @@
-﻿@model List<Apartment>
-@{ 
+﻿@model ApartmentsViewModel
+@addTagHelper *, BookingLikeApp
+@{
 	ViewData["Title"] = "Отели";
 }
 
-<h2 class="display-4">Отели</h2>
+<form asp-action="Index" method="get">
+	<div class="card">
+		<div class="card-body">
+			<h2 class="card-title">Поиск</h2>
+			<div class="row">
+				<div class="input-group col-sm-4">
+					<div class="input-group-prepend mb-3">
+						<span class="input-group-text">Название</span>
+					</div>
+					<input name="name" asp-for="@Model.FilterModel.Name" type="text" class="form-control" />
+				</div>
+				<div class="input-group col-sm-8">
+					<div class="input-group-prepend mb-3">
+						<span class="input-group-text">Локация</span>
+					</div>
+					@{ await Html.RenderPartialAsync("_CountrySelect", ViewData["Countries"]); }
+					@{ await Html.RenderPartialAsync("_CitySelect", ViewData["Cities"]); }
+				</div>
+				<div class="input-group col-sm-4">
+					<div class="input-group-prepend mb-3">
+						<span class="input-group-text">Готовность</span>
+					</div>
+					<select name="finished" asp-for="@Model.FilterModel.Finished" class="custom-select">
+						<option value="0" selected>Все</option>
+						<option value="1">Готовые</option>
+						<option value="2">Не готовые</option>
+					</select>
+				</div>
+				<div class="input-group col-sm-4">
+					<div class="input-group-prepend mb-3">
+						<span class="input-group-text">Доступность</span>
+					</div>
+					<select name="enabled" asp-for="@Model.FilterModel.Enabled" class="custom-select">
+						<option value="0" selected>Все</option>
+						<option value="1">Доступные</option>
+						<option value="2">Недоступные</option>
+					</select>
+				</div>
+				<div class="input-group col-sm-4">
+					<div class="input-group-prepend mb-3">
+						<span class="input-group-text">Провереность</span>
+					</div>
+					<select name="check" asp-for="@Model.FilterModel.Checked" class="custom-select">
+						<option value="0" selected>Все</option>
+						<option value="1">Доступные</option>
+						<option value="2">Не проверенные</option>
+					</select>
+				</div>
+				<div class="input-group col-sm-6">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Сортировка</span>
+					</div>
+					<select name="sortOrder" asp-for="@Model.SortOrder.Current" class="custom-select">
+						<option value="0" selected>По имени</option>
+						<option value="1">По имени (обр.)</option>
+						<option value="2">По рейтингу</option>
+						<option value="3">По рейтингу (обр.)</option>
+						<option value="4">По бронированиям</option>
+						<option value="5">По бронированиям (обр.)</option>
+						<option value="6">По обзорам</option>
+						<option value="7">По обзорам (обр.)</option>
+					</select>
+				</div>
+				<div class="col-sm-4">
+					<input type="submit" value="Поиск" class="btn btn-success btn-block" />
+				</div>
+			</div>
+			<div class="row justify-content-end">
+				
+			</div>
+		</div>
+	</div>
+
+</form>
+
+
+<filter-page-link-helper page-view-model="@Model.Page"
+						 page-url-countryId="@Model.FilterModel.CountryId"
+						 page-url-cityId="@Model.FilterModel.CityId"
+						 page-url-begin="@Model.FilterModel.ReservationTimeBegin"
+						 page-url-end="@Model.FilterModel.ReservationTimeEnd"
+						 page-url-name="@Model.FilterModel.Name"
+						 page-url-enabled="@Model.FilterModel.Enabled"
+						 page-url-finished="@Model.FilterModel.Finished"
+						 page-url-check="@Model.FilterModel.Checked"
+						 page-url-sortOrder="@Model.SortOrder.Current">
+</filter-page-link-helper>
+@if (Model.Apartments.Count > 0)
+{
+	<table class="table table-borderless">
+		<thead>
+		<th>Название</th>
+		<th>Страница</th>
+		<th>Закончен</th>
+		<th>Доступен</th>
+		<th>Проверен</th>
+		<th>Дата регистрации</th>
+		</thead>
+		@foreach (var apartment in Model.Apartments)
+		{
+			<tr>
+				<td><a asp-action="Read" asp-controller="Apartments" asp-route-id="@apartment.Id">@apartment.Name</a></td>
+				<td>
+					@if (apartment.Finished && apartment.Enable)
+					{
+						<a asp-action="Details" asp-controller="Read" asp-area="Apartment" asp-route-id="@apartment.Id">Ссылка</a>
+					}
+				</td>
+				<td>
+					@if (@apartment.Finished)
+					{
+						<span class="badge badge-secondary">Да</span>
+					}
+					else
+					{
+						<span class="badge badge-danger">Нет</span>
+					}
+				</td>
+				<td>
+					@if (@apartment.Enable)
+					{
+						<span class="badge badge-secondary">Да</span>
+					}
+					else
+					{
+						<span class="badge badge-danger">Нет</span>
+					}
+				</td>
+				<td>
+					@if (@apartment.Checked)
+					{
+						<span class="badge badge-secondary">Да</span>
+					}
+					else
+					{
+						<span class="badge badge-danger">Нет</span>
+					}
+				</td>
+				<td>@apartment.RegistrationDate</td>
+			</tr>
+		}
+	</table>
+}
+else
+{
+	<h2>По данному запросу не найдено элементов</h2>
+}
+
+<filter-page-link-helper page-view-model="@Model.Page"
+						 page-url-countryId="@Model.FilterModel.CountryId"
+						 page-url-cityId="@Model.FilterModel.CityId"
+						 page-url-begin="@Model.FilterModel.ReservationTimeBegin"
+						 page-url-end="@Model.FilterModel.ReservationTimeEnd"
+						 page-url-name="@Model.FilterModel.Name"
+						 page-url-enabled="@Model.FilterModel.Enabled"
+						 page-url-finished="@Model.FilterModel.Finished"
+						 page-url-check="@Model.FilterModel.Checked"
+						 page-url-sortOrder="@Model.SortOrder.Current">
+</filter-page-link-helper>

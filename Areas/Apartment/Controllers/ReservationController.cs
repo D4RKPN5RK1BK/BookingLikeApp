@@ -8,8 +8,9 @@ using BookingLikeApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using BookingLikeApp.Areas.Apartment.ViewModels;
 using BookingLikeApp.ViewModels;
+using BookingLikeApp.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookingLikeApp.Areas.Apartment.Controllers
 {
@@ -34,16 +35,11 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 	{
 		public string Exception { get; set; }
 		public string InnerException { get; set; }
-		public List<string> Messages { get; set; }
+		public string Message { get; set; }
+		public string Target { get; set; }
+
 		public int ReservationId { get; set; }
 		public bool Success { get; set; }
-
-		public CreateResponce()
-		{
-			Messages = new List<string>();
-			ReservationId = 0;
-			Success = false;
-		}
 	}
 
 	// Контроллер
@@ -60,29 +56,39 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 		}
 
 		[HttpGet]
-		public async Task<ActionResult> Index(int page = 1)
+		public ActionResult Index(int page = 1, int apartmentId = 0, BoolEnum accept = BoolEnum.All, ReservationSortEnum orderBy = ReservationSortEnum.ByDateAsc)
 		{
-			int pageSize = 10;
-
-			ReservationsViewModel model = new ReservationsViewModel();
-			model.ReservationDataPacks = new List<ReservationDataPack>();
-			User user = await _userManager.GetUserAsync(User);
-			List<Reservation> reservations = _context.Reservations.Where(o => o.UserId == user.Id && !o.Cencel).Skip((page - 1) * pageSize).Take(pageSize).ToList();
-
-			foreach(var r in reservations)
+			var model = new ReservationsViewModel();
+			model.FilterModel = new ReservationsFilter()
 			{
-				EntityReservation entityReservation = _context.EntityReservations.FirstOrDefault(o => o.ReservationId == r.Id);
-				Models.Apartment apartment = _context.Apartments.Find(_context.Numbers.Find(_context.Packs.Find(_context.PackTenants.Find(entityReservation.PackTenantId).PackId).NumberId).ApartmentId);
-				model.ReservationDataPacks.Add(new ReservationDataPack()
-				{
-					Reservation = r,
-					Apartment = apartment
-				});
+				Accept = accept,
+				ApartmentId = apartmentId,
+				UserId = _userManager.GetUserId(User)
+			};
+			model.SortModel = new ReservationsSort(orderBy);
 
+			model.Reservations = _context.Reservations.Where(o => o.UserId == model.FilterModel.UserId && !o.Cencel).ToList();
+
+			if (apartmentId > 0)
+				model.Reservations = model.Reservations.Where(o => o.ApartmentId == apartmentId).ToList();
+
+			switch (accept)
+			{
+				case BoolEnum.TrueOnly:
+					model.Reservations = model.Reservations.Where(o => o.Confirm).ToList();
+					break;
+				case BoolEnum.FalseOnly:
+					model.Reservations = model.Reservations.Where(o => !o.Confirm).ToList();
+					break;
 			}
 
-			int count = _context.Reservations.Where(o => o.UserId == user.Id && !o.Cencel).Count();
-			model.PageInfo = new PageViewModel(count, page, pageSize); 
+			model.PageModel = new PageViewModel(model.Reservations.Count, page, 10);
+			model.Sort();
+			model.Cut();
+
+			for(int i = 0; i < model.Reservations.Count; i++)
+				model.Reservations[i].Apartment = _context.Apartments.Find(model.Reservations[i].ApartmentId);
+
 			return View(model);
 		}
 
@@ -90,21 +96,47 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 		public ActionResult Create([FromBody]CreateRequest model)
 		{
 
-			CreateResponce responce = new CreateResponce();
+			CreateResponce responce = new CreateResponce() { Success = false };
 
 
 			//Часть с проверкой на корректность запроса
 			
 			try
 			{
-				/*return Json(model);*/
+
+
+				if(model.Packs == null || model.Packs.Count == 0 || model.Packs.Sum(o => o.Count) == 0)
+				{
+					responce.Message = "Не выбран ни один номер";
+					responce.Target = "";
+					return Json(responce);
+				}
+
+				model.Packs.RemoveAll(o => o.Count <= 0 || o.PackTenantId == 0 || o.PackId == 0);
+
+				if(model.ReservationBegin >= model.ReservationEnd)
+				{
+					responce.Message = "Некорректный промежуток времени";
+					return Json(responce);
+				}
+
+				/*if(model.Packs.Any())*/
+			}
+			catch(NullReferenceException ex)
+			{
+				responce.Exception = ex.Message;
+				responce.InnerException = ex.InnerException.Message;
+				responce.Message = "Некорректно составленный запрос";
+				return Json(responce);
 			}
 			catch(Exception ex)
 			{
-				return Json("exception: " + ex.Message);
+				responce.Exception = ex.Message;
+				responce.Message = "Не выбар ни один элемент";
+				responce.Success = false;
 			}
 
-			//Часть c созданием действительных обхектов и занесением их данных в базу данных
+			//Часть c созданием действительных обхектов и занесением их в базу данных
 
 			try
 			{
@@ -115,6 +147,7 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 					EntityReservations = new List<EntityReservation>(),
 					TimeStamp = DateTime.Now,
 					UserId = _userManager.GetUserId(User),
+					ApartmentId = _context.Numbers.Find(_context.Packs.Find(model.Packs.First().PackId).NumberId).ApartmentId
 				};
 
 				_context.Add(reservation);
@@ -150,8 +183,8 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 						//Желательно сюда поставить исключение 
 						if (numberEntity == null)
 						{
-							responce.Exception = "Все сущности заняты";
-							responce.Messages.Add("Кто-то уже зарезервировал номра, перезагрузите страницу для обновления данных.");
+							responce.Message = "Кто-то уже зарезервировал номра, перезагрузите страницу для обновления данных.";
+							responce.Target = "";
 							return Json(responce);
 						}
 						else
@@ -179,9 +212,12 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 					{
 						numberServices.Add(_context.NumberServices.Find(packTenant.Pack.PackServices[j].NumberServiceId));
 					}
+					decimal tempPrice = 0;
 
-					reservation.Price += packTenant.Price;
-					reservation.Price += (decimal)numberServices.Sum(o => o.Price);
+					tempPrice += packTenant.Price;
+					tempPrice += (decimal)numberServices.Sum(o => o.Price);
+					tempPrice *= (decimal)(reservation.ReservationEnd - reservation.ReservationBegin).TotalDays + 1;
+					reservation.Price += tempPrice;
 				}
 
 				if (reservation.EntityReservations.Count > 0)
@@ -192,12 +228,11 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 					responce.ReservationId = reservation.Id;
 					return Json(responce);
 				}
-
 			}
-			catch (Exception ex)
+			catch
 			{
-				responce.Exception = ex.Message;
-				responce.InnerException = ex.InnerException.Message;
+				responce.Success = false;
+				responce.Message = "Невозможно обработать запрос";
 				return Json(responce);
 			}
 
@@ -205,17 +240,22 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 			
 		}
 
-		
-
 		[HttpGet]
-		public ActionResult Info(int id)
+		public async Task<ActionResult> Info(int id)
 		{
-			ReservationReadViewModel model = new ReservationReadViewModel();
-			model.ERDataPacks = new List<EntityReservationDataPack>();
-			model.Reservation = _context.Reservations.Find(id);
-			model.Reservation.EntityReservations = _context.EntityReservations.Where(o => o.ReservationId == model.Reservation.Id).ToList();
-			foreach(var er in model.Reservation.EntityReservations)
+			User user = await _userManager.GetUserAsync(User);
+			var model = new ReservationReadViewModel()
 			{
+				ERDataPacks = new List<EntityReservationDataPack>(),
+				Reservation = await _context.Reservations
+					.Include(o => o.EntityReservations)
+					.Include(o => o.Apartment)
+					.Include(o => o.Review)
+					.FirstAsync(o => o.Id == id),
+			};
+			model.AllowAccept = (user.Wallet - model.Reservation.Price > 0); 
+
+			foreach(var er in model.Reservation.EntityReservations)
 				if (!model.ERDataPacks.Any(o => o.EntityReservation.PackTenantId == er.PackTenantId))
 				{
 					EntityReservationDataPack ERDataPack = new EntityReservationDataPack()
@@ -228,78 +268,98 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 					};
 					model.ERDataPacks.Add(ERDataPack);
 				}
-			}
-
-			model.Apartment = _context.Apartments.Find(model.ERDataPacks.First().Number.ApartmentId);
-
-			if (_context.Reviews.Any(o => o.ReservationId == id))
-			{
-				model.Reservation.Review = _context.Reviews.Find(id);
-			}
-			else
-			{
-				model.Reservation.Review = null;
-			}
 
 			return View(model);
-
 		}
 
 		[HttpPost]
-		public ActionResult Cencel(int id)
+		public async Task<ActionResult> Cencel(int id)
 		{
-			Reservation reservation = _context.Reservations.Find(id);
+			Reservation reservation = await _context.Reservations.Include(o => o.Review).FirstAsync(o => o.Id == id);
 			reservation.Cencel = true;
 			_context.Update(reservation);
+			if (reservation.Review != null)
+				_context.Remove(reservation.Review);
 			_context.SaveChanges();
 			return RedirectToAction("Index");
 		}
 
 		[HttpPost]
-		public ActionResult Confirm(int id)
+		public async Task<ActionResult> Confirm(int id)
 		{
 			Reservation reservation = _context.Reservations.Find(id);
-			reservation.Confirm = true;
-			_context.Update(reservation);
-			_context.SaveChanges();
-			return RedirectToAction("Read", new { id = id });
+			reservation.Transaction = new Transaction()
+			{
+				Value = reservation.Price,
+				InputUser = await _userManager.GetUserAsync(User),
+				OutputUser = await _context.Users.Include(o => o.Apartments).FirstAsync(o => o.Apartments.Any(o => o.Id == reservation.ApartmentId)),
+				TimeStamp = DateTime.Now
+			};
+
+			if ((reservation.Transaction.InputUser.Wallet -= reservation.Transaction.Value) >= 0)
+			{
+				if (reservation.Transaction.InputUser.Id != reservation.Transaction.OutputUser.Id)
+				{
+					reservation.Transaction.InputUser.Wallet -= reservation.Transaction.Value;
+					reservation.Transaction.OutputUser.Wallet += reservation.Transaction.Value;
+				}
+				reservation.Confirm = true;
+				_context.Update(reservation);
+				_context.Update(reservation.Transaction);
+				_context.Update(reservation.Transaction.InputUser);
+				_context.Update(reservation.Transaction.OutputUser);
+				_context.SaveChanges();
+			}
+
+			
+			return RedirectToAction("Info", new { id = id });
 		}
 
-		//Обзывы
+		//Отзывы
+
 
 		[HttpGet]
-		public ActionResult CreateReview(int id)
+		public async Task<ActionResult> CreateReview(int id)
 		{
-			ReservationReadViewModel model = new ReservationReadViewModel();
-			model.ERDataPacks = new List<EntityReservationDataPack>();
-			model.Reservation = _context.Reservations.Find(id);
-			model.Reservation.EntityReservations = _context.EntityReservations.Where(o => o.ReservationId == model.Reservation.Id).ToList();
-			model.Scores = _context.Scores.ToList();
-			model.Reservation.Review = _context.Reviews.Find(id);
-			model.Apartment = _context.Apartments.Find(_context.Numbers.Find(_context.NumberEntities.Find(model.Reservation.EntityReservations.FirstOrDefault().NumberEntityId).NumberId).ApartmentId);
-
+			var model = new ReservationReadViewModel()
+			{
+				ERDataPacks = new List<EntityReservationDataPack>(),
+				Scores = _context.Scores.ToList(),
+				Reservation = await _context.Reservations
+					.Include(o => o.Apartment)
+					.Include(o => o.Review)
+					.Include(o => o.EntityReservations)
+					.FirstAsync(o => o.Id == id)
+			};
 			return View(model);
 		}
+
 		[HttpPost]
 		public ActionResult CreateReview(Review model)
 		{
 			model.CreateAt = DateTime.Now;
+			if(model.ReviewScores != null)
+				model.ReviewScores.RemoveAll(o => o.Value <= 0 || o.Value > _context.Scores.Find(o.ScoreId).MaxValue);
 			_context.Add(model);
 			_context.SaveChanges();
 			return RedirectToAction("UpdateReview", new {id = model.ReservationId});
 		}
 
 		[HttpGet]
-		public ActionResult UpdateReview(int id, bool success = false)
+		public async Task<ActionResult> UpdateReview(int id, bool success = false)
 		{
-			ReservationReadViewModel model = new ReservationReadViewModel();
-			model.ERDataPacks = new List<EntityReservationDataPack>();
-			model.Reservation = _context.Reservations.Find(id);
-			model.Reservation.Review = _context.Reviews.Find(id);
-			model.Reservation.Review.ReviewScores = _context.ReviewScores.Where(o => o.ReviewId == id).ToList();
-			model.Reservation.EntityReservations = _context.EntityReservations.Where(o => o.ReservationId == model.Reservation.Id).ToList();
-			model.Scores = _context.Scores.ToList();
-			model.Apartment = _context.Apartments.Find(_context.Numbers.Find(_context.NumberEntities.Find(model.Reservation.EntityReservations.FirstOrDefault().NumberEntityId).NumberId).ApartmentId);
+			ReservationReadViewModel model = new ReservationReadViewModel()
+			{
+				ERDataPacks = new List<EntityReservationDataPack>(),
+				Scores = _context.Scores.ToList(),
+				Reservation = await _context.Reservations
+					.Include(o => o.Apartment)
+					.Include(o => o.Review)
+						.ThenInclude(o => o.ReviewScores)
+					.Include(o => o.EntityReservations)
+					.FirstAsync(o => o.Id == id)
+			};
+			
 			if (success)
 				ViewData["Message"] = "Данные успешно обновлены";
 
@@ -311,13 +371,17 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 			if(ModelState.IsValid)
 			{
 				model.CreateAt = DateTime.Now;
+				_context.ReviewScores.RemoveRange(_context.ReviewScores.Where(o => o.ReviewId == model.ReservationId));
+				if (model.ReviewScores != null)
+					model.ReviewScores.RemoveAll(o => o.Value <= 0 || o.Value > _context.Scores.Find(o.ScoreId).MaxValue);
+				model.ApartmentId = _context.Reservations.Find(model.ReservationId).ApartmentId;
 				var result = _context.Update(model);
 				_context.SaveChanges();
-				return RedirectToAction("UpdateReview", new { id = model.ReservationId, success = true});
+				return RedirectToAction("Info", new { id = model.ReservationId });
 			}
 			else
 			{
-				return RedirectToAction("UpdateReview", new { id = model.ReservationId, success = false });
+				return View(model);
 			}
 		}
 
@@ -327,6 +391,24 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 			_context.Reviews.Remove(_context.Reviews.Find(id));
 			_context.SaveChanges();
 			return RedirectToAction("Info", new { id = id});
+		}
+
+		[HttpGet]
+		public async Task<ActionResult> Read(int id)
+		{
+			Reservation model = await _context.Reservations
+				.Include(o => o.User)
+				.Include(o => o.Apartment)					
+				.FirstAsync(o => o.Id == id);
+
+			model.EntityReservations = await _context.EntityReservations
+				.Include(o => o.PackTenant)
+					.ThenInclude(o => o.Pack)
+				.Include(o => o.NumberEntity)
+				.Where(o => o.ReservationId == id)
+				.ToListAsync();
+
+			return View(model);
 		}
 	}
 }

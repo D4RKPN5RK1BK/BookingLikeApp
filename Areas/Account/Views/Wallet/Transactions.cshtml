@@ -1,0 +1,130 @@
+﻿@model BookingLikeApp.ViewModels.TransactionsViewModel
+@addTagHelper *, BookingLikeApp
+@{ 
+	ViewData["Title"] = "Транзакции";
+}
+
+<div class="list-group list-group-flush">
+	<div class="list-group-item">
+		<h2 class="card-title">Поиск</h2>
+		<form asp-action="Transactions" method="get">
+			<div class="row">
+				<div class="col-sm-4">
+					<div class="input-group">
+						<div class="input-group-prepend mb-3">
+							<span class="input-group-text">Начиная</span>
+						</div>
+							<input type="date" name="begin" class="form-control" value="@Model.FilterModel.Begin" />
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text">Заканчиваня </span>
+						</div>
+							<input type="date" name="end" class="form-control" value="@Model.FilterModel.End" />
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="input-group">
+						<div class="input-group-prepend mb-3">
+							<span class="input-group-text">Сортировать по</span>
+						</div>
+						<select name="sortOrder" asp-for="@Model.SortModel.Current" class="custom-select">
+							<option value="0">Дате</option>
+							<option value="1">Дате (обр.)</option>
+							<option value="2">Стоимости</option>
+							<option value="3">Стоимости (обр.)</option>
+						</select>
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="input-group">
+						<div class="input-group-prepend mb-3">
+							<span class="input-group-text">По типу</span>
+
+						</div>
+						<select name="fill" asp-for="@Model.FilterModel.Fill" class="custom-select">
+							<option value="0">Все</option>
+							<option value="1">Выводы </option>
+							<option value="2">Поступающие</option>
+						</select>
+					</div>
+				</div>
+				<div class="col-4">
+
+				<input type="submit" value="Начать поиск" class="btn btn-success btn-block"/>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="list-group-item">
+		<filter-page-link-helper page-view-model="Model.PageModel"
+								 page-url-begin="Model.FilterModel.Begin"
+								 page-url-end="Model.FilterModel.End"
+								 page-url-fill="Model.FilterModel.Fill"
+								 page-url-sortOrder="Model.SortModel.Current">
+		</filter-page-link-helper>
+		<table class="table table-borderless table-sm">
+			<thead>
+			<th>Сумма</th>
+			<th>Дата</th>
+			<th>Поучатель</th>
+			<th>Отправитель</th>
+			</thead>
+			@foreach (var t in Model.Elements)
+			{
+				<tr>
+					<td>
+						@if (t.OutputUser != null &&  t.OutputUser.UserName == User.Identity.Name)
+						{
+							<p><b class="text-success">+@t.Value ₽</b></p>
+						}
+						else
+						{
+							<p><b class="text-danger">-@t.Value ₽</b></p>
+						}
+					</td>
+					<td>
+						@t.TimeStamp.ToString()
+					</td>
+					<td>
+						@if (t.OutputUser != null)
+						{
+							<div class="row">
+								<profile-picture image-size="20" img-url="@t.OutputUser.PFPUrl"></profile-picture>
+								@t.OutputUser.DisplayName
+							</div>
+						}
+						else
+						{
+							<div class="row">Неизвестно</div>
+						}
+
+					</td>
+					<td>
+						@if (t.InputUser != null)
+						{
+							<div class="row">
+								<profile-picture image-size="20" img-url="@t.InputUser.PFPUrl"></profile-picture>
+								@t.InputUser.DisplayName
+							</div>
+						}
+						else
+						{
+							<div class="row">Неизвестно</div>
+						}
+					</td>
+				</tr>
+			}
+		</table>
+		
+
+		<filter-page-link-helper page-view-model="Model.PageModel"
+								 page-url-begin="Model.FilterModel.Begin"
+								 page-url-end="Model.FilterModel.End"
+								 page-url-fill="Model.FilterModel.Fill"
+								 page-url-sortOrder="Model.SortModel.Current">
+		</filter-page-link-helper>
+	</div>
+</div>

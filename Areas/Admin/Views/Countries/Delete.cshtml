@@ -12,10 +12,6 @@
 		<p>@Html.DisplayNameFor(o => o.Name)</p>
 		<h4>@Html.DisplayFor(o => o.Name)</h4>
 	</div>
-	<div class="form-group">
-		<p>@Html.DisplayNameFor(o => o.Code)</p>
-		<h4>@Html.DisplayFor(o => o.Code)</h4>
-	</div>
 	@if (!String.IsNullOrEmpty(Model.PhotoUrl))
 	{
 		<div class="form-group">
@@ -23,14 +19,7 @@
 			<img src="@Html.DisplayFor(o => o.PhotoUrl)" class="img-thumbnail" />
 		</div>
 	}
-	@if (!String.IsNullOrEmpty(Model.FlagUrl))
-	{
-		<div class="form-group">
-			<p>@Html.DisplayNameFor(o => o.FlagUrl)</p>
-			<img src="@Html.DisplayFor(o => o.FlagUrl)" class="img-thumbnail" />
-		</div>
-	}
-	<form asp-action="Edit" method="post">
+	<form asp-action="Delete" method="post">
 		<div class="form-group">
 			<input type="hidden" asp-for="Id" />
 			<input type="submit" value="Удалить" class="btn btn-danger" />

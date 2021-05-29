@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,6 +31,15 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 			_env = env;
 		}
 
+		private static SelectList GetTimeList()
+		{
+			Dictionary<string, DateTime> timeDictionary = new Dictionary<string, DateTime>();
+			for (int i = 1; i <= 24; i++)
+				timeDictionary.Add(DateTime.MinValue.AddHours(i).ToString("HH:mm"), DateTime.MinValue.AddHours(i));
+
+			return new SelectList(timeDictionary, "Value", "Key");
+		}
+
 		protected async Task<bool> AllowEditAsync(int? id)
 		{
 			if (id == null) return false;
@@ -39,112 +49,153 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 			return true;
 		}
 
+		[HttpGet]
 		public async Task<IActionResult> Index(int id)
 		{
 			if (!await AllowEditAsync(id)) return NotFound();
-			Models.Apartment model = await _context.Apartments.FindAsync(id);
+			Models.Apartment model = await _context.Apartments
+					.Include(o => o.Registration)
+					.FirstAsync(o => o.Id == id);
 			return View(model);
 		}
 
-		public async Task<IActionResult> BasicInfo(int id)
+		[HttpGet]
+		public async Task<ActionResult> BasicInfo(int id)
 		{
 			if (!await AllowEditAsync(id)) return NotFound();
-			BasicInfoViewModel model = new BasicInfoViewModel(await _context.Apartments.FindAsync(id));
-			model.SetProps(await _context.Registrations.FindAsync(id));
-			return View(model);
+
+			Models.Apartment model = _context.Apartments
+				.Include(o => o.Registration)
+				.Include(o => o.City)
+				.Include(o => o.Country)
+				.First(o => o.Id == id);
+
+			var viewModel = new BasicInfoViewModel()
+			{
+				Id = model.Id,
+				Name = model.Name,
+				Description = model.Description,
+				Stars = model.Stars,
+				ContactPerson = model.ContactPerson,
+				ContactPhone = model.ContactPhone,
+				AdditionalPhone = model.AdditionalPhone,
+				CityId = model.CityId,
+				CountryId = model.CountryId,
+				SecondAddressLine = model.SecondAddressLine,
+				Registration = model.Registration,
+				Finished = model.Finished
+			};
+
+			ViewData["Countries"] = new SelectList(_context.Countries.ToArray(), "Id", "Name", model.CountryId);
+			ViewData["Cities"] = new SelectList(_context.Cities.Where(o => o.CountryId == model.CountryId).ToArray(), "Id", "Name", model.CityId);
+			return View(viewModel);
 		}
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> BasicInfo(BasicInfoViewModel model)
+		public async Task<ActionResult> BasicInfo(BasicInfoViewModel model)
 		{
 			if (ModelState.IsValid)
 			{
-				Models.Apartment apartment = await _context.Apartments.FindAsync(model.Id);
-				apartment.SetBasicInfo(model);
-				_context.Update(apartment);
+				Models.Apartment apartment = await _context.Apartments
+					.Include(o => o.Registration)
+					.FirstAsync(o => o.Id == model.Id);
 
-				if (_context.Registrations.Any(o => o.ApartmentId == apartment.Id))
-				{
-					apartment.Registration = await _context.Registrations.FindAsync(apartment.Id);
+				apartment.Name = model.Name;
+				apartment.Description = model.Description;
+				apartment.Stars = model.Stars;
+				apartment.ContactPerson = model.ContactPerson;
+				apartment.ContactPhone = model.ContactPhone;
+				apartment.AdditionalPhone = model.AdditionalPhone;
+				apartment.CityId = model.CityId;
+				apartment.CountryId = model.CountryId;
+				apartment.SecondAddressLine = model.SecondAddressLine;
+
+				if(apartment.Registration != null)
 					apartment.Registration.BasicInfo = true;
-					_context.Update(apartment.Registration);
 
-				}
-
+				_context.Update(apartment);
 				await _context.SaveChangesAsync();
-
 				return RedirectToAction("Index", "Number", new { apartment.Id });
 			}
+
+			model.Registration = _context.Registrations.Find(model.Id);
+			ViewData["Countries"] = new SelectList(_context.Countries.ToArray(), "Id", "Name", model.CountryId);
+			ViewData["Cities"] = new SelectList(_context.Cities.Where(o => o.CountryId == model.CountryId).ToArray(), "Id", "Name", model.CityId);
 			return View(model);
 		}
 
-		public async Task<IActionResult> Rules(int id)
+		[HttpGet]
+		public async Task<ActionResult> Rules(int id)
 		{
 			if (!await AllowEditAsync(id)) return NotFound();
-			RulesViewModel model = new RulesViewModel(await _context.Apartments.FindAsync(id));
-			model.SetProps(await _context.Registrations.FindAsync(id));
+			Models.Apartment model = _context.Apartments
+				.Include(o => o.Registration)
+				.First(o => o.Id == id);
 
-			return View(model);
+			var viewModel = new RulesViewModel()
+			{
+				Id = model.Id,
+				Name = model.Name,
+				ArrivalTimeStarts = model.ArrivalTimeStarts,
+				ArrivalTimeEnds = model.ArrivalTimeEnds,
+				DepartureTimeStarts = model.DepartureTimeStarts,
+				DepartureTimeEnds = model.DepartureTimeEnds,
+				/*DaysUntilCancelEnds = model.DaysUntilCancelEnds,
+				CancelPrice = model.CancelPrice,*/
+				Registration = model.Registration,
+				Finished = model.Finished
+			};
+
+			ViewBag.TimeList = GetTimeList();
+			return View(viewModel);
 		}
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Rules(RulesViewModel model)
+		public async Task<ActionResult> Rules(RulesViewModel model)
 		{
 			if (ModelState.IsValid)
 			{
-				Models.Apartment apartment = await _context.Apartments.FindAsync(model.Id);
-				apartment.SetRules(model);
-				_context.Update(apartment);
+				if (!await AllowEditAsync(model.Id)) return NotFound();
+				Models.Apartment apartment = await _context.Apartments
+					.Include(o => o.Registration)
+					.FirstAsync(o => o.Id == model.Id);
 
-				if (_context.Registrations.Any(o => o.ApartmentId == apartment.Id))
-				{
-					apartment.Registration = await _context.Registrations.FindAsync(apartment.Id);
+				apartment.ArrivalTimeStarts = model.ArrivalTimeStarts;
+				apartment.ArrivalTimeEnds = model.ArrivalTimeEnds;
+				apartment.DepartureTimeStarts = model.DepartureTimeStarts;
+				apartment.DepartureTimeEnds = model.DepartureTimeEnds;
+				/*apartment.DaysUntilCancelEnds = model.DaysUntilCancelEnds;
+				apartment.CancelPrice = model.CancelPrice;*/
+
+				if (apartment.Registration != null)
 					apartment.Registration.Rules = true;
-					_context.Update(apartment.Registration);
 
-				}
-
+				_context.Update(apartment);
 				await _context.SaveChangesAsync();
 
-				return RedirectToAction("Payment", "Edit", new { apartment.Id });
+
+				if(apartment.Registration?.IsFinished ?? false || apartment.Finished) 
+					return RedirectToAction("Enable", "Edit", new { apartment.Id });
+				else	
+					return RedirectToAction("BasicInfo", "Edit", new { apartment.Id });
 			}
+
+			model.Registration = _context.Registrations.Find(model.Id);
+			ViewBag.TimeList = GetTimeList();
 			return View(model);
 		}
 
 		//Сервисы отеля
 
 		[HttpGet]
-		public async Task<IActionResult> Services(int id)
+		public async Task<ActionResult> Services(int id)
 		{
 			if (!await AllowEditAsync(id)) return NotFound();
-			ServicesViewModel model = new ServicesViewModel(await _context.Apartments.FindAsync(id));
-			model.SetProps(await _context.Registrations.FindAsync(id));
-			model.ApartmentServices = _context.ApartmentServices.Where(o => o.ApartmentId == id).ToList();
-			List<ApartmentService> services = _context.ApartmentServices.Where(o => o.ApartmentId == model.Id).ToList();
+			Models.Apartment model = await _context.Apartments
+					.Include(o => o.Registration)
+					.Include(o => o.ApartmentServices)
+					.FirstAsync(o => o.Id == id);
 
-			return View(model);
-		}
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Services(ServicesViewModel model)
-		{
-			if (ModelState.IsValid)
-			{
-				Models.Apartment apartment = await _context.Apartments.FindAsync(model.Id);
-				apartment.Registration = await _context.Registrations.FindAsync(apartment.Id);
-				apartment.SetServices(model);
-
-				_context.RemoveRange(_context.ApartmentServices.Where(o => o.ApartmentId == apartment.Id));
-				List<ApartmentService> apartmentServices = new List<ApartmentService>();
-
-				apartment.Registration.Services = true;
-
-				await _context.ApartmentServices.AddRangeAsync(apartmentServices);
-				_context.Update(apartment.Registration);
-				_context.Update(apartment);
-				await _context.SaveChangesAsync();
-				return RedirectToAction("Photos", "Edit", new { apartment.Id });
-			}
 			return View(model);
 		}
 
@@ -159,6 +210,14 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 				ApartmentId = id
 			};
 			await _context.AddAsync(model);
+
+			if(_context.Registrations.Any(o => o.ApartmentId == id))
+			{
+				Registration registration = _context.Registrations.Find(id);
+				registration.Services = true;
+				_context.Update(registration);
+			}
+
 			await _context.SaveChangesAsync();
 			return Json(model);
 		}
@@ -182,43 +241,49 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 
 		//Фотографии отеля
 
-		public async Task<IActionResult> Photos(int id)
+		public async Task<ActionResult> Photos(int id)
 		{
 			if (!await AllowEditAsync(id)) return NotFound();
-			Models.Apartment apartment = await _context.Apartments.FindAsync(id);
-			apartment.Photos = _context.Photos.Where(o => o.ApartmentId == apartment.Id).ToList();
-			PhotosViewModel model = new PhotosViewModel(apartment);
-			model.SetProps(await _context.Registrations.FindAsync(id));
+			Models.Apartment model = await _context.Apartments
+					.Include(o => o.Registration)
+					.Include(o => o.Photos)
+					.FirstAsync(o => o.Id == id);
+			
 			return View(model);
 		}
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> AddPhoto(PhotosViewModel model)
+		public async Task<ActionResult> AddPhoto(IFormFile file, int id)
 		{
-			Models.Apartment apartment = await _context.Apartments.FindAsync(model.Id);
-			apartment.Registration = await _context.Registrations.FindAsync(apartment.Id);
+			if (!await AllowEditAsync(id)) return NotFound();
+			Models.Apartment apartment = await _context.Apartments
+					.Include(o => o.Registration)
+					.FirstAsync(o => o.Id == id);
 
-
-			if (model.File != null)
+			if (file != null)
 			{
 				int index = _context.Photos.Any() ? _context.Photos.Max(o => o.Id) : 1;
 
-				string path = "/images/" + index.ToString() + model.File.FileName;
+				string path = "/images/" + index.ToString() + file.FileName;
 
 				using (var filestream = new FileStream(_env.WebRootPath + path, FileMode.Create))
 				{
-					await model.File.CopyToAsync(filestream);
+					await file.CopyToAsync(filestream);
 				}
 
 				Photo photo = new Photo()
 				{
-					ApartmentId = apartment.Id,
+					ApartmentId = id,
 					PhotoUrl = path,
-					Name = index.ToString() + model.File.FileName,
+					Name = index.ToString() + file.FileName,
 				};
 
-				apartment.Registration.Photos = true;
-				_context.Update(apartment.Registration);
+				if (apartment.Registration != null)
+				{
+					apartment.Registration.Photos = true;
+					_context.Update(apartment.Registration);
+				}
+
 				await _context.AddAsync(photo);
 				await _context.SaveChangesAsync();
 
@@ -231,8 +296,12 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 		{
 			Photo photo = await _context.Photos.FindAsync(id);
 			if (photo == null) return NotFound();
-			Models.Apartment apartment = await _context.Apartments.FindAsync(photo.ApartmentId);
-			if (!await AllowEditAsync(apartment.Id)) return NotFound();
+
+			Models.Apartment apartment = await _context.Apartments
+					.Include(o => o.Registration)
+					.FirstAsync(o => o.Id == id);
+
+			if (!await AllowEditAsync(id)) return NotFound();
 
 			_context.Photos.Remove(photo);
 			await _context.SaveChangesAsync();
@@ -240,85 +309,37 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 			return RedirectToAction("Photos", "Edit", new { apartment.Id });
 		}
 
-		public async Task<IActionResult> Facilites(int id)
+		[HttpGet]
+		public async Task<ActionResult> Enable(int id)
 		{
 			if (!await AllowEditAsync(id)) return NotFound();
-			FacilitesViewModel model = new FacilitesViewModel(await _context.Apartments.FindAsync(id));
-			model.SetProps(await _context.Registrations.FindAsync(id));
+			Models.Apartment model = await _context.Apartments
+					.Include(o => o.Registration)
+					.FirstAsync(o => o.Id == id);
 
-			return View(model);
-		}
-
-		public async Task<IActionResult> Payment(int id)
-		{
-			if (!await AllowEditAsync(id)) return NotFound();
-			Models.Apartment apartment = await _context.Apartments.FindAsync(id);
-			apartment.Registration = await _context.Registrations.FindAsync(apartment.Id);
-
-			PaymentViewModel model = new PaymentViewModel(apartment);
-			model.SetProps(await _context.Registrations.FindAsync(id));
-			User user = await _userManager.GetUserAsync(User);
-			model.Polishers = new SelectList(
-				new Dictionary<string, bool>()
-				{
-					{user.UserName, false },
-					{apartment.Name == null ? "Данный отель" : apartment.Name , true }
-				},
-				"Value",
-				"Key"
-				);
-			model.Cards = _context.Cards.ToList();
-
-			for (int i = 0; i < model.Cards.Count; i++)
-			{
-				if (_context.ApartmentCards.Any(o => o.ApartmentId == apartment.Id && o.CardId == model.Cards[i].Id))
-					model.Cards[i].Use = true;
-			}
 			return View(model);
 		}
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Payment(PaymentViewModel model)
+		public async Task<ActionResult> Enable(int id, bool enable)
 		{
-			if (ModelState.IsValid)
+			if (!await AllowEditAsync(id)) return NotFound();
+			Models.Apartment model = await _context.Apartments
+					.Include(o => o.Registration)
+					.FirstAsync(o => o.Id == id);
+
+			if(model.Registration != null && model.Registration.IsFinished)
 			{
-				Models.Apartment apartment = await _context.Apartments.FindAsync(model.Id);
-				apartment.Registration = await _context.Registrations.FindAsync(apartment.Id);
-				apartment.Registration.Payment = true;
-				apartment.SetPayment(model);
-
-				_context.RemoveRange(_context.ApartmentCards.Where(o => o.ApartmentId == apartment.Id));
-
-				List<ApartmentCard> apartmentCards = new List<ApartmentCard>();
-
-				foreach (var item in model.Cards)
-				{
-					apartmentCards.Add(new ApartmentCard() { ApartmentId = apartment.Id, CardId = item.Id });
-				}
-
-				await _context.AddRangeAsync(apartmentCards);
-				_context.Update(apartment);
-				_context.Update(apartment.Registration);
-				await _context.SaveChangesAsync();
-
-				if (apartment.Registration.IsFinished)
-				{
-					apartment.Finished = true;
-					apartment.Enable = model.Enable;
-					_context.Update(apartment);
-					_context.Remove(apartment.Registration);
-					await _context.SaveChangesAsync();
-					return RedirectToAction("Index", "Read", new { apartment.Id });
-				}
-				else
-				{
-					if(apartment.Registration.Unfinished == "Numbers")
-						return RedirectToAction("Index", "Number", new { apartment.Id });
-					else 
-						return RedirectToAction(apartment.Registration.Unfinished, "Edit", new { apartment.Id });
-				}
+				model.Finished = true;
+				_context.Remove(model.Registration);
+				_context.Update(model).Property(o => o.Finished);
 			}
-			return View(model);
+				
+			model.Enable = enable;
+			_context.Update(model).Property(o => o.Enable);
+			await _context.SaveChangesAsync();
+
+			return RedirectToAction("Index", "Read");
 		}
 
 	}

@@ -12,7 +12,9 @@ namespace BookingLikeApp.Models
 	{
 		public int Id { get; set; }
 		public string UserId { get; set; }
-		
+		[ForeignKey("Transaction")]
+		public int? TransactionId { get; set; } 
+		public int? ApartmentId { get; set; }
 
 		[DisplayName("Подтвержден")]
 		public bool Confirm { get; set; }
@@ -36,8 +38,24 @@ namespace BookingLikeApp.Models
 		[DisplayName("Крайний срок отмены")]
 		public DateTime AbortCancel { get; set; }
 
+		[NotMapped]
+		[DisplayName("Кроичество дней")]
+		public double Days
+		{
+			get => ReservationEnd.Subtract(ReservationBegin).TotalDays + 1;
+		}
+
+		[NotMapped]
+		[DisplayName("Кроичество дней")]
+		public bool Outdated
+		{
+			get => DateTime.Now.Date.Subtract(TimeStamp.Date).TotalDays > 0 && !Confirm;
+		}
+
 		public User User { get; set; }
 		public Review Review { get; set; }
+		public Apartment Apartment { get; set; }
+		public Transaction Transaction { get; set; }
 		public List<EntityReservation> EntityReservations { get; set; }
 	}
 }

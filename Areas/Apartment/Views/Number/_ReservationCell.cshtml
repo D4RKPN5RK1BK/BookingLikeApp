@@ -1,0 +1,22 @@
+﻿@model ReservationCellViewModel
+<td colspan="@(Model.Reservation.Days > (Model.End - Model.Current).TotalDays ? (Model.End - Model.Current).TotalDays : Model.Reservation.Days)">
+	@if (Model.Reservation.Confirm)
+	{
+		<a asp-action="Read" asp-controller="Reservation" asp-route-id="@Model.Reservation.Id" class="btn-success btn btn-block text-white btn-sm">
+			@Model.Reservation.User.DisplayName
+		</a>
+	}
+	else if (Model.Reservation.Outdated)
+	{
+		<a asp-action="Read" asp-controller="Reservation" asp-route-id="@Model.Reservation.Id" class="btn-warning btn btn-block btn-sm">
+			@Model.Reservation.User.DisplayName
+		</a>
+	}
+	else
+	{
+		<a asp-action="Read" asp-controller="Reservation" asp-route-id="@Model.Reservation.Id" class="btn-secondary btn btn-block text-white btn-sm">
+			@Model.Reservation.User.DisplayName
+		</a>
+	}
+
+</td>

@@ -16,7 +16,7 @@ namespace BookingLikeApp.Models
 
 		[Required]
 		[DisplayName("Название сборки")]
-		public string? Name { get; set; }
+		public string Name { get; set; }
 
 		[DisplayName("Доступен")]
 		public bool Enable { get; set; }

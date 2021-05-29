@@ -1,0 +1,126 @@
+﻿@model UserInfoViewModel
+@addTagHelper *, BookingLikeApp
+@{
+	ViewData["Title"] = "Информация";
+	Layout = "_UserLayout";
+}
+<div class="card">
+	<div class="card-body">
+		<div class="col-12">
+			<div class="row align-items-end col-12">
+				<profile-picture img-url="@Model.User.PFPUrl" image-size="50"></profile-picture>
+				<h2 class="ml-3 display-4">@Model.User.UserName</h2>
+			</div>
+		</div>
+		@if (User.IsInRole("admin") && !Model.UserRoles.Contains("admin"))
+		{
+			@if (!Model.UserRoles.Contains("staff"))
+			{
+				<form method="post" asp-action="AddRoleStaff">
+					<div class="col-md-6 my-3">
+						<input type="hidden" name="id" value="@Model.User.Id" />
+						<input type="submit" value="Сделать сотрудником" class="btn btn-success btn-block" />
+					</div>
+				</form>
+			}
+			else
+			{
+				<form method="post" asp-action="RemoveRoleStaff">
+					<div class="col-md-6 my-3">
+						<input type="hidden" name="id" value="@Model.User.Id" />
+						<input type="submit" value="Исключить из сотрудников" class="btn btn-warning btn-block" />
+					</div>
+				</form>
+			}
+		}
+
+
+		@if (!Model.UserRoles.Contains("admin"))
+		{
+			@if (Model.User.LockoutEnd == null)
+			{
+				<form method="post" asp-action="Block">
+					<div class="col-md-6 my-3">
+						<input type="hidden" name="id" value="@Model.User.Id" />
+						<div class="input-group">
+							<input type="date" name="date" value="@Model.User.Id" class="form-control" />
+							<div class="input-group-append">
+								<input type="submit" value="Заблокировать" class="btn btn-danger" />
+							</div>
+						</div>
+					</div>
+				</form>
+			}
+			else
+			{
+				<form method="post" asp-action="Unblock">
+					<div class="col-md-6 my-3">
+						<input type="hidden" name="id" value="@Model.User.Id" />
+						<input type="submit" value="Разблокировать" class="btn btn-secondary btn-block" />
+					</div>
+				</form>
+			}
+		}
+		<div class="col-12">
+			<table class="table table-borderless table-sm">
+				<tr>
+					<td>Отображаемое имя</td>
+					<td><b>@Model.User.DisplayName</b></td>
+				</tr>
+				<tr>
+					<td>Дата регистрации</td>
+					<td><b>@Model.User.RegistationDate.ToShortDateString()</b></td>
+				</tr>
+				<tr>
+					<td>Пол</td>
+					<td>
+						@if (Model.User.Gender == true)
+						{
+							<b>Мужчина</b>
+						}
+						else if (Model.User.Gender == false)
+						{
+							<b>Женщина</b>
+						}
+						else
+						{
+							<b>Не определен</b>
+						}
+					</td>
+				</tr>
+				<tr>
+					<td>Дата рождения</td>
+					<td>
+						@if (Model.User.DateOfBirth == null)
+						{
+							<b>Не установлена</b>
+						}
+						else
+						{
+							<b>@Model.User.DateOfBirth</b>
+						}
+					</td>
+				</tr>
+				<tr>
+					<td>Роли</td>
+					<td>
+						@foreach (var role in Model.UserRoles)
+						{
+							<span class="badge badge-secondary">@role</span>
+						}
+					</td>
+				</tr>
+				@if (Model.User.LockoutEnd != null)
+				{
+					<tr>
+						<td>Заблокирован до </td>
+						<td><b>@Model.User.LockoutEnd</b></td>
+					</tr>
+				}
+			</table>
+		</div>
+
+	</div>
+
+</div>
+

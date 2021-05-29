@@ -1,174 +1,133 @@
-﻿using BookingLikeApp.Areas.Apartment.ViewModels;
-using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Threading.Tasks;
+using BookingLikeApp.Attributes;
 
 namespace BookingLikeApp.Models
 {
-    public class Apartment
+	public class Apartment
     {
         public int Id { get; set; }
         
         //Основная информация
-        [DisplayName("Улица")]
-        public int ApartmentStreetId { get; set; }
+		[DisplayName("Город")]
+		public virtual int? CityId { get; set; }
+		[DisplayName("Страна")]
+		public virtual int? CountryId { get; set; }
+
+		[DataType(DataType.DateTime)]
+		[DisplayName("Дата регистрации")]
+		public virtual DateTime? RegistrationDate { get; set; }
         
         [DisplayName("Тип жилья")]
-        public int ApartmentTypeId { get; set; }
+        public virtual int ApartmentTypeId { get; set; }
 
-        [Range(1, 5, ErrorMessage = "Значение для {0} должно должно быть от {1} до {2}" )]
+        [Range(0, 5, ErrorMessage = "Значение для \"{0}\" должно должно быть от {1} до {2}")]
         [DisplayName("Количество звезд")]
-        public int Stars { get; set; }
+        public virtual int Stars { get; set; }
 
         [DisplayName("Владелец")]
-        public string UserId { get; set; }
-
-        [MaxLength(256, ErrorMessage = "Длинна строки {0} не может превышать {1}")]
+        public virtual string UserId { get; set; }
+		
         [DisplayName("Наименование собственности")]
-        public string Name { get; set; }
+        [MaxLength(256, ErrorMessage = "Длинна строки \"{0}\" не может превышать {1}")]
+        public virtual string Name { get; set; }
         
-        [Column(TypeName = "text")]
+        /*[Column(TypeName = "text")]*/
         [DisplayName("Описание")]
-        public string Description { get; set; }
-        
-        [MaxLength(256, ErrorMessage = "Длинна строки {0} не может превышать {1}")]
-        [DisplayName("Имя человека для обратной связи")]
-        public string ContactPerson { get; set; }
+        public virtual string Description { get; set; }
 
-        [MaxLength(20, ErrorMessage = "Длинна строки {0} не может превышать {1}")]
+        [DisplayName("Имя человека для обратной связи")]
+		[MaxLength(256, ErrorMessage = "Длинна строки \"{0}\" не может превышать {1}")]
+		public virtual string ContactPerson { get; set; }
+
+		[MaxLength(20, ErrorMessage = "Длинна строки \"{0}\" не может превышать {1}")]
         [DataType(DataType.PhoneNumber, ErrorMessage = "Неверно указан номер телефона")]
         [DisplayName("Контактный номер телефона")]
-        public string ContactPhone { get; set; }
+        public virtual string ContactPhone { get; set; }
 
-        [MaxLength(20, ErrorMessage = "Длинна строки {0} не может превышать {1}")]
-        [DataType(DataType.PhoneNumber, ErrorMessage = "Неверно указан номер телефона")]
         [DisplayName("Дополнительный номер телефона")]
-        public string AdditionalPhone { get; set; }
+        [MaxLength(20, ErrorMessage = "Длинна строки \"{0}\" не может превышать {1}")]
+        [DataType(DataType.PhoneNumber, ErrorMessage = "Неверно указан номер телефона")]
+        public virtual string AdditionalPhone { get; set; }
 
-        [MaxLength(256, ErrorMessage = "Длинна строки {0} не может превышать {1}")]
-        [DisplayName("Дополнительная адресная строка")]
-        public string SecondAddressLine { get; set; }
+        [DisplayName("Дополнительная адресная строка (дом, квартира)")]
+        [MaxLength(256, ErrorMessage = "Длинна строки \"{0}\" не может превышать {1}")]
+		public virtual string SecondAddressLine { get; set; }
         
         [DisplayName("Логотип")]
-        public string LogoUrl { get; set; }
-        
-        public DateTimeOffset Disabled { get; set; }
+        public virtual string LogoUrl { get; set; }
 
-        //Услуги
-        [DisplayName("Парковка")]
-        public int Parking { get; set; }
 
-        [DisplayName("Завтрак")]
-        public int Breakfest { get; set; }
-
-        /*[DisplayName("Бар")]
-        public bool Bar { get; set; }
-        [DisplayName("Бесплатный вай фай")]
-        public bool FreeWiFi { get; set; }
-        [DisplayName("Фитнес центр")]
-        public bool Fitnes { get; set; }
-        [DisplayName("Бассейн")]
-        public bool Pool { get; set; }
-        [DisplayName("Регитрация полные сутки")]
-        public bool FullTimeRegistration { get; set; }
-        [DisplayName("Семеные номера")]
-        public bool FamilyNumbers { get; set; }
-        [DisplayName("Номера для некурящих")]
-        public bool SmokeFreeNumbers { get; set; }*/
-
-        //Порядок проживания
-        [DisplayName("Разрешены дети")]
-        public bool ChildrensAllowed { get; set; }
-        [DisplayName("Разрешены животные")]
-        public bool AnimalsAllowed { get; set; }
-
-        [Range(0, 14, ErrorMessage = "Значение для {0} должно быть от {1} до {2}")]
-        [DisplayName("Количество дней до заезда")]
-        public int DaysUntilCancelEnds { get; set; }
+        /*[DisplayName("Количество дней до заезда")]
+        [Range(0, 14, ErrorMessage = "Значение для \"{0}\" должно быть от {1} до {2}")]
+		public virtual int DaysUntilCancelEnds { get; set; }
         [DisplayName("Стоимость отмены бронирования")]
-        public bool CancelPrice { get; set; }
-
-        [DisplayName("Стоимость отмены бронирования")]
-        public bool AccidentProtection { get; set; }
+        public virtual bool CancelPrice { get; set; }*/
 
         [DataType(DataType.Time)]
         [DisplayName("Начало регистрации приезда")]
-        public DateTime ArrivalTimeStarts { get; set; }
+        public virtual DateTime ArrivalTimeStarts { get; set; }
         [DataType(DataType.Time)]
         [DisplayName("Конец регистрации приезда")]
-        public DateTime ArrivalTimeEnds { get; set; }
+        public virtual DateTime ArrivalTimeEnds { get; set; }
         [DataType(DataType.Time)]
         [DisplayName("Начало регистрации отъезда")]
-        public DateTime DepartureTimeStarts { get; set; }
+        public virtual DateTime DepartureTimeStarts { get; set; }
         [DataType(DataType.Time)]
         [DisplayName("Конец регистрации отъезда")]
-        public DateTime DepartureTimeEnds { get; set; }
+        public virtual DateTime DepartureTimeEnds { get; set; }
 
-        //Оплата проживания
-        [DisplayName("Списывать деньги при помощи карт")]
-        public bool UseCards { get; set; }
+        //Чекбоксы
         [DisplayName("Проверено")]
-        public bool Checked { get; set; }
-        public bool Enable { get; set; }
-        public bool Finished { get; set; }
+		public virtual bool Checked { get; set; }
+        [DisplayName("Доступно для снятия")]
+        public virtual bool Enable { get; set; }
+        [DisplayName("Закончено")]
+        public virtual bool Finished { get; set; }
+        [DisplayName("Залкировано")]
+		public virtual bool Bolcked { get; set; }
 
+		[NotMapped]
+		[DisplayName("Доступно для поиска")]
+		public bool EnableToSearch
+		{
+			get => Enable && Finished && !Bolcked;
+		}
+
+        [DisplayName("Дата создания отеля")]
+		public DateTime CreateTimeStamp { get; set; }
 		
-        [DisplayName("Место проживаниия платильщика")]
-        public int? PolisherStreetId { get; set; }
-
         public User User { get; set; }
         public ApartmentType ApartmentType { get; set; }
         public Registration Registration { get; set; }
+		public Country Country { get; set; }
+		public City City { get; set; }
         public List<Photo> Photos { get; set; }
         public List<Number> Numbers { get; set; }
-        public List<ApartmentCard> ApartmentCards { get; set; }
 		public List<ApartmentService> ApartmentServices { get; set; }
+		public List<Reservation> Reservations { get; set; }
+		public List<Review> Reviews { get; set; }
 
 		[NotMapped]
-        public Number Number { get; set; }
+		public decimal? AverageScore
+		{
+			get
+			{
+				if (Reviews?.Any(o => o.ReviewScores?.Count > 0) ?? 0 > 0)
+					return Math.Round((decimal)Reviews.Average(o => o.ReviewScores.Average(r => r.Value)), 1);
+				else
+					return null;
+			} 
+		}
 
-        public void SetBasicInfo(BasicInfoViewModel model)
-        {
-			Id = model.Id;
-            ApartmentStreetId = model.ApartmentStreetId;
-            Stars = model.Stars;
-            Name = model.Name;
-            Description = model.Description;
-            ContactPerson = model.ContactPerson;
-            ContactPhone = model.ContactPhone;
-            AdditionalPhone = model.AdditionalPhone;
-            SecondAddressLine = model.SecondAddressLine;
-        }
+		[NotMapped]
+		public List<Score> Scores { get; set; }
 
-        public void SetServices(ServicesViewModel model)
-        {
-			Id = model.Id;
-			Parking = model.Parking;
-            Breakfest = model.Breakfest;
-        }
-
-        public void  SetRules(RulesViewModel model)
-        {
-			Id = model.Id;
-			ChildrensAllowed = model.ChildrensAllowed;
-            AnimalsAllowed = model.AnimalsAllowed;
-            DaysUntilCancelEnds = model.DaysUntilCancelEnds;
-            CancelPrice = model.CancelPrice;
-            AccidentProtection = model.AccidentProtection;
-            ArrivalTimeStarts = model.ArrivalTimeStarts;
-            ArrivalTimeEnds = model.ArrivalTimeEnds;
-            DepartureTimeStarts = model.DepartureTimeStarts;
-            DepartureTimeEnds = model.DepartureTimeEnds;
-        }
-
-        public void SetPayment(PaymentViewModel model)
-        {
-
-        }
+		public bool HaveFreeNumbers(DateTime? begin, DateTime? end) =>
+			Numbers.Any(o => o.HaveFreeEntities((DateTime)begin, (DateTime)end, Reservations.Where(o => !o.Cencel).ToList()));
     }
 }

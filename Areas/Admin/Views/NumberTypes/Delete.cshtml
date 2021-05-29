@@ -21,10 +21,6 @@
 		<p class="col-form-label">@Html.DisplayNameFor(o => o.Code)</p>
 		<h4>@Html.DisplayFor(o => o.Code)</h4>
 	</div>
-	@if (Model.HasRooms)
-	{
-		<p class="bg-warning pl-2 rounded">@Html.DisplayNameFor(o => o.HasRooms)</p>
-	}
 	@if (Model.Share)
 	{
 		<p class="bg-warning pl-2 rounded">@Html.DisplayNameFor(o => o.Share)</p>

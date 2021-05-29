@@ -21,14 +21,10 @@ namespace BookingLikeApp.Models
         public string PhotoUrl { get; set; }
 		[NotMapped]
 		public IFormFile File { get; set; }
-
-		[DisplayName("Дополнительные удобства")]
-		public bool FacilitesRequired { get; set; }
         
         [DisplayName("Описание")]
-        [Column(TypeName = "text")]
         public string Description { get; set; }
 
-        public IEnumerable<Apartment> Apartments { get; set; }
+        public List<Apartment> Apartments { get; set; }
     }
 }

@@ -11,6 +11,7 @@ namespace BookingLikeApp.Models
 	{
 		[Key]
 		public int ReservationId { get; set; }
+		public int? ApartmentId { get; set; }
 
 		[DisplayName("Сообщение")]
 		[DataType(DataType.Text)]
@@ -19,6 +20,7 @@ namespace BookingLikeApp.Models
 		[DisplayName("Сообщение")]
 		public DateTime CreateAt { get; set; }
 
+		public Models.Apartment Apartment { get; set; }
 		public Reservation Reservation { get; set; }
 		public List<ReviewScore> ReviewScores { get; set; }
 	}

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,7 +17,8 @@ namespace BookingLikeApp.Areas.Apartment.ViewModels
 
 	public class ReservationReadViewModel
 	{
-		public Models.Apartment Apartment { get; set; }
+		[DisplayName("Возможно оформить")]
+		public bool AllowAccept { get; set; }
 		public Models.Reservation Reservation { get; set; }
 		public List<Models.Score> Scores { get; set; }
  		public List<EntityReservationDataPack> ERDataPacks { get; set; }

@@ -1,9 +1,72 @@
-﻿@model Number
+﻿@model NumberReservationsViewModel
 @{ 
 	ViewData["Title"] = "Бронирования";
 }
 <div class="mt-3 card">
-	<iframe frameborder="0" src="@Url.Action("Table", "Number", new { Model.Id })" class="w-100" style="height: 70vh"></iframe>
-
+	<div class="card-body">
+		<h2 class="card-title">Фильтр</h2>
+		<form asp-action="Reservations" method="get">
+			<div class="row">
+				<div class="col-sm-8">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text">По времени</span>
+						</div>
+						<input type="date" name="begin" value="@Model.FilterModel.Begin" class="form-control" />
+						<input type="date" name="end" value="@Model.FilterModel.End" class="form-control" />
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<input type="submit" value="Применить"  class="btn btn-success btn-block"/>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+	@*<iframe frameborder="0" src="@Url.Action("Table", "Number", new { Model.Id })" class="w-100" style="height: 60vh"></iframe>*@
+<div class="mt-3 card">
+	<div class="overflow-auto" style="height: 60vh">
+		<table class="table mt-3">
+			<thead>
+				<tr>
+					<th>Названия номеров</th>
+					@foreach (var date in Model.Dates)
+					{
+						<th>@date.Date.ToString("yy.MM.dd")</th>
+					}
+					<th>Названия номеров</th>
+				</tr>
+			</thead>
+			@foreach (var entity in Model.NumberEntities)
+			{
+		<tr>
+			<td>@entity.Name</td>
+			@foreach (var date in Model.Dates)
+			{
+				@if (Model.Reservations.Any(o => o.ReservationBegin.Date == date.Date && o.EntityReservations.Any(o => o.NumberEntityId == entity.Id)))
+				{
+					{ await Html.RenderPartialAsync("_ReservationCell", new ReservationCellViewModel(Model.Reservations.FirstOrDefault(o => o.ReservationBegin.Date == date.Date && o.EntityReservations.Any(o => o.NumberEntityId == entity.Id)), date, Model.FilterModel.End)); }
+				}
+				else if (!Model.Reservations.Any(o => o.ReservationBegin.Date >= Model.FilterModel.Begin && o.ReservationBegin.Date <= date.Date && o.ReservationEnd.Date >= date.Date && o.EntityReservations.Any(o => o.NumberEntityId == entity.Id)))
+				{
+					<td></td>
+				}
+			}
+			<td>@entity.Name</td>
+		</tr>
+			}
+		<tfoot>
+			<tr>
+				<th>Названия номеров</th>
+				@foreach (var date in Model.Dates)
+				{
+					<th>@date.Date.ToString("yy.MM.dd")</th>
+				}
+				<th>Названия номеров</th>
+			</tr>
+		</tfoot>
+		</table>
+	</div>
+	
 </div>
 

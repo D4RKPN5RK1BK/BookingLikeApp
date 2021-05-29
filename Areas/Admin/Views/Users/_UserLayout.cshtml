@@ -1,0 +1,25 @@
+﻿@model UserInfoViewModel
+@{ 
+	Layout = "_Layout";
+}
+
+<div class="row">
+	<div class="col-sm-3 mt-3">
+		<div class="list-group">
+			<a asp-action="Index" asp-controller="Users" class="list-group-item list-group-item-action">Пользователи</a>
+		</div>
+		<div class="list-group mt-3">
+			<a asp-action="Read" asp-controller="Users" asp-route-id="@Model.User.Id" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Информация" ? "active" : "")">Информация</a>
+			<a asp-action="Apartments" asp-controller="Users" asp-route-id="@Model.User.Id" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Отели" ? "active" : "")">Отели</a>
+			@*<a asp-action="Reservations" asp-controller="Users" asp-route-id="@Model.User.Id" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Бронирования" ? "active" : "")">Бронирования</a>
+			<a asp-action="Reviews" asp-controller="Users" asp-route-id="@Model.User.Id" class="list-group-item list-group-item-action @(ViewData["Title"].ToString() == "Отзывы" ? "active" : "")">Отзывы</a>*@
+		</div>
+	</div>
+	<div class="col-sm-9 mt-3">
+		@RenderBody()
+	</div>
+</div>
+
+@section Scripts {
+	@RenderSection("Scripts", false);
+}

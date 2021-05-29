@@ -1,10 +1,10 @@
-﻿@model ServicesViewModel
+﻿@model Apartment
 @{
 	ViewData["Title"] = "Услуги";
 	ViewData["Id"] = Model.Id;
 }
 <input type="hidden" name="apartmentId" id="apartment_id" value="@Model.Id" />
-<div class="card mt-3">
+<div class="card">
 	<div class="card-body">
 		<h2 class="card-title col-sm-8">Сервисы</h2>
 		<p class="card-text col-sm-8">Укажите сервисы относящиеся к вашем апартаментам в целом.</p>
@@ -42,45 +42,6 @@
 		
 	</div>
 </div>
-
-
-<form asp-controller="Edit" asp-action="Services">
-	<div asp-validation-summary="All"></div>
-    <div class="card">
-        <div class="card-body ">
-            <div class="form-group col-sm-6">
-                <h2 class="card-title">Парковка</h2>
-                <label class="col-form-label-sm">Данная информация будет полезная для людей путешествующих на машине.</label>
-                <select asp-for="Parking" class="custom-select col-sm-6">
-                    <option value="0">Отсутствует</option>
-                    <option value="1">Платная</option>
-                    <option value="2">Бесплатная</option>
-                </select>
-            </div>
-        </div>
-    </div>
-
-    <div class="card mt-3">
-        <div class="card-body">
-            <div class="form-group d-flex flex-column  col-sm-6">
-                <h2 class="card-title">Завтрак</h2>
-                <label class="col-form-label-sm">Завтрак для посетителей.</label>
-                <select asp-for="Breakfest" class="custom-select col-sm-6">
-                    <option value="0">Отсутствует</option>
-                    <option value="1">Присутствует</option>
-                    <option value="2">Включен в стоимость</option>
-                </select>
-            </div>
-        </div>
-    </div>
-
-    
-
-    <div class="d-flex flex-column align-items-center mb-5">
-        <input type="submit" value="Принять и продолжить" class="btn-block btn-success btn-lg mt-3 mb-1" />
-        <small>Переходя по какой люибо другой ссылке вы потеряете все изменения введенные на этой странице!</small>
-    </div>
-</form>
 
 @section Scripts {
 	<script>

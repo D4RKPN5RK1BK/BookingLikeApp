@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookingLikeApp.Areas.Admin.Controllers
 {
 	[Area("admin")]
-	[Authorize(Roles = "admin")]
+	[Authorize(Roles = "staff")]
 	public class ApartmentTypesController : Controller
 	{
 		protected readonly ApplicationDbContext _context;
@@ -51,7 +51,8 @@ namespace BookingLikeApp.Areas.Admin.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				model.PhotoUrl = await AddImageAsync(model.File);
+				if (model.File != null)
+					model.PhotoUrl = await AddImageAsync(model.File);
 				_context.Update(model);
 				await _context.SaveChangesAsync();
 				return RedirectToAction("Index");

@@ -7,6 +7,7 @@ using BookingLikeApp.Data;
 using BookingLikeApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookingLikeApp.Areas.Apartment.Controllers
 {
@@ -55,10 +56,16 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 		}
 
 		[HttpDelete]
-		public void Delete([FromBody]int id)
+		public async Task Delete([FromBody]int id)
 		{
-			_context.Remove(_context.NumberEntities.Find(id));
-			_context.SaveChanges();
+			var numberEntity = await _context.NumberEntities
+				.Include(o => o.EntityReservations)
+				.FirstAsync(o => o.Id == id);
+			if (numberEntity.EntityReservations.Count == 0)
+			{
+				_context.Remove(_context.NumberEntities.Find(id));
+				await _context.SaveChangesAsync();
+			}
 		}
 
 		[HttpPut]

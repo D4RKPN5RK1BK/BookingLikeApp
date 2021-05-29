@@ -1,26 +1,67 @@
-﻿using BookingLikeApp.Models;
+﻿using BookingLikeApp.Data;
+using BookingLikeApp.Models;
+using BookingLikeApp.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace BookingLikeApp.Controllers
 {
-    public class HomeController : Controller
+	public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+		private readonly ApplicationDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
+			_context = context;
         }
 
-        public IActionResult Index()
+		[HttpGet]
+        public ActionResult Index()
         {
-            return View();
+			IndexViewModel model = new IndexViewModel();
+			model.Countries = new SelectList(_context.Countries.ToArray(), "Id", "Name");
+
+			model.CountriesPopular = _context.Countries
+				.Include(o => o.Apartments)
+				.OrderBy(o => o.Apartments.Count)
+				.Take(4)
+				.ToList();
+
+			model.CitiesPopular = _context.Cities
+				.Include(o => o.Apartments)
+				.Include(o => o.Country)
+				.OrderBy(o => o.Apartments.Count)
+				.Take(4)
+				.ToList();
+			
+			model.ApartmentTypesPopular = _context.ApartmentTypes
+				.Include(o => o.Apartments)
+				.OrderBy(o => o.Apartments.Count)
+				.Take(5)
+				.ToList();
+			
+			model.ApartmentsPopular = _context.Apartments
+				.Include(o => o.Reservations)
+				.Include(o => o.Reviews)
+					.ThenInclude(o => o.ReviewScores)
+				.Include(o => o.Photos)
+				.Take(100)
+				.ToList();
+			
+			model.ApartmentsPopular = model.ApartmentsPopular
+				.Where(o => o.EnableToSearch)
+				.OrderBy(o => o.Reservations.Count)
+				.Take(8)
+				.ToList();
+
+			return View(model);
         }
 
         public IActionResult Privacy()

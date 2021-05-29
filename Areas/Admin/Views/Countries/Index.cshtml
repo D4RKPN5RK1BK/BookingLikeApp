@@ -10,7 +10,6 @@
 	@foreach (var item in Model)
 	{
 		<tr>
-			<td>@item.Code</td>
 			<td>@item.Name</td>
 			<td>
 				<a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary">Редактировать</a>

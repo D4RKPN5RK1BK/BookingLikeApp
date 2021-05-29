@@ -7,7 +7,7 @@
 	<a asp-action="Index" class="btn-link">Вернуться к спику</a>
 </div>
 
-<form asp-action="Create" method="post">
+<form asp-action="Create" method="post" enctype="multipart/form-data">
 	<div class="col-sm-4 mt-3">
 		<div class="form-group">
 			<label asp-for="Name" class="col-form-label"></label>
@@ -15,20 +15,16 @@
 			<span asp-validation-for="Name" class="alert-danger"></span>
 		</div>
 		<div class="form-group">
-			<label asp-for="PhotoUrl" class="col-form-label"></label>
-			<input asp-for="File" class="custom-select" />
+			<label>Страна</label>
+			<select asp-for="CountryId" asp-items="@ViewBag.Countries" class="custom-select">
+				<option selected disabled>Выберите страну</option>
+			</select>
+			@*@{ await Html.RenderPartialAsync("_CountrySelect", ViewData["Countries"]);}*@
 		</div>
 		<div class="form-group">
-			<label asp-for="CountryName" class="col-form-label"></label>
-			<input asp-for="CountryName" list="countries" class="form-control"/>
-			<span asp-validation-for="CountryName" class="alert-danger"></span>
+			<label asp-for="PhotoUrl" class="col-form-label"></label>
+			<input asp-for="File" class="form-control-file" />
 		</div>
-		<datalist id="countries">
-			@foreach(var item in ViewBag.CountryList)
-			{
-				<option>@item.Name</option>
-			}
-		</datalist>
 		<div class="form-group">
 			<input asp-for="Blocked" class="form-check-inline" />
 			<label asp-for="Blocked" class="col-form-label"></label>

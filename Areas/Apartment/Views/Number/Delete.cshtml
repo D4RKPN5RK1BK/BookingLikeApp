@@ -3,4 +3,23 @@
     ViewData["Title"] = "Удаление";
 }
 
-<h2>Удаление номера</h2>
+<div class="card mt-3">
+	<div class="card-body">
+		@if (Model.NumberEntities.Sum(o => o.EntityReservations.Count) > 0)
+		{
+			<h2 class="card-title">Удалить этот номер невозможно, так как в нем уже прописаны бронирования.</h2>
+
+		}
+		else
+		{
+			<h2 class="card-title">Вы действительно хотите удалить <b>@Model.Name</b>?</h2>
+			<form asp-action="Delete" method="post">
+				<input type="hidden" asp-for="@Model.Id" />
+				<input type="hidden" asp-for="@Model.ApartmentId" />
+				<input type="submit" value="Удалить" class="btn btn-danger" />
+			</form>
+		}
+
+	</div>
+</div>
+

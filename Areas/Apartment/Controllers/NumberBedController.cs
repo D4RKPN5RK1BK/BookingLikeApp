@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using BookingLikeApp.Areas.Apartment.ViewModels;
 using BookingLikeApp.Data;
 using BookingLikeApp.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -24,16 +25,18 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 		}
 
 		[HttpPost]
-		public async Task<JsonResult> Create([FromBody]int numberId)
+		public async Task<ActionResult> Create([FromBody]int id)
 		{
-			NumberBed numberBed = new NumberBed() { BedId = _context.Beds.FirstOrDefault().Id, NumberId = numberId, Quantity = 0};
+			var numberBed = new NumberBed()
+			{
+				BedId = _context.Beds.FirstOrDefault().Id,
+				Quantity = 0,
+				NumberId = id
+			};
 			_context.NumberBeds.Add(numberBed);
 			await _context.SaveChangesAsync();
 
-			numberBed.Bed = null;
-			numberBed.Number = null;
-
-			return Json(numberBed);
+			return PartialView("_NumberBedPartial", new NumberBedViewModel(numberBed, _context.Beds.ToList()));
 		}
 
 		[HttpDelete]

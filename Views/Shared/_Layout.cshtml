@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@addTagHelper *, BookingLikeApp
+<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
@@ -7,41 +8,43 @@
 	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="~/css/site.css" />
 </head>
-<body>
+<body style="background-color: #fcfcfc">
 	<header>
 		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white shadow mb-3">
 			<div class="container">
 				<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BookingLikeApp</a>
-				<form asp-action="Search" asp-controller="Read" asp-area="Apartment" method="get" class="flex-grow-1">
-					<input type="search" class="form-control" placeholder="Поиск" name="name" />
-				</form>
+
 				<button class="navbar-toggler ml-2" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
 						aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
 				</button>
-
+				
 				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-					<ul class="navbar-nav">
-					</ul>
-
+					<form asp-action="Search" asp-controller="Read" asp-area="Apartment" method="get" class="flex-grow-1">
+						<input type="search" class="form-control" placeholder="Поиск" name="name" />
+					</form>
 					<ul class="navbar-nav">
 						@if (User.Identity.IsAuthenticated)
 						{
 							<li class="nav-item">
 								<a class="nav-link" asp-area="Apartment" asp-controller="Create" asp-action="Index">Добавить объект</a>
 							</li>
-							<li class="dropdown">
-								<a href="#" class="btn btn-primary dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">@User.Identity.Name</a>
+							<li class="nav-item flex-grow-1">
+								<a class="nav-link" asp-action="Index" asp-area="Apartment" asp-controller="Reservation" >Мои бронирования</a>
+							</li>
+							<li class="nav-item  dropdown">
+								<a href="#" class="nav-link dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									@User.Identity.Name
+								</a>
 								<div class=""></div>
 								<div class="dropdown-menu dropdown-menu-right">
-									@if (User.IsInRole("admin"))
+									@if (User.IsInRole("admin") || User.IsInRole("staff"))
 									{
 										<a class="dropdown-item bg-warning" asp-area="admin" asp-controller="Users" asp-action="Index">Администрирование</a>
 									}
 									<a class="dropdown-item" asp-area="account" asp-controller="Home" asp-action="Index">Данные аккаунта</a>
 									<a asp-action="Index" asp-area="Apartment" asp-controller="Read" class="dropdown-item">Собственность</a>
-									<a asp-action="Index" asp-area="Apartment" asp-controller="Reservation" class="dropdown-item">Бронирования</a>
-									<a href="#" class="dropdown-item">Кошелек</a>
+
 									<a asp-area="account" asp-controller="auth" asp-action="Logout" class="dropdown-item font-weight-bold">Выйти</a>
 								</div>
 							</li>
@@ -57,6 +60,7 @@
 						}
 					</ul>
 				</div>
+
 			</div>
 		</nav>
 	</header>

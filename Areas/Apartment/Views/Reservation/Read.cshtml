@@ -1,0 +1,67 @@
+﻿@model Reservation
+@addTagHelper *, BookingLikeApp
+@{ 
+	ViewData["Title"] = "Информация о бронировании";
+}
+<div class="card">
+	<div class="card-body">
+		<h2 class="card-title">Информация о бронировании</h2>
+		<table class="table table-sm table-borderless">
+			<tr>
+				<td>Пользователь</td>
+				<td>
+					<b>@Model.User.DisplayName</b>
+				</td>
+			</tr>
+			<tr>
+				<td>Дата оформления</td>
+				<td><b>@Model.TimeStamp</b></td>
+			</tr>
+			<tr>
+				<td>Дата начала</td>
+				<td><b>@Model.ReservationBegin.ToShortDateString()</b></td>
+			</tr>
+			<tr>
+				<td>Дата окончания</td>
+				<td><b>@Model.ReservationEnd.ToShortDateString()</b></td>
+			</tr>
+			<tr>
+				<td>Количество дней</td>
+				<td><b>@Model.Days</b></td>
+			</tr>
+			<tr>
+				<td>Статус</td>
+				<td><b>@(Model.Confirm ? "Оплачено" : "Не оплачено")</b></td>
+			</tr>
+			<tr>
+				<td>Отель</td>
+				<td><a asp-action="Details" asp-controller="Read" asp-route-id="@Model.Apartment.Id"><b>@Model.Apartment.Name</b></a></td>
+			</tr>
+			<tr>
+				<td>Стоимость</td>
+				<td><b>@Model.Price</b></td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<div class="card mt-3">
+	<table class="table table-borderless table-hover">
+		<thead>
+		<th>Номер</th>
+		<th>Пакет</th>
+		<th colspan="2">Люди</th>
+		<th>Стоимость</th>
+		</thead>
+		@foreach (var er in Model.EntityReservations)
+		{
+			<tr>
+				<td>@er.NumberEntity.Name</td>
+				<td>@er.PackTenant.Pack.Name</td>
+				<td>@er.PackTenant.Adults взр.</td>
+				<td>@er.PackTenant.Childrens дет.</td>
+				<td>@(er.PackTenant.Price * (Decimal)Model.Days)</td>
+			</tr>
+		}
+	</table>
+</div>

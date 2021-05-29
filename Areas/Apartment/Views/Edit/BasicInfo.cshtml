@@ -1,34 +1,37 @@
 ﻿@model BasicInfoViewModel
-@{ 
+@{
 	ViewData["Title"] = "Общая информация";
-	ViewData["Id"] = Model.Id;
 } 
 
-<form asp-controller="Edit" asp-action="BasicInfo">
-
-    <div asp-validation-summary="All"></div>
-
+<form asp-controller="Edit" asp-action="BasicInfo" method="post">
+	<input type="hidden" asp-for="Id" />
+	<input type="hidden" asp-for="ApartmentTypeId" />
     <div class="card">
-        <div class="card-body">
-            <div class="form-group col-sm-5">
-                <h2 class="card-title">Название вашего объекта</h2>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="alert-danger"></span>
-                <small class="form-text text-muted">Это название будут видить все пользователи.</small>
-            </div>
-            <div class="form-group col-sm-3">
-                <label asp-for="Stars" class="col-form-label"></label>
-                <select asp-for="Stars" class="custom-select">
-                    <option value="0">Нет звезд</option>
-                    <option value="1">Одна звезда</option>
-                    <option value="2">Две звезды</option>
-                    <option value="3">Три звезды</option>
-                    <option value="4">Четыре звезды</option>
-                    <option value="5">Пять звезд</option>
-                </select>
-                <span asp-validation-for="Stars" class="alert-danger"></span>
-            </div>
-        </div>
+		<div class="card-body">
+			<div class="form-group col-sm-8">
+				<h2 class="card-title">Название вашего объекта</h2>
+				<input asp-for="Name" class="form-control" />
+				<span asp-validation-for="Name" class="alert-danger"></span>
+				<small class="form-text text-muted">Это название будут видить все пользователи.</small>
+			</div>
+			<div class="form-group col-sm-4">
+				<label asp-for="Stars" class="col-form-label"></label>
+				<select asp-for="Stars" class="custom-select">
+					<option value="0">Нет звезд</option>
+					<option value="1">Одна звезда</option>
+					<option value="2">Две звезды</option>
+					<option value="3">Три звезды</option>
+					<option value="4">Четыре звезды</option>
+					<option value="5">Пять звезд</option>
+				</select>
+				<span asp-validation-for="Stars" class="alert-danger"></span>
+			</div>
+			<div class="form-group col-sm-8">
+				<label asp-for="Description" class="col-form-label"></label>
+				<textarea class="form-control" asp-for="Description"></textarea>
+				<span asp-validation-for="Description" class="alert-danger"></span>
+			</div>
+		</div>
     </div>
 
     <div class="card mt-3">
@@ -43,62 +46,54 @@
             <div class="d-sm-flex">
                 <div class="form-group col-sm-4 flex-grow-1">
                     <label asp-for="ContactPhone" class="col-form-label-sm"></label>
-                    <input asp-for="ContactPhone" class="form-control" />
+                    <input asp-for="ContactPhone" type="tel" class="form-control" />
                     <span asp-validation-for="ContactPhone" class="alert-danger"></span>
                 </div>
                 <div class="form-group col-sm-4  flex-grow-1">
                     <label asp-for="AdditionalPhone" class="col-form-label-sm"></label>
-                    <input asp-for="AdditionalPhone" class="form-control" />
+                    <input asp-for="AdditionalPhone" type="tel" class="form-control" />
                     <span asp-validation-for="AdditionalPhone" class="alert-danger"></span>
                 </div>
             </div>
         </div>
     </div>
 
-    @*<div class="card mt-3">
-        <div class="card-body">
-            <h2 class="card-title">In progress</h2>
-        </div>
-    </div>*@
-
     <div class="card mt-3">
-        <div class="card-body">
-            <div class="col-sm-4">
-                <h2 class="card-title">Расположение объекта</h2>
-                <div class="form-group">
-                    <label class="col-form-label"></label>
-                    <select class="custom-select">
+		<div class="card-body">
+			<h2 class="card-title">Расположение объекта</h2>
+			<div class="col-sm-8">
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label class="col-form-label">Страна</label>
+							@{await Html.RenderPartialAsync("_CountrySelect", ViewData["Countries"]);}
+							<span class="alert-danger" asp-validation-for="CountryId"></span>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label class="col-form-label">Город</label>
+							@{await Html.RenderPartialAsync("_CitySelect", ViewData["Cities"]);}
+							<span class="alert-danger" asp-validation-for="CityId"></span>
+						</div>
+					</div>
 
-                    </select>
-                    <span class="alert-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label class="col-form-label"></label>
-                    <select class="custom-select">
-
-                    </select>
-                    <span class="alert-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="ApartmentStreetId" class="col-form-label"></label>
-                    <select asp-for="ApartmentStreetId" class="custom-select">
-                        <option value="1">Выберите улицу</option>
-                    </select>
-                    <span asp-validation-for="ApartmentStreetId" class="alert-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="SecondAddressLine" class="col-form-label"></label>
-                    <input asp-for="SecondAddressLine" class="form-control" />
-                    <span asp-validation-for="SecondAddressLine" class="alert-danger"></span>
-                </div>
-
-            </div>
-        </div>
+				</div>
+			</div>
+			
+			<div class="col-sm-8">
+				<div class="form-group">
+					<label asp-for="SecondAddressLine" class="col-form-label"></label>
+					<input asp-for="SecondAddressLine" class="form-control" />
+					<span asp-validation-for="SecondAddressLine" class="alert-danger"></span>
+				</div>
+			</div>
+			
+		</div>
     </div>
 
     <div class="d-flex flex-column align-items-center mb-5">
         <input type="submit" value="Принять и продолжить" class="btn-block btn-success btn-lg mt-3 mb-1"/>
         <small>Переходя по какой люибо другой ссылке вы потеряете все изменения введенные на этой странице!</small>
     </div>
-
 </form>

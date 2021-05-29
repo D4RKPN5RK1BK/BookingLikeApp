@@ -7,7 +7,7 @@
 	<a asp-action="Index" class="btn-link">Вернуться к спику</a>
 </div>
 
-<form asp-action="Edit" method="post">
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
 	<div class="col-sm-4 mt-3">
 		<div class="form-group">
 			<label asp-for="Name" class="col-form-label"></label>
@@ -16,19 +16,14 @@
 		</div>
 		<div class="form-group">
 			<label asp-for="PhotoUrl" class="col-form-label"></label>
+			<input asp-for="PhotoUrl" type="hidden"/>
+			<img src="@Model.PhotoUrl" class="w-100 my-2"/>
 			<input asp-for="File" class="form-control" />
 		</div>
 		<div class="form-group">
-			<label asp-for="CountryName" class="col-form-label"></label>
-			<input asp-for="CountryName" list="countries" class="form-control" />
-			<span asp-validation-for="CountryName" class="alert-danger"></span>
+			<label>Страна</label>
+			@{ await Html.RenderPartialAsync("_CountrySelect", ViewData["Countries"]);}
 		</div>
-		<datalist id="countries">
-			@foreach (var item in ViewBag.CountryList)
-			{
-				<option>@item.Name</option>
-			}
-		</datalist>
 		<div class="form-group">
 			<input asp-for="Blocked" class="form-check-inline" />
 			<label asp-for="Blocked" class="col-form-label"></label>

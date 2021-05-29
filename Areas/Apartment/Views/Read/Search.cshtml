@@ -1,11 +1,11 @@
-﻿@model SearchApartmentViewModel
+﻿@model ApartmentsViewModel
 @addTagHelper *, BookingLikeApp
 @{ 
 	ViewData["Title"] = "Поиск";
 }
 
 <div class="row mt-5">
-	<div class="col-sm-3">
+	<div class="col-sm-3 mt-3">
 		<form asp-action="Search" asp-controller="Read" method="get">
 			<div class="card">
 				<div class="card-header bg-warning">
@@ -13,17 +13,42 @@
 				</div>
 				<div class="card-body">
 					<div class="form-group">
+						<label class="col-form-label">Страна</label>
+						@{ await Html.RenderPartialAsync("_CountrySelect", ViewData["Countries"]); }
+						<label class="col-form-label">Город</label>
+						@{ await Html.RenderPartialAsync("_CitySelect", ViewData["Cities"]); }
+
+						<label>Тип апартоментов</label>
+						<select asp-for="FilterModel.ApartmentTypeId" name="apartmenttypeId" asp-items="@ViewBag.ApartmentTypes" class="custom-select">
+							<option value="0">Выберите тип</option>
+						</select>
+					</div>
+
+					<div class="form-group">
+						<label class="col-form-label">Начало</label>
+						<input type="date" asp-for="@Model.FilterModel.ReservationTimeBegin" name="Begin" id="ReservationBegin" class="form-control"/>
+						<label class="col-form-label">Конец</label>
+						<input type="date" asp-for="@Model.FilterModel.ReservationTimeEnd" name="End" id="ReservationEnd" class="form-control"/>
+					</div>
+
+					<div class="form-group">
 						<label class="col-form-label">Название</label>
-						<input asp-for="Name" class="form-control" />
+						<input asp-for="@Model.FilterModel.Name" name="Name" class="form-control" />
 						<span></span>
 					</div>
+
 					<div class="form-group">
-						<label class="col-form-label">Страна</label>
-						<input asp-for="Country" class="form-control" />
-						<span></span>
-						<label class="col-form-label">Город</label>
-						<input asp-for="City" class="form-control" />
-						<span></span>
+						<label class="col-form-label">Сортировать по</label>
+						<select asp-for="@Model.SortOrder.Current" name="sortOrder" class="custom-select">
+							<option value="0">Имени</option>
+							<option value="1">Имени (обр.)</option>
+							<option value="2">По рейтингу</option>
+							<option value="3">По рейтингу (обр.)</option>
+							<option value="4">Бронированиям</option>
+							<option value="5">Бронированиям (обр.)</option>
+							<option value="6">Отзывам</option>
+							<option value="7">Отзывам (обр.)</option>
+						</select>
 					</div>
 				</div>
 			</div>
@@ -33,40 +58,55 @@
 	<div class="col-sm-9">
 		@if (Model.Apartments.Count > 0)
 		{
-			@if (Model.PageModel.TotalPages > 1)
+			<filter-page-link-helper page-view-model="@Model.Page"
+									 page-url-countryId="@Model.FilterModel.CountryId"
+									 page-url-cityId="@Model.FilterModel.CityId"
+									 page-url-begin="@Model.FilterModel.ReservationTimeBegin"
+									 page-url-end="@Model.FilterModel.ReservationTimeEnd"
+									 page-url-name="@Model.FilterModel.Name"
+									 page-url-sortOrder="@Model.SortOrder.Current">
+			</filter-page-link-helper>
+
+			@foreach (var item in Model.Apartments)
 			{
-				<search-link page-view-model="Model.PageModel" page-action="Search"></search-link>
-			}
+				<div class="card my-3">
+					<a asp-action="Details" asp-controller="Read" asp-area="Apartment" asp-route-id="@item.Id" class="card-link">
+						<div class="row no-gutters">
+							@if (item.Photos.Count > 0)
+							{
+								<div class="col-md-6 col-lg-4">
+									<img src="@item.Photos.FirstOrDefault().PhotoUrl" alt="Изображение не найдено" class="w-100 h-100" style="object-fit:cover" />
+								</div>
+							}
+							<div class="col-md-6 col-lg-8">
+								<div class="card-body">
+									<h2>
+										@item.Name
+										<span class="badge badge-primary">@item.ApartmentType.Name</span>
+										@for (int i = 0; i <item.Stars; i++)
+										{
+											<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
+												<path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
+											</svg>
+										}
+									</h2>
 
-			<div class="list-group mb-3">
-				@foreach (var item in Model.Apartments)
-				{
-
-					<a asp-action="Details" asp-route-id="@item.Id" class="list-group-item-action list-group-item row no-gutters">
-						<div class="row">
-							<div class="col-md-4">
-								@if (item.Photos.Count > 0)
-								{
-									<img src="@item.Photos.FirstOrDefault().PhotoUrl" alt="Изображение не найдено" class="img-fluid rounded" />
-
-								}
-								else
-					{
-						<h2>Нет изображения</h2>
-					}
+									<h4><span class="text-primary"><b>@item.Country.Name</b></span>, <span class="text-primary"><b>@item.City.Name</b></span>, @item.SecondAddressLine</h4>
+								</div>
 							</div>
-							<div class="col-md-6">
-								<h2>[@item.ApartmentType.Name] @item.Name</h2>
-								<h4>Количество звезд: @item.Stars</h4>
-							</div>
+
 						</div>
 					</a>
-				}
-			</div>
-			@if (Model.PageModel.TotalPages > 1)
-			{
-				<search-link page-view-model="Model.PageModel" page-action="Search"></search-link>
+				</div>
 			}
+			<filter-page-link-helper page-view-model="@Model.Page"
+									 page-url-countryId="@Model.FilterModel.CountryId"
+									 page-url-cityId="@Model.FilterModel.CityId"
+									 page-url-begin="@Model.FilterModel.ReservationTimeBegin"
+									 page-url-end="@Model.FilterModel.ReservationTimeEnd"
+									 page-url-name="@Model.FilterModel.Name"
+									 page-url-sortOrder="@Model.SortOrder.Current">
+			</filter-page-link-helper>
 		}
 		else
 		{

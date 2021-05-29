@@ -4,11 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using BookingLikeApp.Areas.Apartment.ViewModels;
 using BookingLikeApp.Data;
+using BookingLikeApp.Enums;
 using BookingLikeApp.Models;
 using BookingLikeApp.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookingLikeApp.Areas.Apartment.Controllers
 {
@@ -24,61 +27,173 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 			_userManager = userManager;
 		}
 
-		public async Task<IActionResult> Index(int page = 1)
+		protected Models.Apartment GetApartment(int id)
 		{
-			int pageSize = 10;
-			User user = await _userManager.GetUserAsync(User);
-			UserApartmentsViewModel model = new UserApartmentsViewModel();
-			model.Apartments = _context.Apartments.Where(o => o.UserId == user.Id).ToList();
+			Models.Apartment apartment = _context.Apartments
+				.Include(o => o.Photos)
+				.Include(o => o.City)
+				.Include(o => o.Country)
+				.Include(o => o.ApartmentServices)
+				.Include(o => o.ApartmentType)
+				.Include(o => o.Reviews)
+					.ThenInclude(o => o.ReviewScores)
+				.First(o => o.Id == id);
 
-			int count = model.Apartments.Count;
+			apartment.Scores = _context.Scores.ToList();
 
-			model.Apartments = model.Apartments.Skip((page - 1) * pageSize).Take(pageSize).ToList();
-			for(int i = 0; i < model.Apartments.Count; i++)
+			apartment.Numbers = _context.Numbers.Where(o => o.ApartmentId == apartment.Id && o.Enable && o.Finish)
+				.Include(o => o.NumberEntities)
+				.Include(o => o.NumberType)
+				.Include(o => o.NumberServices)
+				.Include(o => o.NumberBeds)
+					.ThenInclude(o => o.Bed)
+				.ToList();
+
+			for(int i = 0; i< apartment.Scores.Count; i++)
+				apartment.Scores[i].AvgValue = (float)apartment.Reviews?
+					.Where(o => o.ReviewScores.Count > 0)
+					.DefaultIfEmpty()
+					.Average(o => o.ReviewScores?
+						.Where(r => r.ScoreId == apartment.Scores[i].Id)
+						.DefaultIfEmpty()
+						.Average(r => r?.Value));
+
+			for (int i = 0; i < apartment.Numbers.Count; i++)
 			{
-				model.Apartments[i].Numbers = _context.Numbers.Where(o => o.ApartmentId == model.Apartments[i].Id).ToList();
+				apartment.Numbers[i].Packs = _context.Packs.Where(o => o.NumberId == apartment.Numbers[i].Id && o.Enable)
+					.Include(o => o.PackServices)
+					.Include(o => o.PackTenants)
+					.ToList();
+
+				for (int j = 0; j < apartment.Numbers[i].NumberEntities.Count; j++)
+				{
+					apartment.Numbers[i].NumberEntities[j].Reservations = new List<Reservation>();
+					apartment.Numbers[i].NumberEntities[j].EntityReservations = _context.EntityReservations.Where(o => o.NumberEntityId == apartment.Numbers[i].NumberEntities[j].Id).ToList();
+
+					for (int t = 0; t < apartment.Numbers[i].NumberEntities[j].EntityReservations.Count; t++)
+						if (!apartment.Numbers[i].NumberEntities[j].Reservations.Any(o => o.Id == apartment.Numbers[i].NumberEntities[j].EntityReservations[t].ReservationId))
+							apartment.Numbers[i].NumberEntities[j].Reservations.Add(_context.Reservations.Find(apartment.Numbers[i].NumberEntities[j].EntityReservations[t].ReservationId));
+				}
+
 			}
 
-			model.PageViewModel = new PageViewModel(count, page, pageSize);
+			apartment.Numbers = apartment.Numbers.Where(o => o.Packs.Count() > 0 && o.NumberEntities.Count() > 0).ToList();
+
+			return apartment;
+		}
+
+		public async Task<IActionResult> Index(int page = 1, BoolEnum finished = BoolEnum.All, BoolEnum enabled = BoolEnum.All, int countryId = 0, int cityId = 0, SortApartments sortOrder = SortApartments.NameAsc, string name = "")
+		{
+			User user = await _userManager.GetUserAsync(User);
+			ApartmentsViewModel model = new ApartmentsViewModel()
+			{
+				FilterModel = new FilterApartmentsViewModel()
+				{
+					Finished = finished, 
+					Enabled = enabled,
+					CountryId = countryId,
+					CityId = cityId,
+					Name = name,
+				},
+				SortOrder = new SortApartmentsViewModel(sortOrder)
+			};
+			model.Apartments = _context.Apartments.Where(o => o.UserId == user.Id)
+				.Include(o => o.Country)
+				.Include(o => o.City)
+				.Include(o => o.ApartmentType)
+				.ToList();
+
+			model.FilterName();
+
+			if (cityId > 0)
+				model.Apartments = model.Apartments.Where(o => o.CityId == cityId).ToList();
+
+			if (countryId > 0)
+				model.Apartments = model.Apartments.Where(o => o.CountryId == countryId).ToList();
+
+			switch (finished)
+			{
+				case BoolEnum.FalseOnly:
+					model.Apartments = model.Apartments.Where(o => o.Finished == false).ToList();
+					break;
+				case BoolEnum.TrueOnly:
+					model.Apartments = model.Apartments.Where(o => o.Finished == true).ToList();
+					break;
+			}
+
+			switch (enabled)
+			{
+				case BoolEnum.FalseOnly:
+					model.Apartments = model.Apartments.Where(o => o.Enable == false).ToList();
+					break;
+				case BoolEnum.TrueOnly:
+					model.Apartments = model.Apartments.Where(o => o.Enable == true).ToList();
+					break;
+			}
+
+			model.Page = new PageViewModel(model.Apartments.Count, page, 10);
+			model.Sort();
+			model.Cut();
+
+
+			ViewData["Countries"] = new SelectList(_context.Countries.ToArray(), "Id", "Name", model.FilterModel.CountryId);
+			ViewData["Cities"] = new SelectList(_context.Cities.Where(o => o.CountryId == model.FilterModel.CountryId).ToArray(), "Id", "Name", model.FilterModel.CityId);
 			return View(model);
 		}
 
 		[HttpGet]
-		public ActionResult Search(string name = "", string city = "", string country = "", int page = 1)
+		public ActionResult Search(DateTime? begin, DateTime? end, int cityId = 0, int countryId = 0, string name = "", int page = 1, SortApartments sortOrder = SortApartments.NameAsc, int apartmentTypeId = 0)
 		{
-			int pageSize = 10;
-
-			SearchApartmentViewModel model = new SearchApartmentViewModel()
+			var model = new ApartmentsViewModel();
+			model.FilterModel = new FilterApartmentsViewModel()
 			{
-				Name = name,
-				City = city,
-				Country = country
+				ReservationTimeBegin = begin > end ? end : begin,
+				ReservationTimeEnd = end > begin ? end: begin,
+				CityId = cityId,
+				CountryId = countryId == 0 && cityId > 0? _context.Countries.Include(o => o.Cities).First(o => o.Cities.Contains(_context.Cities.Find((int)cityId))).Id : countryId,
+				ApartmentTypeId = apartmentTypeId,
+				Name = name
 			};
+			model.SortOrder = new SortApartmentsViewModel(sortOrder);
 
-			if (_context.Apartments.Any(o => o.Name == model.Name))
+			model.Apartments = _context.Apartments.Where(o => o.Enable && o.Finished).ToList();
+
+			if (countryId > 0)
+				model.Apartments = model.Apartments.Where(o => o.CountryId == countryId).ToList();
+
+			if (cityId > 0)
+				model.Apartments = model.Apartments.Where(o => o.CityId == cityId).ToList();
+
+			if (apartmentTypeId > 0)
+				model.Apartments = model.Apartments.Where(o => o.ApartmentTypeId == apartmentTypeId).ToList();
+
+			model.FilterName();
+
+			for(int i = 0; i < model.Apartments.Count; i++)
 			{
-				model.Apartments = _context.Apartments.Where(o => o.Name == model.Name).ToList();
-			}
-			else
-			{
-				model.Apartments = _context.Apartments.Where(o => o.Name.Contains(model.Name)).ToList();
+				model.Apartments[i].Numbers = _context.Numbers.Where(o => o.ApartmentId == model.Apartments[i].Id).Include(o => o.NumberEntities).ToList();
+				model.Apartments[i].Reservations = _context.Reservations.Where(o => o.ApartmentId == model.Apartments[i].Id).Include(o => o.EntityReservations).ToList();
+				model.Apartments[i].Reviews = _context.Reviews.Where(o => o.ApartmentId == model.Apartments[i].Id).ToList();
 			}
 
-			foreach (var a in model.Apartments)
-			{
-				a.ApartmentType = _context.ApartmentTypes.Find(a.ApartmentTypeId);
-			}
+			if (begin != null && end != null)
+				model.Apartments = model.Apartments.Where(o => o.HaveFreeNumbers(model.FilterModel.ReservationTimeBegin, model.FilterModel.ReservationTimeEnd)).ToList();
 
-			int count = model.Apartments.Count;
-			model.Apartments = model.Apartments.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+			model.Page = new PageViewModel(model.Apartments.Count, page, 10);
+			model.Sort();
+			model.Cut();
+
 			for (int i = 0; i < model.Apartments.Count; i++)
-				if (_context.Photos.Any(o => o.ApartmentId == model.Apartments[i].Id))
-					model.Apartments[i].Photos = _context.Photos.Where(o => o.ApartmentId == model.Apartments[i].Id).ToList();
-				else
-					model.Apartments[i].Photos = new List<Photo>();
+			{
+				model.Apartments[i].Photos = _context.Photos.Where(o => o.ApartmentId == model.Apartments[i].Id).ToList();
+				model.Apartments[i].ApartmentType = _context.ApartmentTypes.Find(model.Apartments[i].ApartmentTypeId);
+				model.Apartments[i].Country = _context.Countries.Find(model.Apartments[i].CountryId);
+				model.Apartments[i].City = _context.Cities.Find(model.Apartments[i].CityId);
+			}
 
-			model.PageModel = new PageViewModel(count, page, pageSize);
-
+			ViewBag.ApartmentTypes = new SelectList(_context.ApartmentTypes.ToArray(), "Id", "Name", model.FilterModel.ApartmentTypeId);
+			ViewData["Countries"] = new SelectList(_context.Countries.ToArray(), "Id", "Name", model.FilterModel.CountryId);
+			ViewData["Cities"] = new SelectList(_context.Cities.Where(o => o.CountryId == model.FilterModel.CountryId).ToArray(), "Id", "Name", model.FilterModel.CityId);
 			return View(model);
 		}
 
@@ -91,28 +206,8 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 			model.MinDate = DateTime.Now;
 			model.MaxDate = DateTime.Now.AddDays(90);
 			model.EnableReservation = false;
-			model.Apartment = _context.Apartments.Find(id);
-			model.Apartment.Photos = _context.Photos.Where(o => o.ApartmentId == id).ToList();
-			model.Apartment.ApartmentType = _context.ApartmentTypes.Find(model.Apartment.ApartmentTypeId);
-			model.Apartment.Numbers = _context.Numbers.Where(o => o.ApartmentId == model.Apartment.Id).ToList();
-			model.Apartment.ApartmentServices = _context.ApartmentServices.Where(o => o.ApartmentId == model.Apartment.Id).ToList();
-			foreach(var n in model.Apartment.Numbers)
-			{
-				n.NumberType = _context.NumberTypes.Find(n.NumberTypeId);
-				n.NumberBeds = _context.NumberBeds.Where(o => o.NumberId == n.Id).ToList();
-				n.NumberEntities = _context.NumberEntities.Where(o => o.NumberId == n.Id).ToList();
-				n.NumberServices = _context.NumberServices.Where(o => o.NumberId == n.Id).ToList();
-				n.Packs = _context.Packs.Where(o => o.NumberId == n.Id).ToList();
-				foreach(var p in n.Packs)
-				{
-					p.PackServices = _context.PackServices.Where(o => o.PackId == p.Id).ToList();
-					p.PackTenants = _context.PackTenants.Where(o => o.PackId == p.Id).ToList();
-				}
-				foreach(var b in n.NumberBeds)
-				{
-					b.Bed = _context.Beds.Find(b.BedId);
-				}
-			}
+			model.Apartment = GetApartment(id);
+
 			return View(model);
 		}
 
@@ -121,77 +216,70 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 		{
 			model.MinDate = DateTime.Now;
 			model.MaxDate = DateTime.Now.AddDays(90);
-			model.Apartment = _context.Apartments.Find(model.Apartment.Id);
-			model.EnableReservation = true;
-			model.Apartment.ApartmentType = _context.ApartmentTypes.Find(model.Apartment.ApartmentTypeId);
-			model.Apartment.Photos = _context.Photos.Where(o => o.ApartmentId == model.Apartment.Id).ToList();
-			
-			if (model.Name == string.Empty || model.Name == null)
-				model.Apartment.Numbers = _context.Numbers.Where(o => o.ApartmentId == model.Apartment.Id).ToList();
-			else
-				model.Apartment.Numbers = _context.Numbers.Where(o => o.ApartmentId == model.Apartment.Id && o.Name.Contains(model.Name)).ToList();
 
-			model.Apartment.ApartmentServices = _context.ApartmentServices.Where(o => o.ApartmentId == model.Apartment.Id).ToList();
-			for(int i = 0; i < model.Apartment.Numbers.Count; i++)
+			if(DateTime.Compare(model.Begin, model.End) >= 0)
 			{
-				model.Apartment.Numbers[i].NumberType = _context.NumberTypes.Find(model.Apartment.Numbers[i].NumberTypeId);
-				model.Apartment.Numbers[i].NumberBeds = _context.NumberBeds.Where(o => o.NumberId == model.Apartment.Numbers[i].Id).ToList();
-				model.Apartment.Numbers[i].NumberEntities = _context.NumberEntities.Where(o => o.NumberId == model.Apartment.Numbers[i].Id).ToList();
-				model.Apartment.Numbers[i].NumberServices = _context.NumberServices.Where(o => o.NumberId == model.Apartment.Numbers[i].Id).ToList();
-				model.Apartment.Numbers[i].Packs = _context.Packs.Where(o => o.NumberId == model.Apartment.Numbers[i].Id).ToList();
+				ModelState.AddModelError("End", "Дата начала бронирования не может превышать дату его конца");
+				model.Apartment = GetApartment(model.Apartment.Id);
+			} 
+			else
+			{
+				model.EnableReservation = true;
+				model.Apartment = GetApartment(model.Apartment.Id);
 
-				for(int j = 0; j < model.Apartment.Numbers[i].NumberBeds.Count; j++)
+				if (!string.IsNullOrEmpty(model.Name))
+					model.Apartment.Numbers = model.Apartment.Numbers.Where(o => o.ApartmentId == model.Apartment.Id && o.Name.Contains(model.Name)).ToList();
+
+				for (int i = 0; i < model.Apartment.Numbers.Count; i++)
 				{
-					model.Apartment.Numbers[i].NumberBeds[j].Bed = _context.Beds.Find(model.Apartment.Numbers[i].NumberBeds[j].BedId);
+					model.Apartment.Numbers[i].NumberEntities = model.Apartment.Numbers[i].NumberEntities.Where(o => o.Reservations.All(r =>
+							   r.ReservationBegin < model.Begin &&
+							   r.ReservationEnd < model.Begin ||
+							   r.ReservationBegin > model.End &&
+							   r.ReservationEnd > model.End &&
+							   !r.Cencel
+					)).ToList();
 				}
-
-				foreach(var e in model.Apartment.Numbers[i].Packs)
-				{
-					e.PackServices = _context.PackServices.Where(o => o.PackId == e.Id).ToList();
-					e.PackTenants = _context.PackTenants.Where(o => o.PackId == e.Id).ToList();
-				}
-
-				for(int j = 0; j < model.Apartment.Numbers[i].Packs.Count; j++)
-				{
-					model.Apartment.Numbers[i].Packs[j].PackServices = _context.PackServices.Where(o => o.PackId == model.Apartment.Numbers[i].Packs[j].Id).ToList();
-					model.Apartment.Numbers[i].Packs[j].PackTenants = _context.PackTenants.Where(o => o.PackId == model.Apartment.Numbers[i].Packs[j].Id).ToList();
-				}
-
-				for(int j = 0; j < model.Apartment.Numbers[i].NumberEntities.Count; j++ )
-				{
-					model.Apartment.Numbers[i].NumberEntities[j].Reservations = new List<Reservation>();
-					model.Apartment.Numbers[i].NumberEntities[j].EntityReservations = _context.EntityReservations.Where(o => o.NumberEntityId == model.Apartment.Numbers[i].NumberEntities[j].Id).ToList();
-					
-					for(int t = 0; t < model.Apartment.Numbers[i].NumberEntities[j].EntityReservations.Count; t++)
-					{
-						
-						if (!model.Apartment.Numbers[i].NumberEntities[j].Reservations.Any(o => o.Id == model.Apartment.Numbers[i].NumberEntities[j].EntityReservations[t].ReservationId))
-							model.Apartment.Numbers[i].NumberEntities[j].Reservations.Add(_context.Reservations.Find(model.Apartment.Numbers[i].NumberEntities[j].EntityReservations[t].ReservationId));
-					}	
-				}
-
-				model.Apartment.Numbers[i].NumberEntities = model.Apartment.Numbers[i].NumberEntities.Where(o => o.Reservations.All(r =>
-						   r.ReservationBegin < model.Begin &&
-						   r.ReservationEnd < model.Begin ||
-						   r.ReservationBegin > model.End &&
-						   r.ReservationEnd > model.End &&
-						   !r.Cencel		
-				)).ToList();
+				model.Apartment.Numbers.RemoveAll(o => o.NumberEntities.Count == 0);
 			}
-
-			model.Apartment.Numbers = model.Apartment.Numbers.Where(o => o.NumberEntities.Count > 0).ToList();
+			
 
 			return View("Details", model);
 		}
 
 		[HttpGet]
-		public ActionResult Price(int id)
+		public async Task<ActionResult> Price(int id)
 		{
 			if (_context.PackTenants.Any(o => o.Id == id))
 			{
-				return Json(_context.PackTenants.Find(id).Price);
+				var packTenant = await _context.PackTenants
+					.Include(o => o.Pack)
+						.ThenInclude(o => o.PackServices)
+							.ThenInclude(o => o.NumberService)
+					.FirstAsync(o => o.Id == id);
+				return Json(packTenant.Price + packTenant.Pack.PackServices.Sum(o => o.NumberService.Price));
 			}
 			return Json(0);
+		}
+
+		[HttpGet]
+		public async Task<ActionResult> Reviews(int id, int page = 1)
+		{
+			var reviews = await _context.Reviews
+				.Include(o => o.Reservation)
+					.ThenInclude(o => o.User)
+				.Include(o => o.ReviewScores)
+				.Where(o => o.Apartment.Id == id && !string.IsNullOrEmpty(o.Message)).ToListAsync();
+		
+			var model = new ReviewsListViewModel()
+			{
+				Apartment = _context.Apartments.Find(id),
+				PageViewModel = new PageViewModel(reviews.Count(), page, 10),
+				Reviews = reviews,
+				Scores = _context.Scores.ToList()
+			};
+
+			return View(model);
 		}
 	}
 }

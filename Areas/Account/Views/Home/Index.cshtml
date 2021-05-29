@@ -1,136 +1,71 @@
 ﻿@model BookingLikeApp.Models.User
+@addTagHelper *, BookingLikeApp
 
 @{
-	ViewData["Title"] = "Info";
+	ViewData["Title"] = "Информация";
 }
 <div class="list-group-flush list-group">
 	<div class="list-group-item">
 		<div class="col-sm-12">
-			<h2 class="card-title display-4">Основные данные</h2>
+			<div class="row justify-content-center align-items-start flex-grow-1">
+
+			</div>
+			
+			<div class="row align-items-end">
+				<a data-toggle="modal" href="#user_pfp_modal" role="button" id="profile_image_container">
+					<profile-picture image-size="100" img-url="@Model.PFPUrl"></profile-picture>
+				</a>
+				<div aria-hidden="true">
+					<div class="modal fade" data-toggle="modal" id="user_pfp_modal">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h2 class="modal-title">Изменение профиля</h2>
+								</div>
+								<div class="modal-body">
+									<div class="col-sm-8">
+										<img src="@Model.PFPUrl" id="image_example" width="250" height="250" alt="Изображение не выбрано" style="object-fit: cover" />
+									</div>
+									<input type="file" name="imageInput" class="form-control-file col-12 mt-3" />
+									<div class="col-sm-8 mt-3">
+										<button type="button" class="btn btn-danger btn-block mt-3" id="delete_image">Удалить</button>
+									</div>
+									<div class="btn-group col-8 mt-3">
+										<button type="button" class="btn btn-success btn-group-toggle" id="update_image">Подтвердить</button>
+										<button type="button" data-dismiss="modal" class="btn btn-secondary btn-group-toggle">Закрыть</button>
+									</div>
+									<div>
+										<span class="alert-danger" name="pfp_alert"></span><br />
+									</div>
+									<div>
+										<span class="alert-success" name="pfp-success"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			<h2 class="display-3 mb-0 pb-0">@Model.UserName</h2>
+			</div>
 			<div class="row mt-3">
-				<div class="col-lg-4 d-flex flex-column">
-					<div class="row justify-content-center align-items-start flex-grow-1">
-						@if (Model.PFPUrl == null)
-						{
-							<a data-toggle="modal" href="#user_pfp_modal" role="button">
-								<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-									<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-									<path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
-								</svg>
-							</a>
-						}
-						else
-						{
-							
-							<a data-toggle="modal"  href="#user_pfp_modal" role="button">
-								<div style="height: 250px">
-									<img src="@Model.PFPUrl" alt="Изображение не найдено" class="h-100 rounded-circle overflow-auto img-fluid"/>
-
-								</div>
-							</a>
-						}
-						<div aria-hidden="true">
-							<div class="modal fade" data-toggle="modal" id="user_pfp_modal">
-								<div class="modal-dialog">
-									<div class="modal-content">
-										<div class="modal-header">
-											<h2 class="modal-title">Изменение профиля</h2>
-										</div>
-										<div class="modal-body">
-											<form asp-action="Avatar" asp-controller="Home" method="post" enctype="multipart/form-data">
-												<input type="file" name="file" class="form-control-file col-12" />
-												<div class="btn-group col-8 mt-3">
-													<input type="submit" value="Подтвердить" class="btn btn-success" />
-													<button type="button" data-dismiss="modal" class="btn btn-secondary btn-g">Закрыть</button>
-													<span class="alert-danger" name="pfp_alert"></span>
-												</div>
-											</form>
-										</div>
-									</div>
-								</div>
-
-							</div>
+				<div class="col-sm-4">
+					<div class="form-group">
+						<label class="col-form-label">Отображаемое имя</label>
+						<input type="text" name="DisplayName" id="display_name" class="form-control" value="@Model.DisplayName" />
+					</div>
+					<div class="form-group">
+						<input type="hidden" class="form-control" name="Gender" id="gender" value="@Model.Gender" />
+						<label class="col-form-label d-block">Гендер</label>
+						<div class="btn-group" data-toggle="buttons">
+							<button type="button" class="btn @(Model.Gender == true ? "btn-primary" : "btn-secondary")" name="genderButton" id="man">Мужчина</button>
+							<button type="button" class="btn @(Model.Gender == false ? "btn-primary" : "btn-secondary")" name="genderButton" id="woman">Женчина</button>
 						</div>
 					</div>
-					<div class="mt-3">
-						<button class="btn btn-secondary btn-block" data-toggle="modal" data-target="#user_data_modal">Изменить данные профиля</button>
-					</div>
-					<div aria-hidden="true">
-						<div class="modal fade" data-toggle="modal" id="user_data_modal">
-							<div class="modal-dialog">
-								<div class="modal-content">
-									<div class="modal-header">
-										<h2 class="modal-title col-12">Данные пользователя</h2>
-									</div>
-									<div class="modal-body">
-										<form asp-action="Data" asp-controller="Home" method="post">
-											<div class="col-8">
-												<div class="form-group">
-													<label class="col-form-label">Отображаемое имя</label>
-													<input type="text" name="DisplayName" id="display_name" class="form-control" value="@Model.DisplayName" />
-													<span class="alert-danger"></span>
-												</div>
-												<div class="form-group">
-													<input type="hidden" class="form-control" name="Gender" id="gender" value="@Model.Gender" />
-													<label class="col-form-label d-block">Гендер</label>
-													<div class="btn-group btn-group-toggle" data-toggle="buttons">
-														<button type="button" class="btn btn-primary @if (Model.Gender == true) Html.Raw("active");" name="genderButton" id="man">Мужчина</button>
-														<button type="button" class="btn btn-primary @if (Model.Gender == false) Html.Raw("active");" name="genderButton" id="woman">Женчина</button>
-													</div>
-													<span class="alert-danger"></span>
-												</div>
-												<div class="form-group">
-													<label class="col-form-label">Дата рождения</label>
-													<input type="date" name="BirthDay" asp-for="DateOfBirth" id="birth_date" class="form-control" />
-													<span class="alert-danger"></span>
-												</div>
-												<div class="btn-group mt-3">
-													<button type="button" name="changeData" id="change_data" class="btn btn-success">Подтвердить</button>
-													<button type="button" data-dismiss="modal" class="btn btn-secondary btn-g">Закрыть</button>
-												</div>
-												<div class="form-group mt-3">
-													<span class="alert-danger" id="data_alert"></span>
-													<span class="alert-success" id="data_success"></span>
-												</div>
-
-											</div>
-										</form>
-									</div>
-								</div>
-							</div>
-						</div>
+					<div class="form-group">
+						<label class="col-form-label">Дата рождения</label>
+						<input type="date" name="BirthDay" asp-for="DateOfBirth" id="birth_date" class="form-control" />
 					</div>
 				</div>
-				<div class="col-lg-8">
-					<h6 class="mb-0"><b>Имя пользователя</b></h6>
-					<h2 class="display-4 mb-0 pb-0">@Model.UserName</h2>
-					<h6 class="mt-2 mb-0"><b>Отображаемое имя</b></h6>
-					<h2 class="display-4 mt-0 pt-0">@(!String.IsNullOrEmpty(Model.DisplayName) ? Model.DisplayName : @Model.UserName)</h2>
-
-
-					<div class="row mt-3 align-baseline">
-						<div class="col-sm-6">
-							<h4>
-								<b id="user_gender">
-									@if (Model.Gender == null)
-									{
-										@Html.Raw("Гендер не выбран");
-									}
-									else
-									{
-										@(Model.Gender == true ? "Мужчина" : "Женщина")
-									}
-								</b>
-							</h4>
-							<p><i>@(Model.DateOfBirth == null ? "Дата рождения не указана" : Model.DateOfBirth)</i></p>
-						</div>
-						<div class="col-sm-6">
-							<h4><b>@Html.DisplayNameFor(o => o.RegistationDate)</b></h4>
-							<p><i>@Model.RegistationDate</i></p>
-						</div>
-					</div>
-				</div>
-
 			</div>
 		</div>
 
@@ -180,53 +115,97 @@
 @section Scripts {
 	<script>
 		$(document).ready(function () {
-			let userDataViewModel = {
-				displayName: $("#display_name").val(),
-				gender: Boolean($("#gender").val()),
-				birthDate: $("#birth_date").val()
-			};
 
 			$("body").on("click", "button[name='genderButton']", function () {
 
 				if ($(this).attr("Id") == "man") {
-					$("#gender").val(true);
-					userDataViewModel.gender = true;
-				}
-				else if ($(this).attr("Id") == "woman") {
-					$("#gender").val(false);
-					userDataViewModel.gender = false;
+					fetch("/account/home/GenderUpdate", {
+						method: "POST",
+						headers: {
+							"accept": "application/json",
+							"content-type": "application/json"
+						},
+						body: JSON.stringify(true)
+					});
+					$("#man").attr("class", "btn btn-primary");
+					$("#woman").attr("class", "btn btn-secondary");
+
 				}
 				else {
-					$("#gender").val = null;
-				}
-				console.log($("#gender").val());
+					fetch("/account/home/GenderUpdate", {
+						method: "POST",
+						headers: {
+							"accept": "application/json",
+							"content-type": "application/json"
+						},
+						body: JSON.stringify(false)
+					});
+					$("#woman").attr("class", "btn btn-primary");
+					$("#man").attr("class", "btn btn-secondary");
+				} 
+
+				
 			});
 
-			$("body").on("click", "#change_data", function () {
-				console.log(userDataViewModel);
-				fetch("/Account/home/data", {
+			$("body").on("change", "#display_name", function () {
+				fetch("/account/home/displayNameUpdate", {
+					method: "POST",
+					headers: {
+						"content-type": "application/json"
+					},
+					body: JSON.stringify($("#display_name").val())
+				});
+			});
+
+			$("body").on("change", "#birth_date", function () {
+				fetch("/account/home/birthDateUpdate", {
 					method: "POST",
 					headers: {
 						"accept": "application/json",
 						"content-type": "application/json"
 					},
-					body: JSON.stringify(userDataViewModel)
+					body: JSON.stringify($("#birth_date").val())
+				});
+			});
+
+			
+
+			$("body").on("click", "#delete_image", function () {
+				fetch("/account/home/deleteImage", {
+					method: "DELETE"
+				});
+				$("#image_example").attr("src", "");
+				const content = `
+							<div>
+								<svg xmlns="http://www.w3.org/2000/svg" width="250" height="250" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+								  <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+								  <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+								</svg>
+							</div>
+						`;
+				$("#profile_image_container").html(content);
+			});
+
+			$("body").on("click", "#update_image", function () {
+				const formData = new FormData();
+				const fileField = document.querySelector('input[name="imageInput"]');
+				formData.append("file", fileField.files[0]);
+					fetch("/account/home/updateImage", {
+					method: "POST",
+					body: formData
 				})
 					.then(res => res.json())
-					.then(data => {
-						console.log(data)
-						if (data.success) {
-							$("#data_success").text(data.message);
-						}
-						else {
-							if (data.target != null) {
-								$("#" + data.target).text(data.message);
-							}
-							else {
-								$("#data_alert").text(data.message);
-							}
-						}
-					});
+					.then(res => {
+						$("#image_example").attr("src", res.data);
+						const content = `
+							<div>
+								<img src="${res.data}" class="rounded-circle" width="250" height="250"/>
+							</div>
+						`;
+						$("#profile_image_container").html(content);
+					})
+					.catch(ex => console.log(ex));
+				console.log(formData);
 			});
 		});
 

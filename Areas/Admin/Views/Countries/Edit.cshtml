@@ -7,25 +7,20 @@
 	<a asp-action="Index" class="btn-link">Вернуться к спику</a>
 </div>
 
-<form asp-action="Edit" method="post">
-	<div class="col-sm-4 mt-3">
+<form asp-action="Edit" asp-controller="Countries" method="post" enctype="multipart/form-data">
+	<div asp-validation-summary="All">
+	</div>
+	<div class="col-sm-5">
 		<div class="form-group">
 			<label asp-for="Name" class="col-form-label"></label>
 			<input asp-for="Name" class="form-control" />
 			<span asp-validation-for="Name" class="alert-danger"></span>
 		</div>
 		<div class="form-group">
-			<label asp-for="Code" class="col-form-label"></label>
-			<input asp-for="Code" class="form-control" />
-			<span asp-validation-for="Code" class="alert-danger"></span>
-		</div>
-		<div class="form-group">
 			<label asp-for="PhotoUrl" class="col-form-label"></label>
-			<input asp-for="PhotoFile" class="form-control" />
-		</div>
-		<div class="form-group">
-			<label asp-for="FlagUrl" class="col-form-label"></label>
-			<input asp-for="FlagFile" class="form-control" />
+			<input asp-for="PhotoUrl" type="hidden" />
+			<img src="@Model.PhotoUrl" class="w-100 my-2"/>
+			<input asp-for="@Model.File" class="form-control" />
 		</div>
 		<div class="form-group">
 			<input asp-for="Blocked" class="form-check-inline" />
@@ -35,4 +30,5 @@
 			<input type="submit" value="Обновить" class="btn btn-success" />
 		</div>
 	</div>
+	
 </form>

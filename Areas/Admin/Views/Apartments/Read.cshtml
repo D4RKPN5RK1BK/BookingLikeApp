@@ -1,0 +1,165 @@
+﻿@model Apartment
+@addTagHelper *, BookingLikeApp
+@{
+	ViewData["Title"] = Model.Name;
+}
+
+<div class="card">
+	<div class="card-header">
+		<h2 class="card-title">
+			@Model.Name
+			@if (Model.Finished)
+			{
+				<span class="badge badge-secondary">Закончен</span>
+			}
+			else
+			{
+				<span class="badge badge-warning">Не закончен</span>
+			}
+			@if (Model.Enable)
+			{
+				<span class="badge badge-secondary">Доступен</span>
+			}
+			else
+			{
+				<span class="badge badge-warning">Не доступен</span>
+			}
+			@if (Model.Checked)
+			{
+				<span class="badge badge-secondary">Проверен</span>
+			}
+			else
+			{
+				<span class="badge badge-warning">Не проверен</span>
+			}
+			@if (Model.Bolcked)
+			{
+				<span class="badge badge-danger">Заблокирован</span>
+			}
+		</h2>
+	</div>
+	<div class="row">
+		<div class="col-sm-8">
+			<table class="table table-borderless table-hover table-sm">
+				<tr>
+					<td>Тип недвижиости</td>
+					<td><b>@Model.ApartmentType.Name</b></td>
+				</tr>
+				<tr>
+					<td>Звезды</td>
+					<td><b>@Model.Stars</b></td>
+				</tr>
+				<tr>
+					<td>Страна</td>
+					<td>
+						<b>@Model.Country?.Name</b>
+					</td>
+				</tr>
+				<tr>
+					<td>Город</td>
+					<td>
+						<b>@Model.City?.Name</b>
+					</td>
+				</tr>
+				<tr>
+					<td>Пользователь</td>
+					<td>
+						<b>
+							<a asp-action="Read" asp-controller="Users" asp-route-id="@Model.UserId">
+								@Model.User
+							</a>
+						</b>
+
+					</td>
+				</tr>
+				<tr>
+					<td>Время регистрации прибытия</td>
+					<td><b>@Model.ArrivalTimeStarts.ToShortTimeString() - @Model.ArrivalTimeEnds.ToShortTimeString()</b></td>
+				</tr>
+				<tr>
+					<td>Время регистрации отбытия</td>
+					<td><b>@Model.DepartureTimeStarts.ToShortTimeString() - @Model.DepartureTimeEnds.ToShortTimeString()</b></td>
+				</tr>
+			</table>
+		</div>
+		<div class="col-sm-4">
+			<h4>Сервисы</h4>
+			<ul>
+				@foreach (var s in Model.ApartmentServices)
+				{
+					<li>@s.Name <b>@(s.Price ?? null)</b></li>
+				}
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="row mt-3">
+	<div class="col-sm-6">
+		<form asp-action="Block" asp-route-id="@Model.Id" method="post">
+			<input type="hidden" name="id" value="@Model.Id" />
+			@if (Model.Bolcked)
+			{
+				<input type="submit" value="Разблокировать" class="btn btn-secondary btn-block" />
+			}
+			else
+			{
+				<input type="submit" value="Заблокировать" class="btn btn-danger btn-block" />
+			}
+		</form>
+	</div>
+	@if (!Model.Checked)
+	{
+		<div class="col-sm-6">
+			<form asp-action="Check" asp-route-id="@Model.Id" method="post">
+				<input type="hidden" name="id" value="@Model.Id" />
+				<input type="submit" value="Пометить как просмотреный" class="btn btn-warning btn-block" />
+			</form>
+		</div>
+	}
+
+</div>
+
+@foreach (var n in Model.Numbers)
+{
+<div class="card mt-3">
+	<div class="list-group list-group-flush">
+		<div class="list-group-item">
+			<h3 class="card-title">@n.Name</h3>
+		</div>
+		@foreach (var p in n.Packs)
+		{
+			<div class="list-group-item">
+				
+				<div class="row">
+					<div class="col-sm-8">
+						<h4>@p.Name</h4>
+						<table class="table table-borderless table-sm">
+							@foreach (var pt in p.PackTenants)
+							{
+								<tr>
+									<td>@pt.Adults взр.</td>
+									<td>@pt.Childrens дет.</td>
+									<td><b>@pt.Price</b></td>
+								</tr>
+							}
+						</table>
+					</div>
+					<div class="col-sm-4">
+						<h5>Сервисы</h5>
+						<ul>
+							@foreach (var ps in p.PackServices)
+							{
+							<li>@ps.NumberService.Name <b>@(ps.NumberService.Price ?? null)</b></li>
+							}
+							
+						</ul>
+						
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+	</div>
+	
+}

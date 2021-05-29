@@ -20,9 +20,6 @@ namespace BookingLikeApp.Models
         [MaxLength(256, ErrorMessage = "Длинна строки {0} не может превышать {1}")]
 		public string Code { get; set; }
 
-
-        [DisplayName("Имеет комнаты")]
-        public bool HasRooms { get; set; }
         [DisplayName("Общий номер")]
         public bool Share { get; set; }
 

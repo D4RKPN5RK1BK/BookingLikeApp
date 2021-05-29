@@ -69,7 +69,8 @@ namespace BookingLikeApp.Areas.Account.Controllers
                     UserName = model.UserName,
                     LockoutEnabled = true,
 					RegistationDate = DateTime.Now,
-					DisplayName = model.UserName
+					DisplayName = model.UserName,
+					LastPasswordUpdate = DateTime.Now
                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password);
@@ -119,11 +120,11 @@ namespace BookingLikeApp.Areas.Account.Controllers
             }
             return View(model);
         }
-
+/*
 		public async Task<ActionResult> VerifyEmail(string userId, string code)
 		{
 			return View();
-		}
+		}*/
 
         public async Task<IActionResult> Logout()
         {

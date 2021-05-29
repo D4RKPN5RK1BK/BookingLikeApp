@@ -1,0 +1,10 @@
+﻿@model NumberBedViewModel
+
+	<div class="form-group col-sm-6 col-lg-4">
+		<input type="hidden" name="NumberBeds.Id" asp-for="NumberBed.Id"/>
+		<label asp-for="NumberBed.BedId"></label>
+		<select asp-items="Model.BedsSelectList" asp-for="NumberBed.BedId" name="NumberBeds.BedId" class="custom-select"></select>
+		<label asp-for="NumberBed.Quantity"></label>
+		<input asp-for="NumberBed.Quantity" name="NumberBeds.Quantity" class="form-control"/>
+		<button name="DeleteNumberBed" type="button" class="btn btn-danger btn-block my-2">Удалить</button>
+	</div>

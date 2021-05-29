@@ -24,5 +24,9 @@ namespace BookingLikeApp.Models
 
 		[NotMapped]
 		public List<Reservation> Reservations { get; set; }
-    }
+
+		public bool IsFree(DateTime begin, DateTime end, List<Reservation> reservations) =>
+			Enable && reservations.All(o => o.ReservationBegin > begin && o.ReservationEnd > begin || o.ReservationBegin < begin && o.ReservationEnd < end);
+
+	}
 }

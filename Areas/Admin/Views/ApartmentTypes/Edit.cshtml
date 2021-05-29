@@ -18,20 +18,17 @@
 		</div>
 		<div class="form-group">
 			<label asp-for="Description" class="col-form-label"></label>
-			<input asp-for="Description" class="form-control" />
+			<textarea asp-for="Description" class="form-control"></textarea>
 			<span asp-validation-for="Description" class="alert-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="PhotoUrl" class="col-form-label"></label>
+			<input asp-for="PhotoUrl" type="hidden"/>
 			@if(!String.IsNullOrEmpty(Model.PhotoUrl))
 			{
 				<img class="img-thumbnail" src="@Model.PhotoUrl">
 			}
 			<input asp-for="File" class="form-control mt-2" />
-		</div>
-		<div class="form-group">
-			<input asp-for="FacilitesRequired" class="form-check-inline" />
-			<label asp-for="FacilitesRequired" class="col-form-label"></label>
 		</div>
 		<div class="form-group">
 			<input type="submit" value="Принять изменения" class="btn btn-success" />

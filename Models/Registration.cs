@@ -8,14 +8,20 @@ namespace BookingLikeApp.Models
     {
         [Key]
         public int ApartmentId { get; set; }
+
         public virtual bool BasicInfo { get; set; }
         public virtual bool Numbers { get; set; }
         public virtual bool Rules { get; set; }
-        public virtual bool FacilitesRequired { get; set; }
-        public virtual bool Facilites { get; set; }
         public virtual bool Photos { get; set; }
-        public virtual bool Payment { get; set; }
         public virtual bool Services { get; set; }
+		
+		/*public virtual bool BasicInfoRequired { get; set; }
+        public virtual bool NumbersRequired { get; set; }
+        public virtual bool RulesRequired { get; set; }
+        public virtual bool FacilitesRequired { get; set; }
+        public virtual bool PhotosRequired { get; set; }
+        public virtual bool PaymentRequired { get; set; }
+        public virtual bool ServicesRequired { get; set; }*/
 
         public Apartment Apartment { get; set; }
 
@@ -24,10 +30,11 @@ namespace BookingLikeApp.Models
         {
             get
             {
-                if (FacilitesRequired)
-                    return (BasicInfo && Numbers && Rules && Facilites && Photos && Payment && Services);
-                else
-                    return (BasicInfo && Numbers && Rules && Photos && Payment && Services);
+				return  BasicInfo &&
+					Numbers &&
+					Services &&
+					Photos &&
+					Rules;
             }
         }
 
@@ -40,9 +47,7 @@ namespace BookingLikeApp.Models
                 if (!Numbers) return nameof(Numbers);
                 if (!Services) return nameof(Services);
                 if (!Photos) return nameof(Photos);
-                if (!Facilites && !FacilitesRequired) return nameof(Facilites);
                 if (!Rules) return nameof(Rules);
-                if (!Payment) return nameof(Payment);
                 return string.Empty;
             }
         }
@@ -58,8 +63,6 @@ namespace BookingLikeApp.Models
 					Numbers = false;
 					Rules = false;
 					Services = false;
-					Facilites = false;
-					Payment = false;
 					Photos = false;
 				}
 				else
@@ -68,8 +71,6 @@ namespace BookingLikeApp.Models
 					Numbers = value.Numbers;
 					Rules = value.Rules;
 					Services = value.Services;
-					Facilites = value.Facilites;
-					Payment = value.Payment;
 					Photos = value.Photos;
 				}                
             }
@@ -83,23 +84,21 @@ namespace BookingLikeApp.Models
                 return new Dictionary<string, bool>()
                 {
                     {nameof(BasicInfo), BasicInfo},
-                    {nameof(Numbers), BasicInfo},
-                    {nameof(Rules), BasicInfo},
-                    {nameof(Facilites), BasicInfo},
-                    {nameof(Photos), BasicInfo},
-                    {nameof(Payment), BasicInfo},
-                    {nameof(Services), BasicInfo},
+                    {nameof(Numbers), Numbers},
+                    {nameof(Rules), Rules},
+                    {nameof(Photos), Photos},
+                    {nameof(Services), Services},
                 };
             }
         }
 
-		[NotMapped]
+		/*[NotMapped]
 		public string ApartmentName { get; set; }
 
 
         public Registration() { }
 
-        public Registration(Models.Apartment apartment)
+        public Registration(Apartment apartment)
         {
 			ApartmentName = apartment.Name;
             if (apartment.Registration != null)
@@ -136,6 +135,6 @@ namespace BookingLikeApp.Models
 				Payment = model.Payment;
 				Photos = model.Photos;
 			}
-        }
-    }
+        }*/
+	}
 }

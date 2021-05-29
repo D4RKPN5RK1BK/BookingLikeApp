@@ -26,25 +26,30 @@ namespace BookingLikeApp.TagHelpers
 			IUrlHelper urlHelper = _urlHelperFactory.GetUrlHelper(ViewContext);
 
 			output.TagName = "div";
-
+			
 			TagBuilder tag = new TagBuilder("ul");
-			tag.AddCssClass("pagination");
-
-			TagBuilder currentItem = CreateTag(PageViewModel.PageNumber, urlHelper);
-
-			if(PageViewModel.HavePreviousPage)
+			if (PageViewModel.TotalPages > 1)
 			{
-				TagBuilder prevItem = CreateTag(PageViewModel.PageNumber - 1, urlHelper);
-				tag.InnerHtml.AppendHtml(prevItem);
+				tag.AddCssClass("pagination");
+
+				TagBuilder currentItem = CreateTag(PageViewModel.PageNumber, urlHelper);
+
+				if (PageViewModel.HavePreviousPage)
+				{
+					TagBuilder prevItem = CreateTag(PageViewModel.PageNumber - 1, urlHelper);
+					tag.InnerHtml.AppendHtml(prevItem);
+				}
+
+				tag.InnerHtml.AppendHtml(currentItem);
+
+				if (PageViewModel.HaveNextPage)
+				{
+					TagBuilder nextItem = CreateTag(PageViewModel.PageNumber + 1, urlHelper);
+					tag.InnerHtml.AppendHtml(nextItem);
+				}
+
 			}
 
-			tag.InnerHtml.AppendHtml(currentItem);
-
-			if(PageViewModel.HaveNextPage)
-			{
-				TagBuilder nextItem = CreateTag(PageViewModel.PageNumber + 1, urlHelper);
-				tag.InnerHtml.AppendHtml(nextItem);
-			}
 
 			output.Content.AppendHtml(tag);
 		}

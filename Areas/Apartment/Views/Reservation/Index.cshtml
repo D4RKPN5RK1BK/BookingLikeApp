@@ -5,46 +5,52 @@
 }
 
 
-<div class="col-sm-8">
-	<h2 class="display-4">Список бронирований</h2>
+<h2 class="display-4 mb-3">Мои бронирования</h2>
 
-	@if (Model.ReservationDataPacks.Count > 0)
-	{
-		@if (Model.PageInfo.TotalPages > 1)
+@if (Model.Reservations.Count > 0)
+{
+	<filter-page-link-helper page-view-model="@Model.PageModel"
+							 page-url-accept="@Model.FilterModel.Accept"
+							 page-url-apartmentId="@Model.FilterModel.ApartmentId"
+							 page-url-sortBy="@Model.SortModel.Current">
+	</filter-page-link-helper>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Подбробная информация</th>
+				<th>Отель</th>
+				<th>Стоимость</th>
+				<th>Время</th>
+				<th>Состояние</th>
+			</tr>
+		</thead>
+		@foreach (var r in Model.Reservations)
 		{
-			<div class="row justify-content-center">
-				<page-link page-view-model="Model.PageInfo" page-action="Index"></page-link>
-			</div>
+			<tr>
+				<td><a asp-action="info" asp-controller="reservation" asp-route-id="@r.Id">Подробнее</a></td>
+				<td><a asp-action="Details" asp-controller="Read" asp-route-id="@r.ApartmentId"><p>@r.Apartment.Name</p></a></td>
+				<td><p><b>@r.Price руб.</b></p></td>
+				<td><p >@r.ReservationBegin.ToString("yyyy.MM.dd") - @r.ReservationEnd.ToString("yyyy.MM.dd")</p></td>
+				<td>
+					@if (r.Confirm)
+					{
+						<span class="badge badge-success">Оплачен</span>
+					}
+					else if (r.Outdated)
+					{
+						<span class="badge badge-success">Просрочен</span>
+					}
+				</td>
+			</tr>
 		}
-
-		<div class="list-group my-3">
-			@foreach (var r in Model.ReservationDataPacks)
-			{
-				<a asp-action="info" asp-controller="reservation" asp-route-id="@r.Reservation.Id" class="list-group-item-action list-group-item">
-					<div class="card-title">
-						<div class="row col-12">
-							<p class="flex-grow-1"><b>@r.Apartment.Name</b></p>
-							<p class="mr-3">@r.Reservation.ReservationBegin.ToString("yyyy.MM.dd") - @r.Reservation.ReservationEnd.ToString("yyyy.MM.dd")</p>
-						</div>
-					</div>
-					<div class="card-body p-0">
-						<p>Стоимость: @r.Reservation.Price руб.</p>
-					</div>
-				</a>
-			}
-
-		</div>
-		@if (Model.PageInfo.TotalPages > 1)
-		{
-			<div class="row justify-content-center">
-				<page-link page-view-model="Model.PageInfo" page-action="Index"></page-link>
-			</div>
-		}
-	}
-	else
-	{
-		<h2>На данный момент у вас нет бронирований</h2>
-	}
-
-
-</div>
+	</table>
+	<filter-page-link-helper page-view-model="@Model.PageModel"
+							 page-url-accept="@Model.FilterModel.Accept"
+							 page-url-apartmentId="@Model.FilterModel.ApartmentId"
+							 page-url-sortBy="@Model.SortModel.Current">
+	</filter-page-link-helper>
+}
+else
+{
+	<h2>По данному запросу ничего не найдено</h2>
+}

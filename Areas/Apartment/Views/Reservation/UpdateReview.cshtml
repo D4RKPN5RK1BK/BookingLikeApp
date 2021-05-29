@@ -16,20 +16,37 @@
 				<div class=" col-sm-4">
 					<input type="hidden" value="@Model.Reservation.Id" name="ReviewScores[@i].ReviewId" />
 					<input type="hidden" value="@Model.Scores[i].Id" name="ReviewScores[@i].ScoreId" />
+					@if (Model.Reservation.Review.ReviewScores.Any(o => o.ScoreId == Model.Scores[i].Id))
+					{
+						<input type="hidden" value="@Model.Reservation.Review.ReviewScores.FirstOrDefault(o => o.ScoreId == Model.Scores[i].Id).Id" name="ReviewScores[@i].Id" />
+					}
 					<label>@Model.Scores[i].Name</label>
 					<select class="custom-select" name="ReviewScores[@i].Value">
-						@for (int j = 1; j < Model.Scores[i].MaxValue + 1; j++)
+						@if (!Model.Reservation.Review.ReviewScores.Any(o => o.ScoreId == Model.Scores[i].Id))
 						{
-							@if (j == Model.Reservation.Review.ReviewScores[i].Value)
-							{
-								<option selected value="@j">@j</option>
-							}
-							else
+							<option selected disabled value="null">Выберите оценку</option>
+							@for (int j = 1; j < Model.Scores[i].MaxValue + 1; j++)
 							{
 								<option value="@j">@j</option>
-							}
 
+							}
 						}
+						else
+						{
+							@for (int j = 1; j < Model.Scores[i].MaxValue + 1; j++)
+							{
+								@if (Model.Reservation.Review.ReviewScores.Any(o => o.ScoreId == Model.Scores[i].Id) && j == Model.Reservation.Review.ReviewScores.First(o => o.ScoreId == Model.Scores[i].Id).Value)
+								{
+									<option selected value="@j">@j</option>
+								}
+								else
+								{
+									<option value="@j">@j</option>
+								}
+
+							}
+						}
+
 					</select>
 				</div>
 				}

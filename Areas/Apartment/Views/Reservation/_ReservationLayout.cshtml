@@ -17,7 +17,7 @@
 					<h4>Дата окончания:</h4>
 					<p>@Model.Reservation.ReservationEnd.ToString("yyyy.MM.dd")</p>
 					<h4>Отель:</h4>
-					<a asp-action="Details" asp-controller="Read" asp-route-id="@Model.Apartment.Id">@Model.Apartment.Name</a>
+					<a asp-action="Details" asp-controller="Read" asp-route-id="@Model.Reservation.Apartment.Id">@Model.Reservation.Apartment.Name</a>
 				</div>
 				<div class="list-group-item">
 					<h4>Итоговая стоимость</h4>
@@ -29,7 +29,7 @@
 						<form asp-action="Confirm" asp-controller="Reservation" asp-route-id="@Model.Reservation.Id">
 							<div class="form-group">
 								<p>Бронирование еще не подтверждено</p>
-								<input type="submit" value="Подтвердить бронирование" class="btn btn-success btn-block" />
+								<input type="submit" value="Оплатить бронирование" @(!Model.AllowAccept? "disabled": "") class="btn btn-success btn-block" />
 							</div>
 						</form>
 						<form asp-action="Cencel" asp-controller="Reservation" asp-route-id="@Model.Reservation.Id">
@@ -54,13 +54,16 @@
 	<div class="col-sm-8">
 		<div class="list-group list-group-horizontal mt-3">
 			<a asp-action="info" class="list-group-item list-group-item-action text-center @(ViewData["Title"].ToString() == "Информаия о бронировании" ? "active" : "")" asp-route-id="@Model.Reservation.Id">Информация</a>
-			@if (Model.Reservation.Review == null)
+			@if (Model.Reservation.Confirm)
 			{
-				<a asp-action="createReview" class="list-group-item list-group-item-action text-center @(ViewData["Title"].ToString() == "Отзыв" ? "active" : "")" asp-route-id="@Model.Reservation.Id">Оставить отзыв</a>
-			}
-			else
-			{
-				<a asp-action="updateReview" class="list-group-item list-group-item-action text-center @(ViewData["Title"].ToString() == "Отзыв" ? "active" : "") list-group-item-success" asp-route-id="@Model.Reservation.Id">Отзыв</a>
+				@if (Model.Reservation.Review == null)
+				{
+					<a asp-action="createReview" class="list-group-item list-group-item-action text-center @(ViewData["Title"].ToString() == "Отзыв" ? "active" : "")" asp-route-id="@Model.Reservation.Id">Оставить отзыв</a>
+				}
+				else
+				{
+					<a asp-action="updateReview" class="list-group-item list-group-item-action text-center @(ViewData["Title"].ToString() == "Отзыв" ? "active" : "") list-group-item-success" asp-route-id="@Model.Reservation.Id">Отзыв</a>
+				}
 			}
 		</div>
 		@RenderBody()

@@ -1,5 +1,23 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@model Apartment
+@{ 
+	Layout = "_EditApartmentLayout";
+	ViewData["Title"] = "Удаление";
 }
+<div class="card">
+	<div class="card-body">
+		@if (Model.Reservations.Count == 0)
+		{
+			<h2 class=" card-title">Вы действительно хотите удалить <b>@Model.Name</b>?</h2>
+			<form asp-action="Delete" method="post">
+				<input type="hidden" name="id" value="@Model.Id" />
+				<input type="submit" value="Удалить" class="btn btn-danger" />
+			</form>
+
+		}
+		else
+		{
+			<h2 class=" card-title">Данный отель нельзя удалить так как на него уже оформлены бронирования.</h2>
+		}
+
+	</div>
+</div>
