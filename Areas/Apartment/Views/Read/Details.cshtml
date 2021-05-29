@@ -185,7 +185,14 @@
 				<div class="card mb-3" name="number" id="number_@number.Id">
 					<input type="hidden" id="number_id_@number.Id" name="numberId" value="@number.Id" />
 					<div class="card-header">
-						<h1><span class="badge badge-secondary">@number.NumberType.Code</span> @number.Name</h1>
+						<h1>
+							<span class="badge badge-secondary">@number.NumberType.Code</span>
+							@if (number.NumberType.Share)
+					{
+							<span class="badge badge-secondary">Общий</span>
+					}
+							@number.Name
+						</h1>
 
 					</div>
 					<div class="card-body">

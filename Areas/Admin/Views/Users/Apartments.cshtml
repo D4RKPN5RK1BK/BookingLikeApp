@@ -17,9 +17,7 @@
 	<thead>
 		<th>Название</th>
 		<th>Страница</th>
-		<th>Закончен</th>
-		<th>Доступен</th>
-		<th>Проверен</th>
+		<th>Состояние</th>
 		<th>Дата регистрации</th>
 	</thead>
 	@foreach (var apartment in Model.SearchApartments.Apartments)
@@ -33,36 +31,28 @@
 				}
 			</td>
 			<td>
-				@if (@apartment.Finished)
+				@if (!apartment.Finished)
 				{
-					<span class="badge badge-secondary">Да</span>
+				<span class="badge badge-warning">Не закончен</span>
 				}
-				else
+				@if (!apartment.Enable)
 				{
-					<span class="badge badge-danger">Нет</span>
+					<span class="badge badge-warning">Не доступен</span>
 				}
-			</td>
-			<td>
-				@if (@apartment.Enable)
+				@if (!apartment.Checked)
 				{
-					<span class="badge badge-secondary">Да</span>
+					<span class="badge badge-warning">Не проверен</span>
 				}
-				else
+				@if (apartment.Bolcked)
 				{
-					<span class="badge badge-danger">Нет</span>
+					<span class="badge badge-danger">Заблокирован</span>
 				}
-			</td>
-			<td>
-				@if (@apartment.Checked)
+				@if (apartment.EnableToSearch)
 				{
-					<span class="badge badge-secondary">Да</span>
-				}
-				else
-				{
-					<span class="badge badge-danger">Нет</span>
+					<span class="badge badge-success">Готов к поиску</span>
 				}
 			</td>
-			<td>@apartment.RegistrationDate</td>
+			<td>@apartment.CreateTimeStamp</td>
 		</tr>
 	}
 </table>

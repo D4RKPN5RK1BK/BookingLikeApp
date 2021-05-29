@@ -177,6 +177,8 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 				model.Apartments[i].Reviews = _context.Reviews.Where(o => o.ApartmentId == model.Apartments[i].Id).ToList();
 			}
 
+			model.Apartments = model.Apartments.Where(o => o.EnableToSearch).ToList();
+
 			if (begin != null && end != null)
 				model.Apartments = model.Apartments.Where(o => o.HaveFreeNumbers(model.FilterModel.ReservationTimeBegin, model.FilterModel.ReservationTimeEnd)).ToList();
 

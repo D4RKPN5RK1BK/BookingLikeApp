@@ -24,6 +24,11 @@
 			<div class="flex-grow-1">
 				<h4>
 					<span class="badge badge-secondary">@item.NumberType.Code</span>
+					@if (@item.NumberType.Share)
+					{
+						<span class="badge badge-secondary">Общий</span>
+					}
+					<span class="badge badge-secondary">@item.NumberType.Code</span>
 					@item.Name
 					@if (!item.Finish)
 					{

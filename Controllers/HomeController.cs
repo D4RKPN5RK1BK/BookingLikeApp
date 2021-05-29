@@ -70,6 +70,11 @@ namespace BookingLikeApp.Controllers
             return View();
         }
 
+		public IActionResult About()
+		{
+			return View();
+		}
+
 		[HttpGet]
 		public ActionResult Secret() => View();
 

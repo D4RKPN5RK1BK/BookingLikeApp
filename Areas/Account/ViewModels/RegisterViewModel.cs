@@ -9,17 +9,16 @@ namespace BookingLikeApp.Areas.Account.ViewModels
 {
     public class RegisterViewModel
     {
-        [DisplayName("Имя пользователя")]
+		[Required(ErrorMessage = "Это поле обязательно для заполнения")]
+		[DisplayName("Имя пользователя")]
         public string UserName { get; set; }
-/*
-        [DisplayName("Электронная почта")]
-        [DataType(DataType.EmailAddress)]
-        public string Email { get; set; }
-*/
-        [DisplayName("Пароль")]
+
+		[Required(ErrorMessage = "Это поле обязательно для заполнения")]
+		[DisplayName("Пароль")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
         
+		[Required(ErrorMessage = "Это поле обязательно для заполнения")]
         [DisplayName("Подтвердите пароль")]
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Пароли не совпадают")]
