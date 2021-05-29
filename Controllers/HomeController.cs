@@ -30,20 +30,20 @@ namespace BookingLikeApp.Controllers
 
 			model.CountriesPopular = _context.Countries
 				.Include(o => o.Apartments)
-				.OrderBy(o => o.Apartments.Count)
+				.OrderByDescending(o => o.Apartments.Count)
 				.Take(4)
 				.ToList();
 
 			model.CitiesPopular = _context.Cities
 				.Include(o => o.Apartments)
 				.Include(o => o.Country)
-				.OrderBy(o => o.Apartments.Count)
+				.OrderByDescending(o => o.Apartments.Count)
 				.Take(4)
 				.ToList();
 			
 			model.ApartmentTypesPopular = _context.ApartmentTypes
 				.Include(o => o.Apartments)
-				.OrderBy(o => o.Apartments.Count)
+				.OrderByDescending(o => o.Apartments.Count)
 				.Take(5)
 				.ToList();
 			
@@ -53,11 +53,12 @@ namespace BookingLikeApp.Controllers
 					.ThenInclude(o => o.ReviewScores)
 				.Include(o => o.Photos)
 				.Take(100)
+				.OrderByDescending(o => o.Reservations.Count)
 				.ToList();
 			
 			model.ApartmentsPopular = model.ApartmentsPopular
 				.Where(o => o.EnableToSearch)
-				.OrderBy(o => o.Reservations.Count)
+				.OrderByDescending(o => o.Reservations.Count)
 				.Take(8)
 				.ToList();
 

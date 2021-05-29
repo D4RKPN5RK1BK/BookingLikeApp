@@ -37,9 +37,7 @@
 	<div class="carousel-inner">
 		@for (int i = 0; i < Model.CitiesPopular.Count; i++)
 		{
-			<a asp-action="Search" asp-controller="Read" asp-area="Apartment" asp-route-cityId="@Model.CitiesPopular[i].Id" class="@(i == 0 ? "carousel-item active" : "carousel-item")" style="background-color: #000000">
-
-
+			<a asp-action="Search" asp-controller="Read" asp-area="Apartment" asp-route-cityId="@Model.CitiesPopular[i].Id" class="@(i == 0 ? "carousel-item active" : "carousel-item") bg-dark">
 				<img src="@Model.CitiesPopular[i].PhotoUrl" class="d-block w-100 " height="300" style="object-fit:cover;  opacity: .5" alt="..." />
 
 				<div class="carousel-caption d-none d-md-block">
@@ -73,12 +71,12 @@
 		{
 			case 0:
 				<div class="col-sm-6 mb-3">
-					<a class="card h-100 text-white card-link" asp-action="Search" asp-controller="Read" asp-area="Apartment" asp-route-apartmentTypeId="@Model.ApartmentTypesPopular[i].Id" style="background-color: #000000">
-						<img src="@Model.ApartmentTypesPopular[i].PhotoUrl" alt="Изображение не найдено" height="200" class="card-img text-center" style="object-fit:cover;  opacity: .65" />
+					<a class="card h-100 text-white card-link bg-dark card-img border-0" asp-action="Search" asp-controller="Read" asp-area="Apartment" asp-route-apartmentTypeId="@Model.ApartmentTypesPopular[i].Id">
+						<img src="@Model.ApartmentTypesPopular[i].PhotoUrl" alt="Изображение не найдено" height="200" class="card-img text-center" style="object-fit:cover;  opacity: .5" />
 
 						<div class="card-img-overlay">
 							<h4 class="card-title ">@Model.ApartmentTypesPopular[i].Name</h4>
-							<div class="card-text ">@Model.ApartmentTypesPopular[i].Description</div>
+							<small class="card-text ">@Model.ApartmentTypesPopular[i].Description</small>
 						</div>
 					</a>
 				</div>
@@ -88,12 +86,12 @@
 			
 			case 2:
 				<div class="col-sm-4 mb-3">
-					<a class="card h-100 text-white card-link" asp-action="Search" asp-controller="Read" asp-area="Apartment" asp-route-apartmentTypeId="@Model.ApartmentTypesPopular[i].Id" style="background-color: #000000">
+					<a class="card h-100 text-white card-link bg-dark card-img border-0" asp-action="Search" asp-controller="Read" asp-area="Apartment" asp-route-apartmentTypeId="@Model.ApartmentTypesPopular[i].Id">
 						<img src="@Model.ApartmentTypesPopular[i].PhotoUrl" alt="Изображение не найдено" height="200" class="card-img text-center" style="object-fit:cover;  opacity: .65" />
 
 						<div class="card-img-overlay">
 							<h4 class="card-title ">@Model.ApartmentTypesPopular[i].Name</h4>
-							<div class="card-text ">@Model.ApartmentTypesPopular[i].Description</div>
+							<small class="card-text ">@Model.ApartmentTypesPopular[i].Description</small>
 						</div>
 					</a>
 				</div>
@@ -122,7 +120,7 @@
 	<div class="carousel-inner">
 		@for (int i = 0; i < Model.CountriesPopular.Count; i++)
 		{
-			<a asp-action="Search" asp-controller="Read" asp-area="Apartment" asp-route-countryId="@Model.CountriesPopular[i].Id" class="@(i == 0 ? "carousel-item active" : "carousel-item")" style="background-color: #000000">
+			<a asp-action="Search" asp-controller="Read" asp-area="Apartment" asp-route-countryId="@Model.CountriesPopular[i].Id" class="@(i == 0 ? "carousel-item active" : "carousel-item") bg-dark">
 
 
 				<img src="@Model.CountriesPopular[i].PhotoUrl" class="d-block w-100 " height="300" style="object-fit:cover;  opacity: .5" alt="..." />
@@ -154,8 +152,8 @@
 	@foreach (var a in Model.ApartmentsPopular)
 	{
 		<div class=" col-6  col-md-3 col-sm-4 mb-3">
-			<a class="card h-100 text-white card-link" asp-action="Details" asp-controller="Read" asp-area="Apartment" asp-route-id="@a.Id" style="background-color: #000000">
-				<img src="@a.Photos.First().PhotoUrl" height="200" class="card-img text-center" style="object-fit:cover;  opacity: .65" />
+			<a class="card h-100 text-white card-link bg-dark card-img border-0" asp-action="Details" asp-controller="Read" asp-area="Apartment" asp-route-id="@a.Id">
+				<img src="@(a?.Photos?.Count() > 0 ? a.Photos.First().PhotoUrl : "")" height="200" class="card-img text-center" style="object-fit:cover;  opacity: .65" />
 				<div class="card-img-overlay">
 					<h4 class="card-title ">
 						@a.Name

@@ -219,6 +219,7 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 				Id = number.Id,
 				Name = number.Name,
 				Apartment = number.Apartment,
+				ApartmentId = number.ApartmentId,
 				NumberEntities = number.NumberEntities,
 				Reservations = _context.Reservations
 					.Include(o => o.EntityReservations)

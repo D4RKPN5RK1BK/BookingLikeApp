@@ -56,7 +56,7 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 		}
 
 		[HttpGet]
-		public ActionResult Index(int page = 1, int apartmentId = 0, BoolEnum accept = BoolEnum.All, ReservationSortEnum orderBy = ReservationSortEnum.ByDateAsc)
+		public ActionResult Index(int page = 1, int apartmentId = 0, BoolEnum accept = BoolEnum.All, ReservationSortEnum orderBy = ReservationSortEnum.ByDateDesc)
 		{
 			var model = new ReservationsViewModel();
 			model.FilterModel = new ReservationsFilter()

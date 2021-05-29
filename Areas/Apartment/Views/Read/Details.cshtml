@@ -24,45 +24,38 @@
 	</div>
 	<div class="list-group list-group-flush">
 
-		<div class="row no-gutters">
+		<div class="row">
 			@if (Model.Apartment.Photos.Count > 0)
 			{
-				<div class="col-sm-8 bg-light">
-					<div class="row no-gutters p-0 flex-wrap w-100 h-100">
-						@for (int i = 0; i < Model.Apartment.Photos.Count; i++)
+				<div class="col-sm-8">
+					<div class="row mx-3 flex-wrap">
+						@foreach (var p in Model.Apartment.Photos)
 						{
-							switch (i)
-							{
-								case 0:
-									<img src="@Model.Apartment.Photos[i].PhotoUrl" class="w-50" style="object-fit:cover" />
-									break;
-								case 1:
-									goto case 0;
-								default:
-									<img src="@Model.Apartment.Photos[i].PhotoUrl" class="overflow-auto img-fluid w-25" style="object-fit:cover" />
-									break;
-							}
+							<div class="col-4 no-gutters my-3">
+								<img src="@p.PhotoUrl" class="w-100 h-100 rounded" style="object-fit:cover" />
+
+							</div>
 						}
 					</div>
+
+
+
 				</div>
-			}
-
-
-			<div class="col-sm-4">
-				<div class="list-group-item">
-					@if(!string.IsNullOrEmpty(Model.Apartment.Description))
-			{
+				<div class="col-sm-4">
 					<h5>
 						<pre style="white-space: pre-wrap" class="mt-2 card-text">@Model.Apartment.Description</pre>
 					</h5>
-
-			}
-					 else
-			{
-						<h4>Описание отсутствует</h4>
-			}
 				</div>
-			</div>
+			}
+			else
+			{
+				<div class="col-12">
+					<h5>
+						<pre style="white-space: pre-wrap" class="mt-2 card-text">@Model.Apartment?.Description</pre>
+					</h5>
+				</div>
+			}
+
 		</div>
 		@if (Model.Apartment.AverageScore != null)
 		{
@@ -243,19 +236,18 @@
 
 								<tr name="pack" id="pack_@pack.Id">
 									<input type="hidden" name="packId" value="@pack.Id" />
-									<td>@pack.Name</td>
 									<td>
+										<h4>@pack.Name</h4>
 										<ul class="list-unstyled">
 											@foreach (var packService in pack.PackServices)
 											{
 												<li class=" text-success">
-													<p>@number.NumberServices.First(o => o.Id == packService.NumberServiceId).Name</p>
+													<p>@number.NumberServices.First(o => o.Id == packService.NumberServiceId).Name <b>@number.NumberServices.First(o => o.Id == packService.NumberServiceId)?.Price</b></p>
 												</li>
 											}
 										</ul>
-										<div class="list-group">
-
-										</div>
+									</td>
+									<td>
 									</td>
 									<td name="packTenant">
 										<div class="form-group">
@@ -351,7 +343,7 @@
 
 						let tempPrice = 0;
 						for (let i = 0; i < prices.length; i++) {
-							tempPrice += prices[i] * days;
+							tempPrice += prices[i] * (days + 1);
 						}
 
 						

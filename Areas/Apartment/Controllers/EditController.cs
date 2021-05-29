@@ -127,10 +127,10 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 		[HttpGet]
 		public async Task<ActionResult> Rules(int id)
 		{
-			if (!await AllowEditAsync(id)) return NotFound();
 			Models.Apartment model = _context.Apartments
 				.Include(o => o.Registration)
 				.First(o => o.Id == id);
+			if (model.UserId != _userManager.GetUserId(User)) return NotFound();
 
 			var viewModel = new RulesViewModel()
 			{
@@ -155,10 +155,10 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				if (!await AllowEditAsync(model.Id)) return NotFound();
 				Models.Apartment apartment = await _context.Apartments
 					.Include(o => o.Registration)
 					.FirstAsync(o => o.Id == model.Id);
+				if (apartment.UserId != _userManager.GetUserId(User)) return NotFound();
 
 				apartment.ArrivalTimeStarts = model.ArrivalTimeStarts;
 				apartment.ArrivalTimeEnds = model.ArrivalTimeEnds;
@@ -255,16 +255,15 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<ActionResult> AddPhoto(IFormFile file, int id)
 		{
-			if (!await AllowEditAsync(id)) return NotFound();
 			Models.Apartment apartment = await _context.Apartments
 					.Include(o => o.Registration)
 					.FirstAsync(o => o.Id == id);
+			if (apartment.UserId != _userManager.GetUserId(User)) return NotFound();
 
 			if (file != null)
 			{
-				int index = _context.Photos.Any() ? _context.Photos.Max(o => o.Id) : 1;
-
-				string path = "/images/" + index.ToString() + file.FileName;
+				var guid = Guid.NewGuid();
+				string path = "/images/" + guid + file.FileName;
 
 				using (var filestream = new FileStream(_env.WebRootPath + path, FileMode.Create))
 				{
@@ -275,7 +274,7 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 				{
 					ApartmentId = id,
 					PhotoUrl = path,
-					Name = index.ToString() + file.FileName,
+					Name = guid + file.FileName,
 				};
 
 				if (apartment.Registration != null)
@@ -292,16 +291,15 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 		}
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> DeletePhoto(int id)
+		public async Task<ActionResult> DeletePhoto(int id)
 		{
-			Photo photo = await _context.Photos.FindAsync(id);
-			if (photo == null) return NotFound();
+			Photo photo =  _context.Photos.Find(id);
 
 			Models.Apartment apartment = await _context.Apartments
 					.Include(o => o.Registration)
-					.FirstAsync(o => o.Id == id);
+					.FirstAsync(o => o.Id == photo.ApartmentId);
 
-			if (!await AllowEditAsync(id)) return NotFound();
+			if (apartment.UserId != _userManager.GetUserId(User)) return NotFound();
 
 			_context.Photos.Remove(photo);
 			await _context.SaveChangesAsync();
@@ -341,6 +339,5 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 
 			return RedirectToAction("Index", "Read");
 		}
-
 	}
 }

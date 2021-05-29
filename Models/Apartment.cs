@@ -44,12 +44,14 @@ namespace BookingLikeApp.Models
 		[MaxLength(256, ErrorMessage = "Длинна строки \"{0}\" не может превышать {1}")]
 		public virtual string ContactPerson { get; set; }
 
+		[Phone(ErrorMessage = "Неверно указан номер телефона")]
 		[MaxLength(20, ErrorMessage = "Длинна строки \"{0}\" не может превышать {1}")]
         [DataType(DataType.PhoneNumber, ErrorMessage = "Неверно указан номер телефона")]
         [DisplayName("Контактный номер телефона")]
         public virtual string ContactPhone { get; set; }
 
-        [DisplayName("Дополнительный номер телефона")]
+		[Phone(ErrorMessage = "Неверно указан номер телефона")]
+		[DisplayName("Дополнительный номер телефона")]
         [MaxLength(20, ErrorMessage = "Длинна строки \"{0}\" не может превышать {1}")]
         [DataType(DataType.PhoneNumber, ErrorMessage = "Неверно указан номер телефона")]
         public virtual string AdditionalPhone { get; set; }

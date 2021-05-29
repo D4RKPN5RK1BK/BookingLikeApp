@@ -30,10 +30,10 @@ namespace BookingLikeApp.ViewModels
 			switch (SortModel.Current)
 			{
 				case ReservationSortEnum.ByDateAsc:
-					Reservations = Reservations.OrderBy(o => o.TimeStamp).ToList();
+					Reservations = Reservations.OrderBy(o => o.ReservationBegin).ThenBy(o => o.TimeStamp).ToList();
 					break;
 				case ReservationSortEnum.ByDateDesc:
-					Reservations = Reservations.OrderByDescending(o => o.TimeStamp).ToList();
+					Reservations = Reservations.OrderByDescending(o => o.ReservationBegin).ThenByDescending(o => o.TimeStamp).ToList();
 					break;
 				case ReservationSortEnum.ByPriceAsc:
 					Reservations = Reservations.OrderBy(o => o.Price).ToList();

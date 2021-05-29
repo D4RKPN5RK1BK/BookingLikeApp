@@ -34,8 +34,7 @@
 					<img src="@item.PhotoUrl" alt="Image not found" class="rounded-lg" style="height: 150px;" />
 					<div class="ml-3">
 						<h4>@item.Name</h4>
-						<form asp-controller="Edit" asp-action="DeletePhoto">
-							<input type="hidden" name="id" value="@item.Id" />
+						<form asp-controller="Edit" asp-action="DeletePhoto" asp-route-id="@item.Id" method="post">
 							<input type="submit" value="Удалить" class="btn btn-danger" />
 						</form>
 					</div>

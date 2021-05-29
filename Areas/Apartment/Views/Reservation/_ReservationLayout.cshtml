@@ -16,8 +16,14 @@
 					<p>@Model.Reservation.ReservationBegin.ToString("yyyy.MM.dd")</p>
 					<h4>Дата окончания:</h4>
 					<p>@Model.Reservation.ReservationEnd.ToString("yyyy.MM.dd")</p>
+					<h4>Регистрация прибытия:</h4>
+					<p>@Model.Reservation.Apartment.ArrivalTimeStarts.ToString("HH:mm") - @Model.Reservation.Apartment.ArrivalTimeEnds.ToString("HH:mm")</p>
+					<h4>Регистрация отбытия:</h4>
+					<p>@Model.Reservation.Apartment.ArrivalTimeStarts.ToString("HH:mm") - @Model.Reservation.Apartment.ArrivalTimeEnds.ToString("HH:mm")</p>
 					<h4>Отель:</h4>
 					<a asp-action="Details" asp-controller="Read" asp-route-id="@Model.Reservation.Apartment.Id">@Model.Reservation.Apartment.Name</a>
+					<h4>Контактный телефон:</h4>
+					<p>@Model.Reservation.Apartment.ContactPhone</p>
 				</div>
 				<div class="list-group-item">
 					<h4>Итоговая стоимость</h4>

@@ -49,14 +49,15 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 					.ThenInclude(o => o.Bed)
 				.ToList();
 
-			for(int i = 0; i< apartment.Scores.Count; i++)
-				apartment.Scores[i].AvgValue = (float)apartment.Reviews?
-					.Where(o => o.ReviewScores.Count > 0)
-					.DefaultIfEmpty()
-					.Average(o => o.ReviewScores?
-						.Where(r => r.ScoreId == apartment.Scores[i].Id)
+			if(apartment.Reviews.Count > 0)
+				for(int i = 0; i< apartment.Scores.Count; i++)
+					apartment.Scores[i].AvgValue = (float)apartment.Reviews?
+						.Where(o => o?.ReviewScores.Count > 0)
 						.DefaultIfEmpty()
-						.Average(r => r?.Value));
+						.Average(o => o?.ReviewScores?
+							.Where(r => r?.ScoreId == apartment?.Scores[i].Id)
+							.DefaultIfEmpty()
+							.Average(r => r?.Value));
 
 			for (int i = 0; i < apartment.Numbers.Count; i++)
 			{
