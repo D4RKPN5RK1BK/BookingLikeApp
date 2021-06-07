@@ -6,8 +6,8 @@
 <div class="card mt-3">
 	<div class="card-header">
 		<div class="row">
-			<div class="col-sm-8">
-				<h1 class="card-title">
+			<div class="col-sm-12">
+				<h2 class="card-title">
 					<span class="badge badge-success">@Model.Apartment.ApartmentType.Name</span>
 					@Model.Apartment.Name
 					@for (int i = 0; i < Model.Apartment.Stars; i++)
@@ -16,7 +16,7 @@
 							<path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
 						</svg>
 					}
-				</h1>
+				</h2>
 
 			</div>
 		</div>
@@ -27,11 +27,11 @@
 		<div class="row">
 			@if (Model.Apartment.Photos.Count > 0)
 			{
-				<div class="col-sm-8">
+				<div class="col-sm-5">
 					<div class="row mx-3 flex-wrap">
 						@foreach (var p in Model.Apartment.Photos)
 						{
-							<div class="col-4 no-gutters my-3">
+							<div class="col-6 no-gutters my-3">
 								<img src="@p.PhotoUrl" class="w-100 h-100 rounded" style="object-fit:cover" />
 
 							</div>
@@ -41,9 +41,9 @@
 
 
 				</div>
-				<div class="col-sm-4">
+				<div class="col-sm-7">
 					<h5>
-						<pre style="white-space: pre-wrap" class="mt-2 card-text">@Model.Apartment.Description</pre>
+						<pre style="white-space: pre-wrap; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif" class="mt-2 card-text">@Model.Apartment.Description</pre>
 					</h5>
 				</div>
 			}
@@ -51,7 +51,7 @@
 			{
 				<div class="col-12">
 					<h5>
-						<pre style="white-space: pre-wrap" class="mt-2 card-text">@Model.Apartment?.Description</pre>
+						<pre style="white-space: pre-wrap; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif" class="mt-2 card-text">@Model.Apartment?.Description</pre>
 					</h5>
 				</div>
 			}
@@ -87,8 +87,9 @@
 
 		<div class="list-group-item">
 			<div class="row">
-				<div class="col-sm-8">
+				<div class="col-sm-5">
 					<h2><b>@Model.Apartment.Country.Name</b>, <b>@Model.Apartment.City.Name</b> </h2>
+					<h4>@Model.Apartment.SecondAddressLine</h4>
 					<h4>
 						Регистрация заезда:
 						<b>@Model.Apartment.ArrivalTimeStarts.ToString("HH:mm") - @Model.Apartment.ArrivalTimeEnds.ToString("HH:mm")</b>
@@ -113,26 +114,48 @@
 						}
 					</h4>*@
 				</div>
-				<div class="col-sm-4">
-					<ul class="alert alert-success list-unstyled">
-						@foreach (var s in Model.Apartment.ApartmentServices)
-						{
-							<li>
-								<h5>
-									<b>
-										@s.Name
-									</b>
-									@if (s.HavePrice)
+				<div class="col-sm-7">
+					<div class="row">
+						<div class="col-sm-6">
+							@if (Model.Apartment.ApartmentServices.Where(o => o.HavePrice == false).ToList().Count > 0)
+							{
+								<ul class="alert alert-success list-unstyled">
+									@foreach (var s in Model.Apartment.ApartmentServices.Where(o => o.HavePrice == false).ToList())
 									{
-										<b>
-											- @s.Price руб.
-										</b>
+										<li>
+											<h5>
+												@s.Name
+											</h5>
+										</li>
 									}
-								</h5>
-								
-							</li>
-						}
-					</ul>
+								</ul>
+							}
+						</div>
+						<div class="col-sm-6">
+							@if (Model.Apartment.ApartmentServices.Where(o => o.HavePrice == true).ToList().Count > 0)
+							{
+								<ul class="alert alert-success list-unstyled">
+									@foreach (var s in Model.Apartment.ApartmentServices.Where(o => o.HavePrice == true).ToList())
+									{
+										<li>
+											<h5>
+												@s.Name
+												@if (s.HavePrice)
+												{
+													<b>
+														- @s.Price руб.
+													</b>
+												}
+											</h5>
+
+										</li>
+									}
+								</ul>
+							}
+						</div>
+					</div>
+					
+					
 				</div>
 			</div>
 		</div>
@@ -185,14 +208,14 @@
 				<div class="card mb-3" name="number" id="number_@number.Id">
 					<input type="hidden" id="number_id_@number.Id" name="numberId" value="@number.Id" />
 					<div class="card-header">
-						<h1>
+						<h2>
 							<span class="badge badge-secondary">@number.NumberType.Code</span>
 							@if (number.NumberType.Share)
 					{
 							<span class="badge badge-secondary">Общий</span>
 					}
 							@number.Name
-						</h1>
+						</h2>
 
 					</div>
 					<div class="card-body">
@@ -228,13 +251,12 @@
 						</div>
 
 					</div>
-					<table class="table table-striped" id="pack_table_@number.Id" name="packTable">
+					<table class="table" id="pack_table_@number.Id" name="packTable">
 						<thead>
 							<tr>
-								<td>Пакет</td>
-								<td>Услуги</td>
-								<td>Количество людей</td>
-								<td>Количество Номеров</td>
+								<th>Пакет</th>
+								<th>Количество людей</th>
+								<th>Количество Номеров</th>
 							</tr>	
 						</thead>
 						<tbody>
@@ -248,13 +270,18 @@
 										<ul class="list-unstyled">
 											@foreach (var packService in pack.PackServices)
 											{
-												<li class=" text-success">
-													<p>@number.NumberServices.First(o => o.Id == packService.NumberServiceId).Name <b>@number.NumberServices.First(o => o.Id == packService.NumberServiceId)?.Price</b></p>
-												</li>
+											<li class=" text-success">
+												<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+													<path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
+												</svg>
+												@number.NumberServices.First(o => o.Id == packService.NumberServiceId).Name
+												@if (number.NumberServices.First(o => o.Id == packService.NumberServiceId).HavePrice)
+												{
+													<b> - @number.NumberServices.First(o => o.Id == packService.NumberServiceId)?.Price руб.</b>
+												}
+											</li>
 											}
 										</ul>
-									</td>
-									<td>
 									</td>
 									<td name="packTenant">
 										<div class="form-group">
@@ -283,14 +310,13 @@
 								</tr>
 							}
 						</tbody>
-						<tfoot>
+						@*<tfoot>
 							<tr>
-								<td>Пакет</td>
-								<td>Услуги</td>
-								<td>Количество людей</td>
-								<td>Количество Номеров</td>
+								<th>Пакет</th>
+								<th>Количество людей</th>
+								<th>Количество Номеров</th>
 							</tr>
-						</tfoot>
+						</tfoot>*@
 					</table>
 				</div>
 			}

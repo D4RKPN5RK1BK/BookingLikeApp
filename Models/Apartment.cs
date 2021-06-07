@@ -115,12 +115,12 @@ namespace BookingLikeApp.Models
 		public List<Review> Reviews { get; set; }
 
 		[NotMapped]
-		public decimal? AverageScore
+		public double? AverageScore
 		{
 			get
 			{
 				if (Reviews?.Any(o => o.ReviewScores?.Count > 0) ?? 0 > 0)
-					return Math.Round((decimal)Reviews.Average(o => o.ReviewScores.Average(r => r.Value)), 1);
+					return Math.Round(Reviews.Where(o => o.ReviewScores.Count > 0).Average(o => o.ReviewScores.Average(r => r.Value)), 1);
 				else
 					return null;
 			} 

@@ -175,7 +175,7 @@
 						}
 					</h5>
 					<p class="my-0">Бронирований: <b>@a.Reservations.Count</b></p>
-					<p class="my-0">Ср. оценка: <b>@a.AverageScore</b></p>
+					<p class="my-0">Ср. оценка: <b>@(a?.AverageScore ?? 0) </b></p>
 				</div>
 			</a>
 		</div>

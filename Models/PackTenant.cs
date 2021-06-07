@@ -22,6 +22,7 @@ namespace BookingLikeApp.Models
 		public int Childrens { get; set; }
 
 		[DisplayName("Стоимость")]
+		[Range(0, 1000000, ErrorMessage = "Значение поля {0} не иожет быть меньше {1} или больше {2}")]
 		public decimal Price { get; set; }
 
 		[DisplayName("Актуальная запись")]

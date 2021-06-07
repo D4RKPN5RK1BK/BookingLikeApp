@@ -112,8 +112,11 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 		[HttpPut]
 		public void UpdatePackTenant([FromBody]PackTenant model)
 		{
-			_context.Update(model);
-			_context.SaveChanges();
+			if(ModelState.IsValid)
+			{
+				_context.Update(model);
+				_context.SaveChanges();
+			}
 		}
 	}
 }

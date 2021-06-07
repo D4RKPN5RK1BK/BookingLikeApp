@@ -51,7 +51,7 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 
 			if(apartment.Reviews.Count > 0)
 				for(int i = 0; i< apartment.Scores.Count; i++)
-					apartment.Scores[i].AvgValue = (float)apartment.Reviews?
+					apartment.Scores[i].AvgValue = apartment.Reviews?
 						.Where(o => o?.ReviewScores.Count > 0)
 						.DefaultIfEmpty()
 						.Average(o => o?.ReviewScores?
@@ -286,3 +286,4 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 		}
 	}
 }
+

@@ -341,3 +341,4 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 		}
 	}
 }
+

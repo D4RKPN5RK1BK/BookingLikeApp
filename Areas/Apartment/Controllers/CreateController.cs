@@ -12,20 +12,20 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 {
 	[Authorize]
 	[Area("Apartment")]
-    public class CreateController : Controller
-    {
+	public class CreateController : Controller
+	{
 
-        private readonly UserManager<User> _userManager;
-        private readonly ApplicationDbContext _context;
+		private readonly UserManager<User> _userManager;
+		private readonly ApplicationDbContext _context;
 
-        public CreateController(UserManager<User> userManager, ApplicationDbContext context)
-        {
-            _userManager = userManager;
-            _context = context;
-        }
+		public CreateController(UserManager<User> userManager, ApplicationDbContext context)
+		{
+			_userManager = userManager;
+			_context = context;
+		}
 
-        public async Task<ActionResult> Index()
-        {
+		public async Task<ActionResult> Index()
+		{
 			Models.Apartment apartment = await _context.Apartments
 				.FirstOrDefaultAsync(o => o.Finished == false && o.UserId == _userManager.GetUserId(User));
 
@@ -37,13 +37,13 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 			else
 				ViewData["Exist"] = false;
 
-            ViewBag.ApartmentTypes = _context.ApartmentTypes.ToList();
-            return View();
-        }
+			ViewBag.ApartmentTypes = _context.ApartmentTypes.ToList();
+			return View();
+		}
 
-        public async Task<ActionResult> Initialize(int apartmentType) 
-        {
-            Models.Apartment apartment = await _context.Apartments
+		public async Task<ActionResult> Initialize(int apartmentType)
+		{
+			Models.Apartment apartment = await _context.Apartments
 				.FirstOrDefaultAsync(o => !o.Finished && o.UserId == _userManager.GetUserId(User));
 
 			if (apartment != null)
@@ -60,13 +60,14 @@ namespace BookingLikeApp.Areas.Apartment.Controllers
 				Checked = false,
 				CreateTimeStamp = DateTime.Now
 			};
-            apartment.Registration = new Registration();
-            await _context.AddAsync(apartment);
-            await _context.SaveChangesAsync();
+			apartment.Registration = new Registration();
+			await _context.AddAsync(apartment);
+			await _context.SaveChangesAsync();
 
-            return RedirectToAction("BasicInfo", "Edit", new { apartment.Id });
-        }
+			return RedirectToAction("BasicInfo", "Edit", new { apartment.Id });
+		}
 
-       
-    }
+
+	}
 }
+

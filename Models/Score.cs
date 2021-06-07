@@ -15,6 +15,6 @@ namespace BookingLikeApp.Models
 		public List<ReviewScore> ReviewScores { get; set; }
 		
 		[NotMapped]
-		public float? AvgValue { get; set; }
+		public double? AvgValue { get; set; }
 	}
 }

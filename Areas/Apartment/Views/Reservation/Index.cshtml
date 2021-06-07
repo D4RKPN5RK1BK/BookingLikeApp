@@ -7,50 +7,83 @@
 
 <h2 class="display-4 mb-3">Мои бронирования</h2>
 
-@if (Model.Reservations.Count > 0)
-{
-	<filter-page-link-helper page-view-model="@Model.PageModel"
-							 page-url-accept="@Model.FilterModel.Accept"
-							 page-url-apartmentId="@Model.FilterModel.ApartmentId"
-							 page-url-sortBy="@Model.SortModel.Current">
-	</filter-page-link-helper>
-	<table class="table">
-		<thead>
-			<tr>
-				<th>Подбробная информация</th>
-				<th>Отель</th>
-				<th>Стоимость</th>
-				<th>Время</th>
-				<th>Состояние</th>
-			</tr>
-		</thead>
-		@foreach (var r in Model.Reservations)
+<div class="row mt-3">
+	<div class="col-sm-3">
+		<form asp-action="Index" method="get">
+			<div class="card">
+				<div class="card-body">
+					<div class="form-group">
+						<label>Поиск</label>
+						<select class="custom-select" asp-for="@Model.FilterModel.Accept" name="accept">
+							<option value="0">Все</option>
+							<option value="1">Только оплаченные</option>
+							<option value="2">Только неоплаченные</option>
+						</select>
+					</div>
+
+					<div class="form-group">
+						<label>Сортировка</label>
+						<select class="custom-select" asp-for="@Model.SortModel.Current" name="orderBy">
+							<option value="0">По дате</option>
+							<option value="1">По дате (обр.)</option>
+							<option value="2">По цене</option>
+							<option value="3">По цене (обр.)</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<input type="submit" value="Применить" class="btn btn-success btn-block mt-3" />
+		</form>
+	</div>
+	<div class="col-sm-9">
+		@if (Model.Reservations.Count > 0)
 		{
-			<tr>
-				<td><a asp-action="info" asp-controller="reservation" asp-route-id="@r.Id">Подробнее</a></td>
-				<td><a asp-action="Details" asp-controller="Read" asp-route-id="@r.ApartmentId"><p>@r.Apartment.Name</p></a></td>
-				<td><p><b>@r.Price руб.</b></p></td>
-				<td><p >@r.ReservationBegin.ToString("yyyy.MM.dd") - @r.ReservationEnd.ToString("yyyy.MM.dd")</p></td>
-				<td>
-					@if (r.Confirm)
-					{
-						<span class="badge badge-success">Оплачен</span>
-					}
-					else if (r.Outdated)
-					{
-						<span class="badge badge-success">Просрочен</span>
-					}
-				</td>
-			</tr>
+			<filter-page-link-helper page-view-model="@Model.PageModel"
+									 page-url-accept="@Model.FilterModel.Accept"
+									 page-url-apartmentId="@Model.FilterModel.ApartmentId"
+									 page-url-sortBy="@Model.SortModel.Current">
+			</filter-page-link-helper>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Подбробная информация</th>
+						<th>Отель</th>
+						<th>Стоимость</th>
+						<th>Время</th>
+						<th>Состояние</th>
+					</tr>
+				</thead>
+				@foreach (var r in Model.Reservations)
+				{
+					<tr>
+						<td><a asp-action="info" asp-controller="reservation" asp-route-id="@r.Id">Подробнее</a></td>
+						<td><a asp-action="Details" asp-controller="Read" asp-route-id="@r.ApartmentId"><p>@r.Apartment.Name</p></a></td>
+						<td><p><b>@r.Price руб.</b></p></td>
+						<td><p>@r.ReservationBegin.ToString("yyyy.MM.dd") - @r.ReservationEnd.ToString("yyyy.MM.dd")</p></td>
+						<td>
+							@if (r.Confirm)
+							{
+								<span class="badge badge-success">Оплачен</span>
+							}
+							else if (r.Outdated)
+							{
+								<span class="badge badge-warning">Просрочен</span>
+							}
+						</td>
+					</tr>
+				}
+			</table>
+			<filter-page-link-helper page-view-model="@Model.PageModel"
+									 page-url-accept="@Model.FilterModel.Accept"
+									 page-url-apartmentId="@Model.FilterModel.ApartmentId"
+									 page-url-sortBy="@Model.SortModel.Current">
+			</filter-page-link-helper>
 		}
-	</table>
-	<filter-page-link-helper page-view-model="@Model.PageModel"
-							 page-url-accept="@Model.FilterModel.Accept"
-							 page-url-apartmentId="@Model.FilterModel.ApartmentId"
-							 page-url-sortBy="@Model.SortModel.Current">
-	</filter-page-link-helper>
-}
-else
-{
-	<h2>По данному запросу ничего не найдено</h2>
-}
+		else
+		{
+			<h2>По данному запросу ничего не найдено</h2>
+		}
+	</div>
+</div>
+
+
